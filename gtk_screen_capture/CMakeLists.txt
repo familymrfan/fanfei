@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(screen_capture)
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs")
 
-if(LINUX)
+if(UNIX)
 
 elseif (WIN32)
 
@@ -13,7 +13,7 @@ endif()
 
 add_executable(screen_capture screen_capture_type.cpp screen_capture_snatch_view.cpp screen_capture_event.cpp screen_capture_model.cpp screen_capture_controller.cpp dialogflow.cpp mainflow.cpp main.cpp flow.cpp)
 
-if(LINUX)
+if(UNIX)
 include_directories(/usr/include/glib-2.0)
 include_directories(/usr/include/gio-unix-2.0)
 include_directories(/usr/include/gtk-2.0)
