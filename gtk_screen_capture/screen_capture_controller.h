@@ -21,24 +21,46 @@
 #ifndef SCREENCAPTURE_H
 #define SCREENCAPTURE_H
 
+#include <string>
+#include <memory>
 #include "flow.h"
+#include "screen_capture_event.h"
 
+enum AUTHLLIST
+{
+    AUTH_REDRAW_ALL_VIEWS
+};
 
+class ScreenCaptureModel;
+class ScreenCaptureSnatchView;
 class ScreenCaptureController : public Flow
 {
 protected:
   void Init();
+  void DispatchEvent(Event event);
+  friend gint OnPaint(GtkWidget *widget, GdkEvent *event, gpointer callback_data);
+  friend gint OnLButtonDownMessage(GtkWidget *widget,GdkEvent *event,gpointer callback_data);
+  friend gint OnLButtonUpMessage(GtkWidget *widget,GdkEvent *event,gpointer callback_data);
+  friend gint OnMouseMoveMessage(GtkWidget *widget,GdkEvent *event,gpointer callback_data);
   virtual bool Operate() override;
 private:
     // model
-    ScreenCaptureModel *model_;
+    std::shared_ptr<ScreenCaptureModel> model_;
     // snatch view
-    ScreenCaptureSnatchView *snatch_view_;
+    std::shared_ptr<ScreenCaptureSnatchView> snatch_view_;
+    //desktop image
+    GdkPixbuf *desktop_image_pixbuf_;
     // base
     int width_;
     int height_;
+    // EVENT_DRAG_RECT assistant 
+    bool is_drag_;
+    custom_rect drag_rect_;
+    custom_point start_point_;
+    custom_point end_point_;
     // other
     std::string file_path_;
+    
 };
 
 #endif // SCREENCAPTURE_H

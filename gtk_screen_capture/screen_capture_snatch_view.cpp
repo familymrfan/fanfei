@@ -17,14 +17,14 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
+#include "screen_capture_controller.h"
 #include "screen_capture_snatch_view.h"
 #include "screen_capture_model.h"
 
 #include <utility>
 
 void ScreenCaptureSnatchView::Paint(){
-    // draw capture snatch view 
+    /*// draw capture snatch view 
     HDC mem_dc = CreateCompatibleDC(hdc);
     HBITMAP old_desktop_bitmap = static_cast<HBITMAP>(::SelectObject(mem_dc,model_->GetDesktopBitmap()));
     ::BitBlt(hdc,area_.left,area_.top,area_.right-area_.left,area_.bottom-area_.top,mem_dc,area_.left,area_.top,SRCCOPY);
@@ -40,8 +40,41 @@ void ScreenCaptureSnatchView::Paint(){
     for (int i=STRETCH_LEFT_TOP;i<STRETCH_END;i++){
         ::FillRect(hdc,&rect[i],brush);
     }
-    ::DeleteObject(brush);
+    ::DeleteObject(brush);*/  
     
+  // draw capture snatch view 
+  auto cr = gdk_cairo_create(drawable_);
+  GtkWidget* image = model_->GetDesktopBitmap();
+  gdk_cairo_set_source_pixbuf(cr,gtk_image_get_pixbuf((GtkImage*)image),0.0f,0.0f);
+  cairo_rectangle(cr,area_.left,area_.top,area_.right-area_.left,area_.bottom-area_.top);
+  cairo_clip(cr);
+  cairo_paint(cr);
+  cairo_reset_clip(cr);
+  // draw border
+  GdkColor color = model_->GetSnatchViewBorderColor();
+  cairo_set_source_rgb (cr, (double)color.red/255, (double)color.green/255, (double)color.blue/255);
+  cairo_set_line_width(cr,2.0f);
+  cairo_move_to (cr, area_.left, area_.top);
+  cairo_line_to (cr, area_.right, area_.top);
+  cairo_line_to (cr, area_.right, area_.bottom);
+  cairo_line_to (cr, area_.left, area_.bottom);
+  cairo_close_path (cr);
+  cairo_stroke(cr);
+
+  // draw corner rects
+  custom_rect rect[STRETCH_END];
+  MakeStrechCornerRects(rect);
+  for (int i=STRETCH_LEFT_TOP;i<STRETCH_END;i++){
+      //cairo_rectangle(cr,rect[i].left,rect[i].top,rect[i].right-rect[i].left,rect[i].bottom-rect[i].top);
+      cairo_set_line_width(cr,1.0f);
+      cairo_move_to (cr, rect[i].left, rect[i].top);
+      cairo_line_to (cr, rect[i].right, rect[i].top);
+      cairo_line_to (cr, rect[i].right, rect[i].bottom);
+      cairo_line_to (cr, rect[i].left, rect[i].bottom);
+      cairo_close_path (cr);
+      cairo_fill(cr);
+  }
+  cairo_destroy(cr);
 }
 
 void ScreenCaptureSnatchView::PostPanit(){
@@ -60,9 +93,10 @@ void ScreenCaptureSnatchView::OnEvent(Event event){
             }
             else{
                 if(model_->IsDrag()){
-                    int screen_width  = GetSystemMetrics(SM_CXSCREEN);
-                    int screen_height = GetSystemMetrics(SM_CYSCREEN);
-                    OffsetRect(&area_,drag_info.offset_x,drag_info.offset_y);
+		    int screen_width,screen_height;
+		    auto root_window = gdk_get_default_root_window ();
+		    gdk_drawable_get_size (root_window, &screen_width, &screen_height);     
+                    CustomOffsetRect(&area_,drag_info.offset_x,drag_info.offset_y);
                     if(area_.left<0){
                         area_.right = area_.right - area_.left;
                         area_.left = 0;
@@ -185,7 +219,7 @@ void ScreenCaptureSnatchView::OnEvent(Event event){
     else if(event.id_ == EVENT_DRAG_OVER
         && event.type_ == EVENT_MOUSE){
             if(!model_->IsCaptureOver()){
-                if(!IsRectEmpty (&area_)){
+                if(!CustomIsRectEmpty(&area_)){
                     model_->SetCaptureOver();
                 }
             }
@@ -195,19 +229,19 @@ void ScreenCaptureSnatchView::OnEvent(Event event){
     else if(event.id_ == EVENT_LEFT_BUTTON_DOWN
         && event.type_ == EVENT_MOUSE){
             int length;
-            POINT pt;
+            custom_point pt;
             event.GetParam(static_cast<void *>(&pt),length);
             // stretch
-            RECT rect[STRETCH_END];
+            custom_rect rect[STRETCH_END];
             MakeStrechCornerRects(rect);
             for(int i=STRETCH_LEFT_TOP;i<STRETCH_END;i++){
-                if(PtInRect(&rect[i],pt)){
+                if(CustomPtInRect(&rect[i],pt)){
                     model_->SetStretchType(static_cast<STRETCH_TYPE>(i));
                     return;
                 }
             }
             // drag
-            if(PtInRect(&area_,pt) && model_->IsCaptureOver()){
+            if(CustomPtInRect(&area_,pt) && model_->IsCaptureOver()){
                 model_->SetDrag();
             }
     }
@@ -218,13 +252,13 @@ void ScreenCaptureSnatchView::OnEvent(Event event){
     }
 }
 
-void ScreenCaptureSnatchView::MakeStrechCornerRects(RECT rect[STRETCH_END]){
+void ScreenCaptureSnatchView::MakeStrechCornerRects(custom_rect rect[STRETCH_END]){
     int horizontal_half_width = (area_.right - area_.left)/2;
     int horizontal_width      = area_.right - area_.left;
     int vertical_half_width   = (area_.bottom - area_.top)/2;
     int vertical_width        = area_.bottom - area_.top;
     // left top
-    SetRect(&rect[STRETCH_LEFT_TOP],
+    CustomSetRect(&rect[STRETCH_LEFT_TOP],
         area_.left - model_->GetStretchResponseWidth(),
         area_.top  - model_->GetStretchResponseWidth(),
         area_.left + model_->GetStretchResponseWidth(),
@@ -232,23 +266,23 @@ void ScreenCaptureSnatchView::MakeStrechCornerRects(RECT rect[STRETCH_END]){
         );
     // top
     rect[STRETCH_TOP] = rect[STRETCH_LEFT_TOP];
-    OffsetRect(&rect[STRETCH_TOP],horizontal_half_width,0);
+    CustomOffsetRect(&rect[STRETCH_TOP],horizontal_half_width,0);
     // right top
     rect[STRETCH_RIGHT_TOP] = rect[STRETCH_LEFT_TOP];
-    OffsetRect(&rect[STRETCH_RIGHT_TOP],horizontal_width,0);
+    CustomOffsetRect(&rect[STRETCH_RIGHT_TOP],horizontal_width,0);
     // left
     rect[STRETCH_LEFT] = rect[STRETCH_LEFT_TOP];
-    OffsetRect(&rect[STRETCH_LEFT],0,vertical_half_width);
+    CustomOffsetRect(&rect[STRETCH_LEFT],0,vertical_half_width);
     // right
     rect[STRETCH_RIGHT] = rect[STRETCH_LEFT];
-    OffsetRect(&rect[STRETCH_RIGHT],horizontal_width,0);
+    CustomOffsetRect(&rect[STRETCH_RIGHT],horizontal_width,0);
     // bottom left
     rect[STRETCH_LEFT_BOTTOM] = rect[STRETCH_LEFT_TOP];
-    OffsetRect(&rect[STRETCH_LEFT_BOTTOM],0,vertical_width);
+    CustomOffsetRect(&rect[STRETCH_LEFT_BOTTOM],0,vertical_width);
     // bottom
     rect[STRETCH_BOTTOM] = rect[STRETCH_TOP];
-    OffsetRect(&rect[STRETCH_BOTTOM],0,vertical_width);
+    CustomOffsetRect(&rect[STRETCH_BOTTOM],0,vertical_width);
     // bottom right
     rect[STRETCH_RIGHT_BOTTOM] = rect[STRETCH_RIGHT_TOP];
-    OffsetRect(&rect[STRETCH_RIGHT_BOTTOM],0,vertical_width);
+    CustomOffsetRect(&rect[STRETCH_RIGHT_BOTTOM],0,vertical_width);
 }

@@ -22,13 +22,14 @@
 #define WISP_WEBMAIL_CORE_SCREEN_CAPTURE_EVENT_H
 
 #include "gtk/gtk.h"
+#include "screen_capture_type.h"
 #include <cstring>
 
 typedef struct EVENTDRAGINFO
 {
-    GdkRectangle drag_rect;
-    GdkPoint begin_point;
-    GdkPoint move_point;
+    custom_rect drag_rect;
+    custom_point begin_point;
+    custom_point move_point;
     int  offset_x;
     int  offset_y;
 }EVENTDRAGINFO;

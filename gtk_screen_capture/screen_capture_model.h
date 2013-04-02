@@ -44,10 +44,15 @@ class ScreenCaptureSnatchView;
 class ScreenCaptureModel:public EventHandle
 {
 public:
-    ScreenCaptureModel(HBITMAP _desktop_bitmap)
-        :desktop_bitmap_(_desktop_bitmap),is_capture_over_(false),
+    ScreenCaptureModel(GtkWidget* desktop_image)
+        :desktop_bitmap_(desktop_image),is_capture_over_(false),
         is_drag_(false),snatch_view_(nullptr),strech_type_(STRETCH_NO),
-        stretch_response_width_(3),snatch_view_border_width_(1),snatch_view_border_color_(RGB(65,105,225)){}
+        stretch_response_width_(3),snatch_view_border_width_(1){
+	  snatch_view_border_color_.red = 65;
+	  snatch_view_border_color_.green = 105;
+	  snatch_view_border_color_.blue = 255;
+	  snatch_view_border_color_.pixel = 255;
+	}
 
     void SetSnatchView(ScreenCaptureSnatchView *_sc_snatch_view){
         snatch_view_ = _sc_snatch_view;
@@ -77,23 +82,23 @@ public:
     int GetSnatchViewBorderWidth() const{
         return stretch_response_width_;
     }
-    GdkColor* GetSnatchViewBorderColor() const{
+    GdkColor GetSnatchViewBorderColor() const{
         return snatch_view_border_color_;
     }
-    /*HBITMAP GetDesktopBitmap() const{
+    GtkWidget* GetDesktopBitmap() const{
         return desktop_bitmap_;
-    }*/
+    }
     virtual void OnEvent(Event event) override{
 
     }
 private:
-    //HBITMAP desktop_bitmap_;
+    GtkWidget* desktop_bitmap_;
     bool    is_drag_;
     bool    is_capture_over_;
     STRETCH_TYPE strech_type_;
     int     stretch_response_width_; // read only
     int     snatch_view_border_width_; // read only
-    GdkColor* snatch_view_border_color_; // read only
+    GdkColor snatch_view_border_color_; // read only
     ScreenCaptureSnatchView *snatch_view_;
 };
 

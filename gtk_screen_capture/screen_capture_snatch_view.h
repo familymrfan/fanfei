@@ -23,23 +23,23 @@
 #pragma once
 
 #include "gtk/gtk.h"
+#include <cstring>
 #include "screen_capture_controller.h"
 #include "screen_capture_event.h"
 #include "screen_capture_authmap.h"
+#include "screen_capture_type.h"
 
 class ScreenCaptureModel;
-
 class ScreenCaptureSnatchView:public EventHandle,public AuthMap
 {
     friend class ScreenCaptureController;
 public:
-    ScreenCaptureSnatchView(HDC _hdc):hdc(_hdc),model_(nullptr){
-        SetRectEmpty(&area_) ;
+    ScreenCaptureSnatchView(GdkDrawable *drawable):drawable_(drawable),model_(nullptr){
     }
     void SetModel(ScreenCaptureModel *_sc_model){
         model_ = _sc_model;
     }
-    RECT GetArea() {
+    custom_rect GetArea() {
         return area_;
     }
 public:
@@ -49,11 +49,11 @@ public:
     void PostPanit();
     virtual void OnEvent(Event event) override;
 protected:
-    void MakeStrechCornerRects(GdkRegion rect[]);
+    void MakeStrechCornerRects(custom_rect rect[]);
 private:
-    HDC hdc;
-    ScreenCaptureModel *model_;
-    GdkRegion area_;
+    GdkDrawable *drawable_;
+    custom_rect area_;
+    ScreenCaptureModel *model_; 
 };
 
 #endif // WISP_WEBMAIL_CORE_SCREEN_CAPTURE_SNATCH_VIEW_H
