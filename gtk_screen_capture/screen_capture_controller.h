@@ -35,6 +35,10 @@ class ScreenCaptureModel;
 class ScreenCaptureSnatchView;
 class ScreenCaptureController : public Flow
 {
+public:
+    ScreenCaptureController():desktop_image_pixbuf_(nullptr),width_(0),height_(0),is_drag_(false){
+
+    }
 protected:
   void Init();
   void DispatchEvent(Event event);

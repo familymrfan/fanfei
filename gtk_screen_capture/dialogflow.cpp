@@ -24,8 +24,8 @@ bool Dialogflow::Operate(){
     GtkWidget *dialog;
     GtkWidget *window;
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    dialog = gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_MESSAGE_OTHER,GTK_BUTTONS_OK_CANCEL,"点击确定开始截图");
-    gtk_window_set_title(GTK_WINDOW(dialog), "网易邮箱截图");
+    dialog = gtk_message_dialog_new(GTK_WINDOW(window),GTK_DIALOG_DESTROY_WITH_PARENT,GTK_MESSAGE_OTHER,GTK_BUTTONS_OK_CANCEL,"click yes to capture");
+    gtk_window_set_title(GTK_WINDOW(dialog), "screen capture");
     bool result = false;
     if(GTK_RESPONSE_OK == gtk_dialog_run(GTK_DIALOG(dialog))){
       result = true;
