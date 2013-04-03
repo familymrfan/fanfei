@@ -24,24 +24,6 @@
 #include <utility>
 
 void ScreenCaptureSnatchView::Paint(){
-    /*// draw capture snatch view 
-    HDC mem_dc = CreateCompatibleDC(hdc);
-    HBITMAP old_desktop_bitmap = static_cast<HBITMAP>(::SelectObject(mem_dc,model_->GetDesktopBitmap()));
-    ::BitBlt(hdc,area_.left,area_.top,area_.right-area_.left,area_.bottom-area_.top,mem_dc,area_.left,area_.top,SRCCOPY);
-    ::SelectObject(mem_dc,old_desktop_bitmap);
-    ::DeleteDC(mem_dc);
-
-    // draw border
-    HBRUSH brush = ::CreateSolidBrush(model_->GetSnatchViewBorderColor());
-    ::FrameRect(hdc,&area_,brush);
-    //  draw corner rects
-    RECT rect[STRETCH_END];
-    MakeStrechCornerRects(rect);
-    for (int i=STRETCH_LEFT_TOP;i<STRETCH_END;i++){
-        ::FillRect(hdc,&rect[i],brush);
-    }
-    ::DeleteObject(brush);*/  
-    
   // draw capture snatch view 
   auto cr = gdk_cairo_create(drawable_);
   GtkWidget* image = model_->GetDesktopBitmap();
@@ -65,7 +47,6 @@ void ScreenCaptureSnatchView::Paint(){
   custom_rect rect[STRETCH_END];
   MakeStrechCornerRects(rect);
   for (int i=STRETCH_LEFT_TOP;i<STRETCH_END;i++){
-      //cairo_rectangle(cr,rect[i].left,rect[i].top,rect[i].right-rect[i].left,rect[i].bottom-rect[i].top);
       cairo_set_line_width(cr,1.0f);
       cairo_move_to (cr, rect[i].left, rect[i].top);
       cairo_line_to (cr, rect[i].right, rect[i].top);

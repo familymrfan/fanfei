@@ -29,6 +29,7 @@ gboolean TimeoutFall(gpointer data){
     auto flow = static_cast<Flow*>(data);
     flow->FallCall();
     gtk_timeout_remove(timeid);
+    return true;
 }
 
 void Flow::SetDownFlow(std::shared_ptr<Flow> down,bool yes_flow,int timeout){
