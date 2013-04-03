@@ -58,12 +58,17 @@ gint OnLButtonDownMessage(GtkWidget *widget,GdkEvent  *event,gpointer callback_d
     if(scc == nullptr){
       return false;
     }
-    scc->is_drag_ = true;
-    scc->start_point_.x = scc->end_point_.x = event->button.x; 
-    scc->start_point_.y = scc->end_point_.y = event->button.y;
-    Event _event;
-    _event.MakeEvent(EVENT_LEFT_BUTTON_DOWN,EVENT_MOUSE,static_cast<void *>(&scc->start_point_),sizeof(custom_point));
-    scc->DispatchEvent(_event);
+    if(event->type == GDK_BUTTON_PRESS){
+      scc->is_drag_ = true;
+      scc->start_point_.x = scc->end_point_.x = event->button.x; 
+      scc->start_point_.y = scc->end_point_.y = event->button.y;
+      Event _event;
+      _event.MakeEvent(EVENT_LEFT_BUTTON_DOWN,EVENT_MOUSE,static_cast<void *>(&scc->start_point_),sizeof(custom_point));
+      scc->DispatchEvent(_event);
+    }
+    else if(event->type == GDK_2BUTTON_PRESS){
+      scc->WriteBitmapToFile();
+    }
     return true;
 }
 
@@ -137,7 +142,7 @@ void ScreenCaptureController::Init(){
     gtk_container_add(GTK_CONTAINER (window), darea);
     
     gtk_window_fullscreen(GTK_WINDOW(window));
-    gtk_widget_add_events(window, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK);
+    gtk_widget_add_events(window, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_BUTTON2_MOTION_MASK);
     
     desktop_image_pixbuf_ = get_screenshot();
     
@@ -168,4 +173,17 @@ bool ScreenCaptureController::Operate(){
 void ScreenCaptureController::DispatchEvent(Event event){
     model_->OnEvent(event);
     snatch_view_->OnEvent(event);
+}
+
+bool ScreenCaptureController::WriteBitmapToFile(){
+    // get snatch image
+    auto desktop_image = model_->GetDesktopBitmap();
+    auto area = snatch_view_->GetArea();
+    
+    cairo_surface_t* surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,area.right-area.left,area.bottom-area.top);
+    auto cr = cairo_create(surface);
+    gdk_cairo_set_source_pixbuf(cr,gtk_image_get_pixbuf((GtkImage*)desktop_image),-area.left,-area.top);
+    cairo_paint(cr);
+    std::cout<<cairo_surface_write_to_png(cairo_get_target(cr),"test.png")<<std::endl;
+    return true;
 }

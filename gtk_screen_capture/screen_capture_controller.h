@@ -42,6 +42,7 @@ public:
 protected:
   void Init();
   void DispatchEvent(Event event);
+  bool WriteBitmapToFile();
   friend gint OnPaint(GtkWidget *widget, GdkEvent *event, gpointer callback_data);
   friend gint OnLButtonDownMessage(GtkWidget *widget,GdkEvent *event,gpointer callback_data);
   friend gint OnLButtonUpMessage(GtkWidget *widget,GdkEvent *event,gpointer callback_data);

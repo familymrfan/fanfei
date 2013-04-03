@@ -39,6 +39,7 @@ void Flow::SetDownFlow(std::shared_ptr<Flow> down,bool yes_flow,int timeout){
 
 void Flow::Fall(){
     bool result = Operate();
+    result?down_no_=nullptr:down_yes_=nullptr;
     if(timeout_>0){
       timeid = gtk_timeout_add(timeout_,TimeoutFall,this);
     }else{
