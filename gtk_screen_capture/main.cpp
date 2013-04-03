@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
     auto screen_capture = std::make_shared<ScreenCaptureController>();
     
     flow->SetDownFlow(dialog);
-    dialog->SetDownFlow(screen_capture);
+    dialog->SetDownFlow(screen_capture,true,500);
     flow->Fall();
     gtk_main();
     

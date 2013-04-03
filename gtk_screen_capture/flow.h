@@ -21,27 +21,22 @@
 #ifndef FLOW_H
 #define FLOW_H
 
+#include <gtk/gtk.h>
 #include <memory>
 
-//todo fanfei a.缺乏上游验证,避免逆流 b.仅支持两极(true or false)分流 c.缺乏上游数据缓存
+//todo fanfei a.缺乏上游验证,避免逆流 b.仅支持两极(true or false)分流 c.缺乏上游数据缓存 d.缺乏延迟处理
 class Flow
 {
 public:
-  void SetDownFlow(std::shared_ptr<Flow> down,bool yes_flow = true){
-    yes_flow == true?down_yes_ = down:down_no_ = down;
-  }
-  void Fall(){
-    bool result = Operate();
-    if(result && down_yes_){
-	down_yes_->Fall();
-    }else if(!result && down_no_){
-	down_no_->Fall();
-    }
-  }
+  void SetDownFlow(std::shared_ptr<Flow> down,bool yes_flow = true,int timeout=0);
+  void Fall();
 protected:
+  friend gboolean TimeoutFall(gpointer data);
   virtual bool Operate() = 0;
+  void FallCall();
   std::shared_ptr<Flow> down_yes_;
   std::shared_ptr<Flow> down_no_;
+  int timeout_;
 };
 
 #endif // FLOW_H

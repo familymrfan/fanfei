@@ -20,3 +20,35 @@
 
 #include "flow.h"
 
+namespace
+{
+guint timeid;
+} // namespace
+
+gboolean TimeoutFall(gpointer data){
+    auto flow = static_cast<Flow*>(data);
+    flow->FallCall();
+    gtk_timeout_remove(timeid);
+}
+
+void Flow::SetDownFlow(std::shared_ptr<Flow> down,bool yes_flow,int timeout){
+    yes_flow == true?down_yes_ = down:down_no_ = down;
+    timeout_ = timeout;
+}
+
+void Flow::Fall(){
+    bool result = Operate();
+    if(timeout_>0){
+      timeid = gtk_timeout_add(timeout_,TimeoutFall,this);
+    }else{
+      FallCall();
+    }
+}
+
+void Flow::FallCall(){
+    if(down_yes_){
+	down_yes_->Fall();
+    }else if(down_no_){
+	down_no_->Fall();
+    }
+}
