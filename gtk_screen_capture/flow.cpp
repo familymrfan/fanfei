@@ -52,5 +52,7 @@ void Flow::FallCall(){
 	down_yes_->Fall();
     }else if(down_no_){
 	down_no_->Fall();
+    }else{
+        gtk_main_quit();
     }
 }
