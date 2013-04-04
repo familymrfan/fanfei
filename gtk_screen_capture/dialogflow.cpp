@@ -30,7 +30,7 @@ bool Dialogflow::Operate(){
     if(GTK_RESPONSE_OK == gtk_dialog_run(GTK_DIALOG(dialog))){
       result = true;
     }else{
-      
+      gtk_exit(0);
     }
     gtk_widget_hide(dialog);
     gtk_widget_destroy(dialog);
