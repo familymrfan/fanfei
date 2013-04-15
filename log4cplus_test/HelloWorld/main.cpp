@@ -8,10 +8,20 @@
 using namespace std;
 using namespace log4cplus;
 
+
+struct LogConfigure
+{
+
+};
+
+bool InitLog(const LogConfigure& config){
+
+}
+
 int
 main()
 {
-    SharedAppenderPtr append_1(new ConsoleAppender());
+/*  SharedAppenderPtr append_1(new ConsoleAppender());
     append_1->setName(LOG4CPLUS_TEXT("First"));
     Logger::getRoot().addAppender(append_1);
 
@@ -44,7 +54,7 @@ main()
                     << setprecision(15)
                     << 123452342342.342L);
     LOG4CPLUS_WARN(test, "The following message is empty:");
-    LOG4CPLUS_WARN(test, "");
+    LOG4CPLUS_WARN(test, "");*/
 
     return 0;
 }

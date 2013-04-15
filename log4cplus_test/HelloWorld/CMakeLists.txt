@@ -13,4 +13,14 @@ link_directories(${HelloWorld_SOURCE_DIR})
 		      
 add_executable(HelloWorld main.cpp)
 
-target_link_libraries(HelloWorld -llog4cplus)
+option(UNICODE "Build with tchar = wchar_t" ON)
+if (UNICODE)
+  add_definitions (-DUNICODE -D_UNICODE -UMBCS -U_MBCS)
+endif (UNICODE)
+
+if(UNIX)
+	target_link_libraries(HelloWorld -llog4cplus)
+elseif (WIN32)
+	target_link_libraries(HelloWorld log4cplusUD.lib)
+endif()
+
