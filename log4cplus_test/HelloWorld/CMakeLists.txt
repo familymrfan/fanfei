@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 project (HelloWorld)
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs")
 
 configure_file(include/log4cplus/config.h.cmake.in
   ${HelloWorld_BINARY_DIR}/include/log4cplus/config.h @ONLY)
