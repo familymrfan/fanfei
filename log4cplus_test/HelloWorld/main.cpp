@@ -16,14 +16,24 @@ using namespace log4cplus;
 using namespace log4cplus::spi;
 using namespace log4cplus::helpers;
 
+enum class LogLevels{
+  kNotSet = NOT_SET_LOG_LEVEL,
+  kTrace  = TRACE_LOG_LEVEL,
+  kDebug  = DEBUG_LOG_LEVEL,
+  kInfo   = INFO_LOG_LEVEL,
+  kWarn   = WARN_LOG_LEVEL,
+  kError  = ERROR_LOG_LEVEL,
+  kFatal  = FATAL_LOG_LEVEL,
+  kOff	 = OFF_LOG_LEVEL
+};
+  
 struct LogConfigure
 {
   LogConfigure():console(true),
 		file_path(""),
 		max_size(0),
-		daily_roll((DailyRollingFileSchedule)-1),
-		min_level(TRACE_LOG_LEVEL),
-		max_level(FATAL_LOG_LEVEL),
+		min_level(LogLevels::kNotSet),
+		max_level(LogLevels::kNotSet),
 		match_string(""),
 		match_string_accept(true),
 		modules_accept(true){
@@ -32,12 +42,11 @@ struct LogConfigure
   bool console;
   std::string file_path;
   int max_size;
-  DailyRollingFileSchedule daily_roll;
   //filter
-  LogLevel min_level;
-  LogLevel max_level;
+  LogLevels min_level;
+  LogLevels max_level;
   std::string match_string;
-  std::list<std::string> modules;
+  std::vector<std::string> modules;
   bool match_string_accept;
   bool modules_accept;
 };
@@ -45,8 +54,8 @@ struct LogConfigure
 bool InitLog(const LogConfigure& config);
 bool InitLog(bool console = true,
 	       const std::string& file_path="",
-	       LogLevel min_level=NOT_SET_LOG_LEVEL,
-	       LogLevel max_level=NOT_SET_LOG_LEVEL,
+	       LogLevels min_level=LogLevels::kNotSet,
+	       LogLevels max_level=LogLevels::kNotSet,
 	       const std::string& match_string=""
 	      ){
     LogConfigure config;
@@ -71,12 +80,6 @@ bool AddAppender(Logger log,const LogConfigure& config){
 	log.addAppender(append);
     }
     
-    if(config.daily_roll != -1){
-	SharedAppenderPtr append(new DailyRollingFileAppender(config.file_path.c_str(),config.daily_roll));
-	append->setName("DAILYROLL");
-	log.addAppender(append);
-    }
-    
     if(log.getAllAppenders().empty()){
 	return false;
     }
@@ -87,11 +90,11 @@ FilterPtr CreateFilter(const LogConfigure& config){
     // filter Accept levelmin ~ levelmax
     LogLevelManager& llm = getLogLevelManager();
     Properties properties;
-    if(config.min_level != NOT_SET_LOG_LEVEL){
-      properties.setProperty("LogLevelMin", llm.toString(config.min_level));
+    if(config.min_level != LogLevels::kNotSet){
+      properties.setProperty("LogLevelMin", llm.toString(static_cast<LogLevel>(config.min_level)));
     }
-    if(config.max_level != NOT_SET_LOG_LEVEL){
-      properties.setProperty("LogLevelMax", llm.toString(config.max_level));
+    if(config.max_level != LogLevels::kNotSet){
+      properties.setProperty("LogLevelMax", llm.toString(static_cast<LogLevel>(config.max_level)));
     }
     properties.setProperty("AcceptOnMatch", "false");
     FilterPtr filter_level(new LogLevelRangeFilter(properties));
@@ -121,36 +124,43 @@ bool InitLog(const LogConfigure& config){
     if(filter == nullptr){
 	return false;
     }
-    if(config.modules_accept){
-	// drop all logs first
-	FilterPtr filter_deny(new DenyAllFilter());
-	for(log4cplus::SharedAppenderPtr appender:Logger::getRoot().getAllAppenders()){
-	    appender->setFilter(filter_deny);
-	}
-	for(std::string logname:config.modules){
-	    Logger log = Logger::getInstance(logname.c_str());
-	    if(!AddAppender(log,config)){
-		return false;
-	    }
-	    for(log4cplus::SharedAppenderPtr appender:log.getAllAppenders()){
-	      appender->setFilter(filter);
-	    }
-	}
-    }else{
-	for(log4cplus::SharedAppenderPtr appender:Logger::getRoot().getAllAppenders()){
+    if(config.modules.empty()){
+        for(log4cplus::SharedAppenderPtr appender:Logger::getRoot().getAllAppenders()){
 	    appender->setFilter(filter);
 	}
-	FilterPtr filter_deny(new DenyAllFilter());
-	for(std::string logname:config.modules){
-	    Logger log = Logger::getInstance(logname.c_str());
-	    log.setAdditivity(false);
-	    if(!AddAppender(log,config)){
-		return false;
-	    }
-	    for(log4cplus::SharedAppenderPtr appender:log.getAllAppenders()){
+    }else{
+	if(config.modules_accept){
+	    // drop all logs first
+	    FilterPtr filter_deny(new DenyAllFilter());
+	    for(log4cplus::SharedAppenderPtr appender:Logger::getRoot().getAllAppenders()){
 		appender->setFilter(filter_deny);
 	    }
+	    for(std::string logname:config.modules){
+		Logger log = Logger::getInstance(logname.c_str());
+		if(!AddAppender(log,config)){
+		    return false;
+		}
+		for(log4cplus::SharedAppenderPtr appender:log.getAllAppenders()){
+		  appender->setFilter(filter);
+		}
+	    }
+	}else{
+	    for(log4cplus::SharedAppenderPtr appender:Logger::getRoot().getAllAppenders()){
+		appender->setFilter(filter);
+	    }
+	    FilterPtr filter_deny(new DenyAllFilter());
+	    for(std::string logname:config.modules){
+		Logger log = Logger::getInstance(logname.c_str());
+		log.setAdditivity(false);
+		if(!AddAppender(log,config)){
+		    return false;
+		}
+		for(log4cplus::SharedAppenderPtr appender:log.getAllAppenders()){
+		    appender->setFilter(filter_deny);
+		}
+	    }
 	}
+      
     }
     return true;
 }
@@ -160,9 +170,8 @@ int main()
     Logger root = Logger::getRoot();
     //InitLog(true,"test.log",TRACE_LOG_LEVEL,WARN_LOG_LEVEL,"N");
     LogConfigure config;
+    config.file_path = "test";
     config.modules_accept = true;
-    config.modules.push_back("test");
-    config.modules.push_back("test2");
     InitLog(config);
     LOG4CPLUS_DEBUG(root, "This is a DEBUG message");
     LOG4CPLUS_INFO(root, "This is a INFO message");
