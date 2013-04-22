@@ -13,8 +13,8 @@ class JsonCpp : public PerfTest {
 public:
 	virtual void SetUp() {
 		PerfTest::SetUp();
-		//Reader reader;
-		//ASSERT_TRUE(reader.parse(json_, root_));
+		Reader reader;
+		ASSERT_TRUE(reader.parse(json_, root_));
 	}
 
 protected:

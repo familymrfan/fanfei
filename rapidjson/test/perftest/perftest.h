@@ -35,7 +35,7 @@ public:
 	virtual void SetUp() {
 		FILE *fp = fopen("data/glossary.json", "rb");
 		if (!fp)
-			fp = fopen("../../bin/data/glossary.json", "rb");
+			fp = fopen("../../../bin/data/glossary.json", "rb");
 		ASSERT_TRUE(fp != 0);
 
 		fseek(fp, 0, SEEK_END);
