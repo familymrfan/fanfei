@@ -77,11 +77,12 @@ TEST_F(RapidJson,TraverseDOM){
     for (size_t i = 0; i < kTrialCount; i++) {
         Document doc;
         doc.Parse<0>(json_);
-        std::cout<<Traverse(doc)<<std::endl;
+        //std::cout<<Traverse(doc)<<std::endl;
     }
 }
 
 TEST_F(RapidJson,Write){
+  for (size_t i = 0; i < kTrialCount; i++) {
     Value root;
     char sz[256]; 
     memset(sz,0,256);
@@ -102,7 +103,8 @@ TEST_F(RapidJson,Write){
     writer.EndArray();
     writer.EndObject();
     os.PutEnd(sz);
-    std::cout<<os.src_;
+  }
+  //  std::cout<<os.src_;
 }
 
 #endif // TEST_RAPIDJSON

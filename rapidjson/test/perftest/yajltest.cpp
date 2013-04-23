@@ -69,12 +69,13 @@ TEST_F(Yajl,Traverse){
     for (size_t i = 0; i < kTrialCount; i++) {
         yajl_val root = yajl_tree_parse(json_, NULL, 0);
         ASSERT_TRUE(root != NULL);
-        std::cout<<Traverse(root)<<std::endl;
+        //std::cout<<Traverse(root)<<std::endl;
         yajl_tree_free(root);
     }
 }
 
 TEST_F(Yajl,Write){
+  for (size_t i = 0; i < kTrialCount; i++) {
     yajl_gen g;
     g = yajl_gen_alloc(NULL);  
     yajl_gen_config(g, yajl_gen_beautify, 1);  
@@ -95,10 +96,10 @@ TEST_F(Yajl,Write){
     const unsigned char * buf;  
     size_t len;  
     yajl_gen_get_buf(g, &buf, &len);  
-    std::cout<<buf;
+    //std::cout<<buf;
     yajl_gen_clear(g);
-
     yajl_gen_free(g);
+  }
 }
 
 #endif // TEST_YAJL

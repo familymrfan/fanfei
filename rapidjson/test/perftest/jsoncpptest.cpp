@@ -50,11 +50,12 @@ TEST_F(JsonCpp,Traverse){
         Value root;
         Reader reader;
         ASSERT_TRUE(reader.parse(json_, root));
-        std::cout<<Traverse(root)<<std::endl;
+        //std::cout<<Traverse(root)<<std::endl;
     }
 }
 
 TEST_F(JsonCpp,Write){
+  for (size_t i = 0; i < kTrialCount; i++) {
     Value root;
     Json::StyledWriter writer;
     root["name"] = "fanfei";
@@ -65,7 +66,8 @@ TEST_F(JsonCpp,Write){
     root["love"].append("basketball");
     root["love"].append("music");
     std::string outputConfig = writer.write( root );
-    std::cout<<outputConfig;
+    //std::cout<<outputConfig;
+  }
 }
 
 #endif // TEST_JSONCPP

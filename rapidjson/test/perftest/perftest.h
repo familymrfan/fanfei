@@ -74,7 +74,7 @@ protected:
 	char *whitespace_;
 	size_t whitespace_length_;
 
-	static const size_t kTrialCount = 1;
+	static const size_t kTrialCount = 10000;
 };
 
 #endif // __cplusplus
