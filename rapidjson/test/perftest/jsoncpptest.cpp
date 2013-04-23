@@ -59,7 +59,7 @@ TEST_F(JsonCpp,Write){
     Value root;
     Json::StyledWriter writer;
     root["name"] = "fanfei";
-    root["name"].setComment("/*This is me!*/",commentAfterOnSameLine);
+    //root["name"].setComment("/*This is me!*/",commentAfterOnSameLine);
     root["age"] = 24;
     root["love"].append("game");
     root["love"].append("book");

@@ -33,9 +33,9 @@
 class PerfTest : public ::testing::Test {
 public:
 	virtual void SetUp() {
-		FILE *fp = fopen("data/glossary.json", "rb");
+		FILE *fp = fopen("data/menu.json", "rb");
 		if (!fp)
-			fp = fopen("../../../bin/data/glossary.json", "rb");
+			fp = fopen("../../../bin/data/menu.json", "rb");
 		ASSERT_TRUE(fp != 0);
 
 		fseek(fp, 0, SEEK_END);
@@ -74,7 +74,7 @@ protected:
 	char *whitespace_;
 	size_t whitespace_length_;
 
-	static const size_t kTrialCount = 10000;
+	static const size_t kTrialCount = 10;
 };
 
 #endif // __cplusplus

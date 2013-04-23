@@ -50,14 +50,14 @@ TEST_F(RapidJson, ReaderParseDOM) {
     }
 }
 
-TEST_F(RapidJson, ReaderParseSAX) {
+/*TEST_F(RapidJson, ReaderParseSAX) {
     for (size_t i = 0; i < kTrialCount; i++) {
         InsituStringStream s(json_);
         BaseReaderHandler<> h;
         Reader reader;
         reader.Parse<kParseInsituFlag>(s, h);
     }
-}
+}*/
 
 
 size_t Traverse(const Value& val) {

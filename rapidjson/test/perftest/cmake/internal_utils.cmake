@@ -49,7 +49,6 @@ macro(config_compiler_and_linker)
   if (NOT gtest_disable_pthreads)
     # Defines CMAKE_USE_PTHREADS_INIT and CMAKE_THREAD_LIBS_INIT.
     find_package(Threads)
-    message("------------------------------------------------------------")
   endif()
 
   fix_default_compiler_settings_()

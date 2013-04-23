@@ -26,7 +26,7 @@ protected:
 };
 
 
-TEST_F(Yajl, ReaderParseSAX) {
+/*TEST_F(Yajl, ReaderParseSAX) {
     for (size_t i = 0; i < kTrialCount; i++) {
         yajl_handle hand = yajl_alloc(NULL, NULL, NULL);
         yajl_config(hand, yajl_allow_comments, 1);
@@ -40,7 +40,7 @@ TEST_F(Yajl, ReaderParseSAX) {
         ASSERT_EQ(yajl_status_ok, stat);
         yajl_free(hand);
     }
-}
+}*/
 
 TEST_F(Yajl, ReaderParseDOM_yajl_tree_parse) {
     for (size_t i = 0; i < kTrialCount; i++) {
