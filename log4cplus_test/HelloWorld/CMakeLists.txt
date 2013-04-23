@@ -11,12 +11,14 @@ include_directories (${HelloWorld_SOURCE_DIR}/include
 		      ${HelloWorld_BINARY_DIR}/include
 		      )
 link_directories(${HelloWorld_SOURCE_DIR})
-		      
+
+# compiler and linker config
+include("internal.cmake")
+set_default_compiler_linker_config()  # Defined in internal.cmake.
+
+#log4cplus
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/log4cplus")
+
 add_executable(HelloWorld main.cpp)
 
-if(UNIX)
-	target_link_libraries(HelloWorld -llog4cplus)
-elseif (WIN32)
-	target_link_libraries(HelloWorld log4cplusUD.lib)
-endif()
-
+target_link_libraries(HelloWorld log4cplus)

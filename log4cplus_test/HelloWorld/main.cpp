@@ -1,4 +1,3 @@
-
 #include <list>
 #include <log4cplus/logger.h>
 #include <log4cplus/configurator.h>
@@ -30,33 +29,33 @@ enum class LogLevels{
 struct LogConfigure
 {
   LogConfigure():console(true),
-		file_path(""),
+		file_path(LOG4CPLUS_TEXT("")),
 		max_size(0),
 		min_level(LogLevels::kNotSet),
 		max_level(LogLevels::kNotSet),
-		match_string(""),
+		match_string(LOG4CPLUS_TEXT("")),
 		match_string_accept(true),
 		modules_accept(true){
       
   }
   bool console;
-  std::string file_path;
+  tstring file_path;
   int max_size;
   //filter
   LogLevels min_level;
   LogLevels max_level;
-  std::string match_string;
-  std::vector<std::string> modules;
+  tstring match_string;
+  std::vector<tstring> modules;
   bool match_string_accept;
   bool modules_accept;
 };
 
 bool InitLog(const LogConfigure& config);
 bool InitLog(bool console = true,
-	       const std::string& file_path="",
+	       const tstring& file_path=LOG4CPLUS_TEXT(""),
 	       LogLevels min_level=LogLevels::kNotSet,
 	       LogLevels max_level=LogLevels::kNotSet,
-	       const std::string& match_string=""
+	       const tstring& match_string=LOG4CPLUS_TEXT("")
 	      ){
     LogConfigure config;
     config.console = console;
@@ -70,13 +69,11 @@ bool InitLog(bool console = true,
 bool AddAppender(Logger log,const LogConfigure& config){
     if(config.console){
 	SharedAppenderPtr append(new ConsoleAppender());
-	append->setName("CONSOLE");
 	log.addAppender(append);
     }
     
     if(!config.file_path.empty()){
 	SharedAppenderPtr append(new RollingFileAppender(config.file_path.c_str()));
-	append->setName("ROLL");
 	log.addAppender(append);
     }
     
@@ -91,23 +88,23 @@ FilterPtr CreateFilter(const LogConfigure& config){
     LogLevelManager& llm = getLogLevelManager();
     Properties properties;
     if(config.min_level != LogLevels::kNotSet){
-      properties.setProperty("LogLevelMin", llm.toString(static_cast<LogLevel>(config.min_level)));
+      properties.setProperty(LOG4CPLUS_TEXT("LogLevelMin"), llm.toString(static_cast<LogLevel>(config.min_level)));
     }
     if(config.max_level != LogLevels::kNotSet){
-      properties.setProperty("LogLevelMax", llm.toString(static_cast<LogLevel>(config.max_level)));
+      properties.setProperty(LOG4CPLUS_TEXT("LogLevelMax"), llm.toString(static_cast<LogLevel>(config.max_level)));
     }
-    properties.setProperty("AcceptOnMatch", "false");
+    properties.setProperty(LOG4CPLUS_TEXT("AcceptOnMatch"), LOG4CPLUS_TEXT("false"));
     FilterPtr filter_level(new LogLevelRangeFilter(properties));
     FilterPtr filter_deny(new DenyAllFilter());
     if(!config.match_string.empty()){
-    properties.setProperty("StringToMatch",config.match_string.c_str());
+    properties.setProperty(LOG4CPLUS_TEXT("StringToMatch"), config.match_string.c_str());
     if(config.match_string_accept){
-	properties.setProperty("AcceptOnMatch", "true");
+	properties.setProperty(LOG4CPLUS_TEXT("AcceptOnMatch"), LOG4CPLUS_TEXT("true"));
 	FilterPtr filter_string(new StringMatchFilter(properties));
 	filter_level->appendFilter(filter_string);
 	filter_string->appendFilter(filter_deny);
       }else{
-	properties.setProperty("AcceptOnMatch", "false");
+	properties.setProperty(LOG4CPLUS_TEXT("AcceptOnMatch"), LOG4CPLUS_TEXT("false"));
 	FilterPtr filter_string(new StringMatchFilter(properties));
 	filter_level->appendFilter(filter_string);
       }
@@ -135,7 +132,7 @@ bool InitLog(const LogConfigure& config){
 	    for(log4cplus::SharedAppenderPtr appender:Logger::getRoot().getAllAppenders()){
 		appender->setFilter(filter_deny);
 	    }
-	    for(std::string logname:config.modules){
+	    for(tstring logname:config.modules){
 		Logger log = Logger::getInstance(logname.c_str());
 		if(!AddAppender(log,config)){
 		    return false;
@@ -149,7 +146,7 @@ bool InitLog(const LogConfigure& config){
 		appender->setFilter(filter);
 	    }
 	    FilterPtr filter_deny(new DenyAllFilter());
-	    for(std::string logname:config.modules){
+	    for(tstring logname:config.modules){
 		Logger log = Logger::getInstance(logname.c_str());
 		log.setAdditivity(false);
 		if(!AddAppender(log,config)){
@@ -170,29 +167,29 @@ int main()
     Logger root = Logger::getRoot();
     //InitLog(true,"test.log",TRACE_LOG_LEVEL,WARN_LOG_LEVEL,"N");
     LogConfigure config;
-    config.file_path = "test";
+    config.file_path = LOG4CPLUS_TEXT("test");
     config.modules_accept = true;
     InitLog(config);
-    LOG4CPLUS_DEBUG(root, "This is a DEBUG message");
-    LOG4CPLUS_INFO(root, "This is a INFO message");
-    LOG4CPLUS_WARN(root, "This is a WARN message");
-    LOG4CPLUS_ERROR(root, "This is a ERROR message");
-    LOG4CPLUS_FATAL(root, "This is a FATAL message");
+    LOG4CPLUS_DEBUG(root, LOG4CPLUS_TEXT("This is a DEBUG message"));
+    LOG4CPLUS_INFO(root, LOG4CPLUS_TEXT("This is a INFO message"));
+    LOG4CPLUS_WARN(root, LOG4CPLUS_TEXT("This is a WARN message"));
+    LOG4CPLUS_ERROR(root, LOG4CPLUS_TEXT("This is a ERROR message"));
+    LOG4CPLUS_FATAL(root, LOG4CPLUS_TEXT("This is a FATAL message"));
     
     std::thread t([]{
     for(int i=0;i<100;i++){
-      Logger test = Logger::getInstance("test");
-      LOG4CPLUS_DEBUG(test, "This is a child DEBUG message");
-      LOG4CPLUS_INFO(test, "This is a child INFO message");
-      LOG4CPLUS_WARN(test, "This is a child WARN message");
-      LOG4CPLUS_ERROR(test, "This is a child ERROR message");
-      LOG4CPLUS_FATAL(test, "This is a child FATAL message");
+      Logger test = Logger::getInstance(LOG4CPLUS_TEXT("test"));
+      LOG4CPLUS_DEBUG(test, LOG4CPLUS_TEXT("This is a child DEBUG message"));
+      LOG4CPLUS_INFO(test, LOG4CPLUS_TEXT("This is a child INFO message"));
+      LOG4CPLUS_WARN(test, LOG4CPLUS_TEXT("This is a child WARN message"));
+      LOG4CPLUS_ERROR(test, LOG4CPLUS_TEXT("This is a child ERROR message"));
+      LOG4CPLUS_FATAL(test, LOG4CPLUS_TEXT("This is a child FATAL message"));
     }
     });
     
     std::thread t2([]{
     for(int i=0;i<100;i++){
-      Logger test2 = Logger::getInstance("test2");
+      Logger test2 = Logger::getInstance(LOG4CPLUS_TEXT("test2"));
       LOG4CPLUS_DEBUG(test2, "This is a child2 DEBUG message");
       LOG4CPLUS_INFO(test2, "This is a child2 INFO message");
       LOG4CPLUS_WARN(test2, "This is a child2 WARN message");
