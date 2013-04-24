@@ -2,18 +2,6 @@ project (log4cplus)
 
 include(ConfigureChecks.cmake)
 
-find_package (Threads)
-message (STATUS "Threads: ${CMAKE_THREAD_LIBS_INIT}")
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/log4cplus/config.h.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/include/log4cplus/config.h @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/log4cplus/config/defines.hxx.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/include/log4cplus/config/defines.hxx @ONLY)
-
-include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include
-                     ${CMAKE_CURRENT_BINARY_DIR}/include
-                    )
-
 set (log4cplus_sources
   appenderattachableimpl.cxx
   appender.cxx
