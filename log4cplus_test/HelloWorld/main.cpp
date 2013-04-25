@@ -67,18 +67,27 @@ bool InitLog(bool console = true,
 }
 
 bool AddAppender(Logger log,const LogConfigure& config){
+    if(!log.getAllAppenders().empty()){
+        log.removeAllAppenders();
+    }
     if(config.console){
-	SharedAppenderPtr append(new ConsoleAppender());
-	log.addAppender(append);
+        SharedAppenderPtr append(new ConsoleAppender());
+        log.addAppender(append);
     }
-    
+
     if(!config.file_path.empty()){
-	SharedAppenderPtr append(new RollingFileAppender(config.file_path.c_str()));
-	log.addAppender(append);
+        SharedAppenderPtr append(new RollingFileAppender(config.file_path));
+        log.addAppender(append);
     }
-    
+    //layout ,we doesn't support custom layout
+    //PatternLayout Detailed Description http://log4cplus.sourceforge.net/docs/html/classlog4cplus_1_1PatternLayout.html
+    for(log4cplus::SharedAppenderPtr appender:log.getAllAppenders()){
+        log4cplus::tstring pattern = LOG4CPLUS_TEXT("%d{%y/%m/%d %H:%M:%S,%Q} [%t][%i] %-5p %m [%c:%L]%n");
+        appender->setLayout( std::auto_ptr<Layout>(new PatternLayout(pattern)) );
+    }
+
     if(log.getAllAppenders().empty()){
-	return false;
+        return false;
     }
     return true;
 }
