@@ -8,6 +8,7 @@ set_default_compiler_linker_config()  # Defined in internal.cmake.
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/docs/samples")
 add_executable(PugiTest main.cpp)
 
 target_link_libraries(PugiTest pugi)
