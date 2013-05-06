@@ -12,10 +12,10 @@
 #define GOOGLE_NAMESPACE ::google
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
-/* #undef HAVE_DLFCN_H */
+#define HAVE_DLFCN_H 1
 
 /* Define to 1 if you have the <fnmatch.h> header file. */
-/* #undef HAVE_FNMATCH_H */
+#define HAVE_FNMATCH_H 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
@@ -45,7 +45,7 @@
 #define HAVE_STRTOLL 1
 
 /* Define to 1 if you have the `strtoq' function. */
-/* #undef HAVE_STRTOQ */
+#define HAVE_STRTOQ 1
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #define HAVE_SYS_STAT_H 1
