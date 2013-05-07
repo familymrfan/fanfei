@@ -78,6 +78,7 @@
 #ifndef BASE_COMMANDLINEFLAGS_H_
 #define BASE_COMMANDLINEFLAGS_H_
 
+#include "config.h"
 #include <string>
 #include <vector>
 #include <gflags/gflags_declare.h>    // IWYU pragma: export

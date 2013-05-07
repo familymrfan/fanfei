@@ -4,6 +4,7 @@
 //#define STRIP_FLAG_HELP 1
 #include "gflags/gflags.h"
 #include "stdint.h"
+#include <stdlib.h>
 
 using namespace GOOGLE_NAMESPACE;
 
@@ -17,7 +18,9 @@ static bool ValidatePort(const char* flagname, int32_t value) {
     return false;
 }
 
-//DEFINE_string(q, "", "What port to listen on");
+DEFINE_string(name, "", "What port to listen on");
+DEFINE_string(q, "", "What port to listen on");
+DEFINE_string(p, "", "What port to listen on");
 DEFINE_int32(port, 10, "What port to listen on");
 static const bool port_dummy = RegisterFlagValidator(&FLAGS_port, &ValidatePort);
 
@@ -26,13 +29,26 @@ static const bool port_dummy = RegisterFlagValidator(&FLAGS_port, &ValidatePort)
 int main(int argc, char* argv[]){
     std::cout<<FLAGS_languages<<std::endl;
     std::cout<<FLAGS_port<<std::endl;
-    SetCommandLineOption("port","20");
+    {
+      FlagSaver fs;
+      SetCommandLineOption("port","20");
+      std::cout<<FLAGS_port<<std::endl;
+      SetCommandLineOption("port","0");
+      std::cout<<FLAGS_port<<std::endl;
+    }
     std::cout<<FLAGS_port<<std::endl;
-    SetCommandLineOption("port","0");
-    std::cout<<FLAGS_port<<std::endl;
-    //FLAGS_q = "heihei";
+    FLAGS_q = "heihei";
+    
+    // set environment
+    setenv("FLAGS_name","fanfei",false);
+    
     ParseCommandLineFlags(&argc, &argv, true);
-    //std::cout<<FLAGS_q<<std::endl;
+    std::cout<<FLAGS_q<<std::endl;
+    std::cout<<FLAGS_p<<std::endl;
+    std::cout<<FLAGS_name<<std::endl;
+    
+    SetUsageMessage("happy every day");
+    std::cout<<ProgramUsage()<<std::endl;
     getchar();
     return 0;
 }
