@@ -8,11 +8,13 @@ set_default_compiler_linker_config()  # Defined in internal.cmake.
 
 add_definitions(-DBOOST_ALL_NO_LIB)
 
+set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/boost)
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost/libs/date_time)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost/libs/regex)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost/libs/system)
 
-include_directories (${CMAKE_CURRENT_SOURCE_DIR})
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
 add_executable(AsioTest main.cpp)
 
