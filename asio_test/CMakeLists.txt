@@ -6,7 +6,7 @@ project (AsioTest)
 include("internal.cmake")
 set_default_compiler_linker_config()  # Defined in internal.cmake.
 
-add_definitions(-DBOOST_ALL_NO_LIB)
+add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_EXCEPTION_DISABLE)
 
 set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
