@@ -18,4 +18,11 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
 add_executable(AsioTest main.cpp)
 
-target_link_libraries(AsioTest boost_date_time boost_regex boost_system)
+set(ASIO_LIBS boost_date_time boost_regex boost_system)
+
+if(UNIX)
+message("add pthread on linux")
+set(ASIO_LIBS ${ASIO_LIBS} pthread)
+endif()
+
+target_link_libraries(AsioTest ${ASIO_LIBS})
