@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 
-project (AsioTest)
+project (BaicSkill)
 
 # compiler and linker config
 include("internal.cmake")
@@ -16,7 +16,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boost/libs/system)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/boost)
 
-add_executable(AsioTest main.cpp)
+add_executable(BaicSkill main.cpp)
 
 set(ASIO_LIBS boost_date_time boost_regex boost_system)
 
@@ -25,4 +25,4 @@ message("add pthread on linux")
 set(ASIO_LIBS ${ASIO_LIBS} pthread)
 endif()
 
-target_link_libraries(AsioTest ${ASIO_LIBS})
+target_link_libraries(BaicSkill ${ASIO_LIBS})
