@@ -18,8 +18,6 @@ public:
 		return hwnd_;
 	}
 protected:
-	std::wstring class_name_;
-	std::wstring window_caption_;
 	DWORD dwStyle_;
 	Proc proc_;
 private:

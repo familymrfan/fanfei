@@ -8,7 +8,6 @@ class Controller
 {
 public:
 	Controller();
-	LRESULT RunLoop();
 
 private:
 	Model model_;

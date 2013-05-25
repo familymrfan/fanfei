@@ -37,16 +37,3 @@ Controller::Controller(){
 	::ShowWindow(model_.GetHwnd(),SW_SHOW);
 	::UpdateWindow(model_.GetHwnd());
 }
-
-LRESULT Controller::RunLoop(){
-	MSG  msg;
-	int status;
-	while ((status = ::GetMessage (&msg, 0, 0, 0)) != 0)
-	{
-		if (status == -1)
-			return false;
-		::TranslateMessage (&msg);
-		::DispatchMessage (&msg);
-	}
-	return msg.wParam;
-}
