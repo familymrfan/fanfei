@@ -15,7 +15,7 @@ struct MV{
 std::shared_ptr<MV> mv = nullptr;
 } // namespace
 
-Controller::Controller(){
+void Controller::Generate(){
 	model_.AddProc([](
 		HWND hwnd,
 		UINT uMsg,

@@ -2,7 +2,8 @@
 #include "controller.h"
 
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow){
-	Controller controller1;
+	Controller c;
+	c.Generate();
 	MSG  msg;
 	int status;
 	while ((status = ::GetMessage (&msg, 0, 0, 0)) != 0)

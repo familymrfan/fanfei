@@ -7,8 +7,7 @@
 class Controller
 {
 public:
-	Controller();
-
+	void Generate();
 private:
 	Model model_;
 	View view_;
