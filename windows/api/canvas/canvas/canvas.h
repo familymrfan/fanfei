@@ -45,7 +45,7 @@ class PaintCanvas :public Canvas
 {
 public:
 	PaintCanvas(HWND hwnd)
-		: Canvas(::BeginPaint(hwnd,&ps_)){
+		:hwnd_(hwnd),Canvas(::BeginPaint(hwnd_,&ps_)){
 
 	}
 
