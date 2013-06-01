@@ -16,6 +16,7 @@ public:
 		auto old_brush = ::SelectObject(hdc_,brush);
 		::Pie(hdc_,x,y,x + width,y + height,x1,y1,x2,y2);
 		::SelectObject(hdc_,old_brush);
+		::DeleteObject(brush);
 	}
 
 	void DrawRound(int x,int y,int width,int height,COLORREF color = RGB(0,0,0)){
@@ -23,6 +24,7 @@ public:
 		auto old_brush = ::SelectObject(hdc_,brush);
 		::Ellipse(hdc_,x, y, x + width, y + height);
 		::SelectObject(hdc_,old_brush);
+		::DeleteObject(brush);
 	}
 
 	void DrawRect(int x,int y,int width,int height,COLORREF color = RGB(0,0,0)){
@@ -30,6 +32,7 @@ public:
 		auto old_brush = ::SelectObject(hdc_,brush);
 		::Rectangle (hdc_, x, y, x + width, y + height);
 		::SelectObject(hdc_,old_brush);
+		::DeleteObject(brush);
 	}
 
 	void DrawText(std::wstring text,int x,int y){
