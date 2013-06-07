@@ -8,8 +8,7 @@ class Stack
 {
 	enum { DEFAULT_SIZE = 100 };
 public:
-	template <class TypeObj>
-	friend	ostream& operator<<(ostream& os,TypeObj& object);
+	friend	ostream& operator<< <Type>(ostream& os,Stack<Type>& object);
 
 	Stack(int size = DEFAULT_SIZE) {
 		top_ = data_ = (Type*)malloc(size*sizeof(Type));
@@ -77,7 +76,7 @@ private:
 };
 
 template <class Type>
-ostream& operator<<(ostream& os,Type& object) {
+ostream& operator<<(ostream& os,Stack<Type>& object) {
 	object.Print();
 	return os;
 }
