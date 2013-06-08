@@ -47,14 +47,14 @@ public:
 		*++top_ = data;
 	}
 
-	void Pop(Type data) {
+	void Pop() {
 		if(length_ == 0) {
 			return ;
 		}
 		length_--;
 		top_--;
-		if(length_ < size_/2) {
-			data_ = (Type*)realloc(data_,length_*sizeof(Type));
+		if(top_ < data_) {
+			top_ = data_;
 		}
 	}
 
