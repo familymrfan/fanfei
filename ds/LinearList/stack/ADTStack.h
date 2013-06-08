@@ -13,6 +13,7 @@ public:
 	Stack(int size = DEFAULT_SIZE) {
 		top_ = data_ = (Type*)malloc(size*sizeof(Type));
 		size_ = size;
+		pre_size_ = 0;
 		length_ = 0;
 	}	
 
@@ -42,23 +43,38 @@ public:
 
 	void Push(Type data) {
 		if(++length_>size_) {
-			data_ = (Type*)realloc(data_,(size_+DEFAULT_SIZE)*sizeof(Type));
+			pre_size_ = size_;
+			size_ += DEFAULT_SIZE;
+			data_ = (Type*)realloc(data_,size_*sizeof(Type));
+			top_  = data_ + length_-1;
+		} else {
+			top_++;
 		}
-		*++top_ = data;
+		*top_ = data;
 	}
 
 	void Pop() {
-		if(length_ == 0) {
+		if (length_ == 0) {
 			return ;
 		}
 		length_--;
 		top_--;
-		if(top_ < data_) {
+		if (length_ == 0) {
 			top_ = data_;
+			return ;
+		}
+		if (length_ < pre_size_) {
+			size_ = pre_size_;
+			pre_size_ -= DEFAULT_SIZE;
+			if (pre_size_ < 0) {
+				pre_size_ = 0;
+			}
+			data_ = (Type*)realloc(data_,(size_)*sizeof(Type));
+			top_ = data_ + length_-1;
 		}
 	}
 
-	
+	int size_;
 protected:
 	void Print() {
 		Type* it = top_;
@@ -72,7 +88,8 @@ private:
 	Type *top_;
 	Type *data_;
 	int length_;
-	int size_;
+	
+	int pre_size_;
 };
 
 template <class Type>
