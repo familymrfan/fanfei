@@ -2,3 +2,5 @@ build
 *.sln
 *.o
 .gitignore
+.kdev4
+.*~
