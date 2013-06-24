@@ -1,57 +1,63 @@
 #include <iostream>
 using namespace std;
 
-class Scanner
+class Builder
 {
 public:
-  void Scan() {
-      cout<< "词法分析"<<endl;
-  }
+    virtual void BuildHead() = 0;
+    virtual void BuildBody() = 0;
+    virtual void BuildLeftArm() = 0;  
+    virtual void BuildRightArm() = 0; 
+    virtual void BuildLeftLeg() = 0;
+    virtual void BuildRightLeg() = 0; 
 };
 
-class Parser
-{
-public:
-    void Parse() {
-	cout<<"语法分析"<<endl;
-    }
+class ThinBuilder : public Builder  
+{  
+public:  
+    void BuildHead() { cout<<"build thin body"<<endl; }  
+    void BuildBody() { cout<<"build thin head"<<endl; }  
+    void BuildLeftArm() { cout<<"build thin leftarm"<<endl; }  
+    void BuildRightArm() { cout<<"build thin rightarm"<<endl; }  
+    void BuildLeftLeg() { cout<<"build thin leftleg"<<endl; }  
+    void BuildRightLeg() { cout<<"build thin rightleg"<<endl; }  
+}; 
+
+class FatBuilder : public Builder  
+{  
+public:  
+    void BuildHead() { cout<<"build fat body"<<endl; }  
+    void BuildBody() { cout<<"build fat head"<<endl; }  
+    void BuildLeftArm() { cout<<"build fat leftarm"<<endl; }  
+    void BuildRightArm() { cout<<"build fat rightarm"<<endl; }  
+    void BuildLeftLeg() { cout<<"build fat leftleg"<<endl; }  
+    void BuildRightLeg() { cout<<"build fat rightleg"<<endl; }  
 };
 
-class GenMidCode
+class Director
 {
+private:
+    Builder *builder_;
 public:
-    void GenCode() {
-      cout<<"产生中间代码"<<endl;
+    Director(Builder *builder):builder_(builder) {
+
+    }
+
+    void Create() {
+        builder_->BuildHead();
+        builder_->BuildBody();
+        builder_->BuildLeftArm();
+        builder_->BuildRightArm();
+        builder_->BuildLeftLeg();
+        builder_->BuildRightLeg();
     }
 };
-
-class GenMachineCode
-{
-public:
-    void GenCode() {
-	cout<<"产生机器代码"<<endl;
-    }
-};
-
-class Compiler
-{
-public:
-    void Run() {
-	Scanner scanner;
-	scanner.Scan();
-	Parser parser;
-	parser.Parse();
-	GenMidCode midcode;
-	midcode.GenCode();
-	GenMachineCode machneCode;
-	machneCode.GenCode();
-    }
-};  
-
 
 int main() {
-    Compiler compiler;
-    compiler.Run();
+    FatBuilder fat;
+    Director director(&fat);
+    director.Create();
+    system("pause");
     return 0;
 }
     
