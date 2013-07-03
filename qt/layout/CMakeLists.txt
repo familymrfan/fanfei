@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-PROJECT(HelloQt)
+PROJECT(layout)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -10,7 +10,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5Widgets)
 
 # Tell CMake to create the helloworld executable
-add_executable(HelloQt main.cpp)
+add_executable(layout main.cpp)
 
 # Use the Widgets module from Qt 5.
-qt5_use_modules(HelloQt Widgets)
+qt5_use_modules(layout Widgets)
