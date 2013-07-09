@@ -44,7 +44,7 @@ public:
     }
 
     int32_t ChildrenNum() const {
-        return children_.size();
+        return (int32_t)children_.size();
     }
     
     virtual void SetParent(Widget* widget) {
@@ -76,7 +76,6 @@ public:
         } else {
             layer_.push_back(layout);
         }
-        Update();
     }
 
     virtual int32_t Width() const {
@@ -87,7 +86,7 @@ public:
         return fake_widget_->height();
     }
 
-public slots:
+public:
     void Update() {
         if(layer_.size() > 0) {
             layer_[0]->SetGeometry(0, 0, Width(), Height());

@@ -20,7 +20,7 @@ public:
     }
 public slots:
     void Update() {
-	widget_->Update();
+	    widget_->Update();
     }
     
 private:

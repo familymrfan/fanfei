@@ -3,11 +3,16 @@
 
 #include "widget.h"
 #include "layout.h"
+#include <algorithm>
 
 namespace ui
 {
 class BoxLayout:public Layout
 {
+public:
+    virtual void AddItem(LayoutItem *item) {
+        Layout::AddItem(item);
+    }
 protected:
     virtual void Update()  {
         auto iter = layout_items_.begin();
@@ -15,28 +20,30 @@ protected:
             LayoutItem *item = *iter;
             
             //¾ÓÖÐ
-            int32_t width = item->PreferSize().width_, height = item->PreferSize().height_;
+            int32_t width = std::min(item->PreferSize().width_, Width()), height = std::min(item->PreferSize().height_, Height());
             int32_t x = (Width() - width)/2, y = (Height() - height)/2;
             
             if(item->IsValidGap(LayoutItem::kWestValid) && item->IsValidGap(LayoutItem::kEastValid)) {
                 x = X() + item->WestSpace();
                 width = Width() - item->EastSpace() - item->WestSpace();
-            } else if(item->IsValidGap(LayoutItem::kWestValid)) {
-                x = X() + item->WestSpace();
-                width = item->PreferSize().width_;
-            } else if(item->IsValidGap(LayoutItem::kEastValid)) {
-                width = item->PreferSize().width_;
-                x = X() + Width() - item->EastSpace() - width;
+            } else {
+                if(item->IsValidGap(LayoutItem::kWestValid)) {
+                    width = std::min(item->PreferSize().width_, Width() - item->WestSpace());
+                    x = X() + item->WestSpace();
+                } else if(item->IsValidGap(LayoutItem::kEastValid)) {
+                    width = std::min(item->PreferSize().width_, Width() - item->EastSpace());
+                    x = X() + Width() - item->EastSpace() - width;
+                }
             }
 
             if(item->IsValidGap(LayoutItem::kNorthValid) && item->IsValidGap(LayoutItem::kSouthValid)) {
                 y = Y() + item->NorthSpace();
                 height = Height() - item->NorthSpace() - item->SouthSpace();
             } else if(item->IsValidGap(LayoutItem::kNorthValid)) {
+                height = std::min(item->PreferSize().height_, Height() - item->NorthSpace());
                 y = Y() + item->NorthSpace();
-                height = item->PreferSize().height_;
             } else if(item->IsValidGap(LayoutItem::kSouthValid)) {
-                height = item->PreferSize().height_;
+                height = std::min(item->PreferSize().height_, Height() - item->SouthSpace());
                 y = Y() + Height() - item->SouthSpace() - height;
             }
 
