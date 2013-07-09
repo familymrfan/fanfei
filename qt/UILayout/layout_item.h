@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+namespace ui
+{
+
 class LayoutItem
 {
 public:
@@ -103,23 +106,42 @@ public:
         return south_space_;
     }
 
-    virtual void SetCoordinate(int32_t x, int32_t y) {
+    // 实际布局与大小
+    virtual void Move(int32_t x, int32_t y) {
         x_ = x;
         y_ = y;
     }
 
-    virtual void SetSize(int32_t width, int32_t height) {
+    virtual void ReSize(int32_t width, int32_t height) {
         size_ = Size(width, height);
     }
 
-    virtual void SetSize(const Size& size) {
+    virtual void ReSize(const Size& size) {
         size_ = size;
     }
 
     virtual void SetGeometry(int32_t x, int32_t y, int32_t width, int32_t height) {
-        SetCoordinate(x, y);
-        SetSize(width, height);
+        Move(x, y);
+        ReSize(width, height);
     }
+
+    virtual int32_t X() const {
+        return x_;
+    }
+
+    virtual int32_t Y() const {
+        return y_;
+    }
+
+    virtual int32_t Width() const {
+        return size_.width_;
+    }
+
+    virtual int32_t Height() const {
+        return size_.height_;
+    }
+
+    virtual void Update() = 0;
 protected:
     LayoutItem():
                 west_space_(0),
@@ -145,4 +167,5 @@ protected:
     Size size_;
 };
 
+} // namespace ui
 #endif

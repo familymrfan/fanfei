@@ -12,6 +12,6 @@ namespace ui
            fake_widget_ = new QWidget;
         }
     };
-} // namespace UI
+} // namespace ui
 
 #endif
