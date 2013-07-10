@@ -1,6 +1,8 @@
 #ifndef LAYOUT_ITEM_LIMITED_SIZE_H_
 #define LAYOUT_ITEM_LIMITED_SIZE_H_
 
+namespace ui
+{
 class LayoutItemLimitedSize
 {
 public:
@@ -86,5 +88,5 @@ protected:
     //最大最小状态
     int32_t limited_status_;
 };
-
+} // namespace ui
 #endif

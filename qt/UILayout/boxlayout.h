@@ -89,8 +89,48 @@ public:
         }
         return Size(max_width, max_height);
     }
+
+    virtual Size PreferSize() const  override {
+        int32_t min_width = 0, width = 0, min_height = 0, height = 0;
+        auto iter = layout_items_.begin();
+        while(iter != layout_items_.end()) {
+            LayoutItem *item = *iter;
+            min_width = width;
+            if(item->IsValidGap(LayoutItem::kWestValid) && !item->IsValidGap(LayoutItem::kEastValid)) {
+                width = item->PreferSize().width_ + item->EastSpace() + item->WestSpace();
+            } else if(item->IsValidGap(LayoutItem::kWestValid)){
+                width = item->PreferSize().width_ + item->WestSpace();
+            } else if(item->IsValidGap(LayoutItem::kEastValid)) {
+                width = item->PreferSize().width_ + item->EastSpace();
+            } else {
+                width = item->PreferSize().width_;
+            }
+
+            if(width > min_width) {
+                min_width = width;
+            }
+
+            min_height = height;
+            if(item->IsValidGap(LayoutItem::kNorthValid) && !item->IsValidGap(LayoutItem::kSouthValid)) {
+                height = item->PreferSize().height_ + item->NorthSpace() + item->EastSpace();
+            } else if(item->IsValidGap(LayoutItem::kNorthValid)){
+                height = item->PreferSize().height_ + item->NorthSpace();
+            } else if(item->IsValidGap(LayoutItem::kSouthValid)) {
+                height = item->PreferSize().height_ + item->SouthSpace();
+            } else {
+                height = item->PreferSize().height_;
+            }
+
+            if(height > min_height) {
+                min_height = height;
+            }
+
+            iter++;
+        }
+        return Size(min_width, min_height);
+    }
 protected:
-    virtual void Update()  {
+    virtual void Update() override {
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
             LayoutItem *item = *iter;

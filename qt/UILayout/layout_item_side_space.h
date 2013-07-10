@@ -1,6 +1,8 @@
 #ifndef LAYOUT_ITEM_SIDE_SPACE_H_
 #define LAYOUT_ITEM_SIDE_SPACE_H_
 
+namespace ui
+{
 class LayoutItemSideSpace
 {
 public:
@@ -86,5 +88,5 @@ protected:
     int32_t south_space_;
     int32_t gap_valid_;
 };
-
+} // namespace ui
 #endif

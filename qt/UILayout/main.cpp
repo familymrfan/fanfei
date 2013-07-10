@@ -2,6 +2,7 @@
 #include <QLayout>
 
 #include "boxlayout.h"
+#include "hboxlayout.h"
 #include "ywindow.h"
 #include "button.h"
 

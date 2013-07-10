@@ -35,6 +35,11 @@ public:
         }
     }
 
+    virtual LayoutItem* ItemAt(int32_t  index) const {
+        if(index < 0 || index > layout_items_.size())
+            return nullptr;
+        return layout_items_[index];
+    }
 protected:
     virtual void SetGeometry(int32_t x, int32_t y, int32_t width, int32_t height) override {
         LayoutItem::SetGeometry(x, y, width, height);

@@ -4,12 +4,14 @@
 #include <stdint.h>
 #include "layout_item_side_space.h"
 #include "layout_item_limited_size.h"
+#include "layout_item_capacity_alloc.h"
 
 namespace ui
 {
 
 class LayoutItem : public LayoutItemSideSpace, 
-                   public LayoutItemLimitedSize
+                   public LayoutItemLimitedSize,
+                   public LayoutItemCapacityAlloc
 {
 public:
     virtual ~LayoutItem() {}
