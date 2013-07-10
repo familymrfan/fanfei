@@ -9,18 +9,13 @@ class Timer: public QObject
     Q_OBJECT
 public:
     Timer(ui::Widget* widget) {
-	widget_ = widget;
+        widget_ = widget;
       
     }
-  
-    
-    
-    virtual ~Timer() {
-      
-    }
+
 public slots:
     void Update() {
-	    widget_->Update();
+        widget_->Update();
     }
     
 private:

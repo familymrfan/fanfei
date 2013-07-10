@@ -16,24 +16,49 @@ int main(int argc, char *argv[])
 
     ui::Window win;
     win.SetGeometry(100, 100, 400, 500);
-    win.Show();
-
+    
+    /* BOX 
     ui::Button btn;
     win.AddChild(&btn);
-    btn.SetWestSpace(10);
-    btn.SetNorthSpace(50);
-    btn.SetLimitedMinSize(ui::LayoutItem::Size(1000, 50));
-    btn.SetText("Mr Fan");
-    btn.Show();
+    btn.SetText("outside");
+    btn.SetNorthSpace(0);
+    btn.SetSouthSpace(0);
+    btn.SetWestSpace(0);
+    btn.SetEastSpace(0);
+
+    ui::Button btn2;
+    btn.AddChild(&btn2);
+    btn2.SetText("inside");
+    btn2.SetNorthSpace(0);
+    btn2.SetSouthSpace(200);
+    btn2.SetWestSpace(0);
+    btn2.SetEastSpace(200);
+    
+    ui::Button btn3;
+    btn2.AddChild(&btn3);
+    btn3.SetText("inside inside");
 
     ui::BoxLayout layout;
     layout.AddItem(&btn);
-    
+    ui::BoxLayout layout2;
+    layout2.AddItem(&btn2);
+    btn.SetLayout(&layout2);
+    ui::BoxLayout layout3;
+    layout3.AddItem(&btn3);
+    btn2.SetLayout(&layout3);
+
     win.SetLayout(&layout);
     win.Update();
+    
+    btn3.Show();
+    btn2.Show();
+    btn.Show();*/
 
+    win.Show();
+
+
+    /* Ä£Äâ onsize */
     Timer c(&win);
-
     QTimer *timer = new QTimer;
     QObject::connect(timer, SIGNAL(timeout()), &c, SLOT(Update()));
     timer->start(500);
