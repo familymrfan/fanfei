@@ -26,6 +26,7 @@ public:
         int32_t width_;
         int32_t height_;
     };
+
     /* Æ«ºÃ´óĞ¡ */
     virtual void SetPreferSize(int32_t width, int height) {
         prefer_size_ = Size(width, height);
@@ -55,8 +56,9 @@ public:
         return limited_min_size_;
     }
 
-    virtual void SetStatus(LimitedSizeStatus status, bool valid = true) {
+    virtual void SetLimitedStatus(LimitedSizeStatus status, bool valid = true) {
         if(valid) {
+            limited_status_ &= ~4;
             limited_status_ |= status;
         }
         else {
@@ -64,7 +66,7 @@ public:
         }
     }
 
-    virtual bool IsValidStatus(LimitedSizeStatus status) const {
+    virtual bool IsValidLimitedStatus(LimitedSizeStatus status) const {
         return (limited_status_ & status) == status && (limited_status_ & 4) == (status & 4);
     }
 

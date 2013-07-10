@@ -22,11 +22,8 @@ public:
     }
 
     virtual void ReSize(int32_t width, int32_t height) {
-        size_ = Size(width, height);
-    }
-
-    virtual void ReSize(const Size& size) {
-        size_ = size;
+        width_ = width;
+        height_ = height;
     }
 
     virtual int32_t X() const {
@@ -38,11 +35,11 @@ public:
     }
 
     virtual int32_t Width() const {
-        return size_.width_;
+        return width_;
     }
 
     virtual int32_t Height() const {
-        return size_.height_;
+        return height_;
     }
 
     virtual void SetGeometry(int32_t x, int32_t y, int32_t width, int32_t height) {
@@ -50,12 +47,18 @@ public:
         ReSize(width, height);
     }
 protected:
-    LayoutItem() {}
+    LayoutItem():x_(0),
+                 y_(0),
+                 width_(0),
+                 height_(0) {
+
+    }
 
     //实际布局与大小
     int32_t x_;
     int32_t y_;
-    Size size_;
+    int32_t width_;
+    int32_t height_;
 };
 
 } // namespace ui

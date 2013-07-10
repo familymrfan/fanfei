@@ -8,7 +8,7 @@
 #include <QTimer>
 #include <QObject>
 #include "timer.h"
-
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
@@ -20,13 +20,16 @@ int main(int argc, char *argv[])
 
     ui::Button btn;
     win.AddChild(&btn);
+    btn.SetWestSpace(10);
+    btn.SetNorthSpace(50);
+    btn.SetLimitedMinSize(ui::LayoutItem::Size(1000, 50));
     btn.SetText("Mr Fan");
     btn.Show();
 
     ui::BoxLayout layout;
     layout.AddItem(&btn);
-    win.SetLayout(&layout);
     
+    win.SetLayout(&layout);
     win.Update();
 
     Timer c(&win);

@@ -8,6 +8,7 @@
 #include <vector>
 #include <QTimer>
 #include <QObject>
+#include <QMessageBox>
 
 namespace ui
 {
@@ -29,8 +30,7 @@ public:
 
     virtual void RemoveChild(Widget* widget) {
         auto iter = children_.begin();
-        while (iter != children_.end())
-        {
+        while (iter != children_.end()) {
             if(*iter == widget) {
                 children_.erase(iter);
                 break;
@@ -40,6 +40,8 @@ public:
     }
     
     Widget* ChildAt(int32_t index) {
+        if(index < 0 || index >= ChildrenNum())
+            return nullptr;
         return children_[index];
     }
 
@@ -86,10 +88,32 @@ public:
         return fake_widget_->height();
     }
 
-public:
-    void Update() {
+    virtual Size LimitedMinSize() const override {
         if(layer_.size() > 0) {
-            layer_[0]->SetGeometry(0, 0, Width(), Height());
+            return layer_[0]->LimitedMinSize();
+        }
+        return LayoutItem::LimitedMinSize();
+    }
+
+    virtual Size LimitedMaxSize() const override {
+        if(layer_.size() > 0) {
+            return layer_[0]->LimitedMaxSize();
+        }
+        return LayoutItem::LimitedMaxSize();
+    }
+public:
+    virtual void Update() override {
+        if(layer_.size() > 0) {
+            int32_t width = Width(), height = Height();
+            if(Width() < layer_[0]->LimitedMinSize().width_) {
+                width = layer_[0]->LimitedMinSize().width_;
+            }
+
+            if(Height() < layer_[0]->LimitedMaxSize().height_) {
+                height = layer_[0]->LimitedMaxSize().height_;
+            }
+            fake_widget_->resize(width, height);
+            layer_[0]->SetGeometry(0, 0, width, height);
             layer_[0]->Update();
         }
     }

@@ -48,10 +48,6 @@ protected:
         LayoutItem::ReSize(width, height);
     }
 
-    virtual void ReSize(const Size& size) {
-        LayoutItem::ReSize(size);
-    }
-
     std::vector<LayoutItem*> layout_items_;
 };
 
