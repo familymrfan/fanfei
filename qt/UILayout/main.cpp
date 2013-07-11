@@ -58,8 +58,7 @@ int main(int argc, char *argv[])
     /* HBOX */
     ui::Button btn;
     win.AddChild(&btn);
-    btn.SetStrechFactor(1);
-    btn.SetLimitedMinSize(ui::LayoutItem::Size(300, 300));
+    btn.SetStrechFactor(2);
     btn.SetText("A");
     btn.SetNorthSpace(0);
     btn.SetSouthSpace(0);

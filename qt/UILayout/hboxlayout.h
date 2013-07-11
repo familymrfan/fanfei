@@ -11,6 +11,8 @@ namespace ui
 class HBoxLayout:public Layout
 {
 public:
+    HBoxLayout():recal_limit_size_(true) {}
+
     struct AllocHelper
     {
         enum AllocStatus{
@@ -35,6 +37,27 @@ public:
         auto box = new BoxLayout;
         box->AddItem(item);
         boxes_.push_back(box);
+        SetReCalLimitSize();
+    }
+
+    virtual bool InsertItem(int32_t index, LayoutItem *item) {
+        auto box = new BoxLayout;
+        box->AddItem(item);
+        if(index < 0 || index > boxes_.size())
+            return false;
+        boxes_.insert(boxes_.begin()+index, box);
+        SetReCalLimitSize();
+        return true;
+    }
+
+    virtual void RemoveItem(LayoutItem *item) {
+        for(size_t i = 0;i<boxes_.size();i++) {
+            if(item == ItemAt(i)) {
+                delete boxes_[i];
+                boxes_.erase(boxes_.begin() + i);
+                break;
+            }
+        }
     }
 
     virtual LayoutItem* ItemAt(int32_t index) {
@@ -45,10 +68,18 @@ public:
     }
 
     ~HBoxLayout() {
-        //TODO(fanfei):clear boxes
+        for(size_t i = 0;i<boxes_.size();i++) {
+            delete boxes_[i];
+            boxes_.erase(boxes_.begin() + i);
+        }
     }
 
-    virtual Size LimitedMinSize() const override {
+    virtual Size LimitedMinSize() override {
+        if(!recal_limit_size_) {
+            //return limited_min_size_;
+        }
+        recal_limit_size_ = false;
+
         int width = 0, height = 0;
         for (BoxLayout* box:boxes_) {
              width += box->LimitedMinSize().width_;
@@ -56,10 +87,16 @@ public:
                  height = box->LimitedMinSize().height_;
              }
         }
-        return Size(width, height);
+        limited_min_size_ = Size(width, height);
+        return limited_min_size_;
     }
 
-    virtual Size LimitedMaxSize() const override {
+    virtual Size LimitedMaxSize() override {
+        if(!recal_limit_size_) {
+            //return limited_max_size_;
+        }
+        recal_limit_size_ = false;
+
         int width = INT32_MAX, height = INT32_MAX;
         for (BoxLayout* box:boxes_) {
             if(width < INT32_MAX - box->LimitedMaxSize().width_) {
@@ -69,10 +106,17 @@ public:
                 height = box->LimitedMaxSize().height_;
             }
         }
-        return Size(width, height);
+
+        limited_max_size_ = Size(width, height);
+        return limited_max_size_;
     }
 
-    virtual Size PreferSize() const override {
+    virtual Size PreferSize() override {
+        if(!recal_limit_size_) {
+            //return prefer_size_;
+        }
+        recal_limit_size_ = false;
+
         int width = 0, height = 0;
         for (BoxLayout* box:boxes_) {
             width += std::max(box->PreferSize().width_, box->LimitedMinSize().width_);
@@ -80,22 +124,27 @@ public:
                 height = hign_height;
             }
         }
-        return Size(width, height);
+
+        prefer_size_ = Size(width, height);
+        return prefer_size_;
     }
 
+    void SetReCalLimitSize() {
+        recal_limit_size_ = true;
+    }
 protected:
     virtual void Update() override {
-        RegisterToAllocHelper();
-        // 计算可分配总容量
+        BoxToAllocHelper();
         int32_t alloc_size = Width();
         if(alloc_size < PreferSize().width_) {
-            return ;
+            DoUnderPrefer();
+        } else {
+            DoExceedPrefer();
         }
-        Alloc();
-        AllocToBox();
+        AllocHelperToBox();
     }
 
-    void RegisterToAllocHelper() {
+    void BoxToAllocHelper() {
         alloc_sections_.clear();
         auto iter = boxes_.begin();
         while(iter != boxes_.end()) {
@@ -106,7 +155,33 @@ protected:
         }
     }
 
-    void Alloc() {
+    void DoUnderPrefer() {
+        int32_t factor = 0; 
+        int32_t alloc_size = Width();
+        int32_t sum_factor = 0;
+
+        auto iter = alloc_sections_.begin();
+        while(iter != alloc_sections_.end()) {
+            if(iter->box->LimitedMinSize().width_ > iter->box->PreferSize().width_) {
+                iter->section = iter->box->LimitedMinSize().width_;
+                iter->status = AllocHelper::kAlloc;
+                alloc_size -= iter->section;
+            } else {
+                sum_factor += iter->box->PreferSize().width_;
+            }
+            iter++;
+        }
+
+        iter = alloc_sections_.begin();
+        while(iter != alloc_sections_.end()) {
+            if(iter->status == AllocHelper::kNoAlloc) {
+                iter->section = (int32_t)((float)alloc_size/sum_factor*iter->box->PreferSize().width_);
+            }
+            iter++;
+        }
+    }
+
+    void DoExceedPrefer() {
         auto first = alloc_sections_.begin();
         while(first != alloc_sections_.end()) {
             if(first->status == AllocHelper::kNoAlloc) {
@@ -119,12 +194,12 @@ protected:
             if (first->box->ItemAt(0)->StrechFactor() == 0) {
                 first->section = std::max(first->box->LimitedMinSize().width_, first->box->PreferSize().width_);
                 first->status = AllocHelper::kAlloc;
-                Alloc();
+                DoExceedPrefer();
             }
             else if(IsStrongWeakAllInNoAlloc() && !first->box->IsStrongElastic()) {
                 first->section = std::max(first->box->LimitedMinSize().width_, first->box->PreferSize().width_);
                 first->status = AllocHelper::kAlloc;
-                Alloc();
+                DoExceedPrefer();
             } else {
                 first->section = GetAllocSectionByStrechFactor(first->box->IsStrongElastic());
 
@@ -144,7 +219,7 @@ protected:
                 } else {
                     first->status = AllocHelper::kTempAlloc;
                 }
-                Alloc();
+                DoExceedPrefer();
             }
         }
     }
@@ -213,17 +288,7 @@ protected:
         }
     }
 
-    void ResetTempAllocToAlloc() {
-        auto iter = alloc_sections_.begin();
-        while(iter != alloc_sections_.end()) {
-            if(iter->status == AllocHelper::kTempAlloc) {
-                iter->status = AllocHelper::kAlloc;
-            }
-            iter++;
-        }
-    }
-
-    void AllocToBox() {
+    void AllocHelperToBox() {
         auto iter = alloc_sections_.begin();
         int32_t pre_x = X();
         while(iter != alloc_sections_.end()) {
@@ -236,6 +301,7 @@ protected:
 
     std::vector<BoxLayout*> boxes_;
     std::vector<AllocHelper> alloc_sections_;
+    bool recal_limit_size_;
 };
 } // namespace ui
 

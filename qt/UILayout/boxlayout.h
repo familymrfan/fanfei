@@ -11,7 +11,28 @@ class BoxLayout:public Layout
 {
     friend class HBoxLayout;
 public:
-    virtual Size LimitedMinSize() const override {
+    BoxLayout():recal_limit_size_(true) {}
+
+    virtual void AddItem(LayoutItem *item) override{
+        SetReCalLimitSize();
+        Layout::AddItem(item);
+    }
+
+    virtual bool InsertItem(int32_t index, LayoutItem *item) override{
+        SetReCalLimitSize();
+        return Layout::InsertItem(index, item);
+    }
+
+    virtual void RemoveItem(LayoutItem *item) {
+        SetReCalLimitSize();
+        Layout::RemoveItem(item);
+    }
+
+    virtual Size LimitedMinSize() override {
+        if(!recal_limit_size_) {
+            //return limited_min_size_;
+        }
+        recal_limit_size_ = false;
         int32_t min_width = 0, width = 0, min_height = 0, height = 0;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
@@ -48,10 +69,16 @@ public:
 
             iter++;
         }
-        return Size(min_width, min_height);
+        limited_min_size_ = Size(min_width, min_height);
+        return limited_min_size_;
     }
 
-    virtual Size LimitedMaxSize() const override {
+    virtual Size LimitedMaxSize() override {
+        if(!recal_limit_size_) {
+            //return limited_max_size_;
+        }
+        recal_limit_size_ = false;
+
         int32_t max_width = 0, width = INT32_MAX, max_height = 0, height = INT32_MAX;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
@@ -79,7 +106,7 @@ public:
 
             max_height = height;
             if(item->IsValidGap(LayoutItem::kNorthValid) && !item->IsValidGap(LayoutItem::kSouthValid)) {
-                if(item->LimitedMaxSize().height_ < INT32_MAX - item->NorthSpace()) {
+                if(item->LimitedMaxSize().height_ < INT32_MAX - item->NorthSpace() - item->EastSpace()) {
                     height = item->LimitedMaxSize().height_ + item->NorthSpace() + item->EastSpace();
                 }
             } else if(item->IsValidGap(LayoutItem::kNorthValid)){
@@ -100,21 +127,34 @@ public:
 
             iter++;
         }
-        return Size(max_width, max_height);
+
+        limited_max_size_ = Size(max_width, max_height);
+        return limited_max_size_;
     }
 
-    virtual Size PreferSize() const  override {
+    virtual Size PreferSize()  override {
+        if(!recal_limit_size_) {
+            //return prefer_size_;
+        }
+        recal_limit_size_ = false;
+
         int32_t min_width = 0, width = 0, min_height = 0, height = 0;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
             LayoutItem *item = *iter;
             min_width = width;
             if(item->IsValidGap(LayoutItem::kWestValid) && !item->IsValidGap(LayoutItem::kEastValid)) {
-                width = item->PreferSize().width_ + item->EastSpace() + item->WestSpace();
+                if(item->PreferSize().width_ < INT32_MAX - item->EastSpace() - item->WestSpace()) {
+                    width = item->PreferSize().width_ + item->EastSpace() + item->WestSpace();
+                }
             } else if(item->IsValidGap(LayoutItem::kWestValid)){
-                width = item->PreferSize().width_ + item->WestSpace();
+                if(item->PreferSize().width_ < INT32_MAX - item->WestSpace()) {
+                    width = item->PreferSize().width_ + item->WestSpace();
+                }
             } else if(item->IsValidGap(LayoutItem::kEastValid)) {
-                width = item->PreferSize().width_ + item->EastSpace();
+                if(item->PreferSize().width_ < INT32_MAX - item->EastSpace()) {
+                    width = item->PreferSize().width_ + item->EastSpace();
+                }
             } else {
                 width = item->PreferSize().width_;
             }
@@ -125,11 +165,17 @@ public:
 
             min_height = height;
             if(item->IsValidGap(LayoutItem::kNorthValid) && !item->IsValidGap(LayoutItem::kSouthValid)) {
-                height = item->PreferSize().height_ + item->NorthSpace() + item->EastSpace();
+                if(item->PreferSize().height_ < INT32_MAX - item->NorthSpace() - item->EastSpace()) {
+                    height = item->PreferSize().height_ + item->NorthSpace() + item->EastSpace();
+                }
             } else if(item->IsValidGap(LayoutItem::kNorthValid)){
-                height = item->PreferSize().height_ + item->NorthSpace();
+                if(item->PreferSize().height_ < INT32_MAX - item->NorthSpace()) {
+                    height = item->PreferSize().height_ + item->NorthSpace();
+                }
             } else if(item->IsValidGap(LayoutItem::kSouthValid)) {
-                height = item->PreferSize().height_ + item->SouthSpace();
+                if(item->PreferSize().height_ < INT32_MAX - item->SouthSpace()) {
+                    height = item->PreferSize().height_ + item->SouthSpace();
+                }
             } else {
                 height = item->PreferSize().height_;
             }
@@ -140,7 +186,13 @@ public:
 
             iter++;
         }
-        return Size(min_width, min_height);
+
+        prefer_size_ = Size(min_width, min_height);
+        return prefer_size_;
+    }
+
+    void SetReCalLimitSize() {
+        recal_limit_size_ = true;
     }
 protected:
     virtual void Update() override {
@@ -156,12 +208,14 @@ protected:
                 x = X() + item->WestSpace();
                 width = Width() - item->EastSpace() - item->WestSpace();
             } else if(item->IsValidGap(LayoutItem::kWestValid)){
-                    width = std::min(item->PreferSize().width_, Width() - item->WestSpace());
-                    x = X() + item->WestSpace();
+                width = std::min(item->PreferSize().width_, Width() - item->WestSpace());
+                x = X() + item->WestSpace();
             } else if(item->IsValidGap(LayoutItem::kEastValid)) {
-                    width = std::min(item->PreferSize().width_, Width() - item->EastSpace());
-                    x = X() + Width() - item->EastSpace() - width;
+                width = std::min(item->PreferSize().width_, Width() - item->EastSpace());
+                x = X() + Width() - item->EastSpace() - width;
             }
+
+            width = std::max(0, width);
 
             if(item->IsValidGap(LayoutItem::kNorthValid) && item->IsValidGap(LayoutItem::kSouthValid)) {
                 y = Y() + item->NorthSpace();
@@ -174,11 +228,15 @@ protected:
                 y = Y() + Height() - item->SouthSpace() - height;
             }
 
+            height = std::max(0, height);
+
             item->SetGeometry(x, y, width, height);
             item->Update();
             iter++;
         }
     }
+
+    bool recal_limit_size_;
 };
 
 } // namespace ui

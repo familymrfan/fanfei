@@ -13,12 +13,24 @@ class Layout:public LayoutItem
     friend class Widget;
 public:
     virtual void AddItem(LayoutItem *item) {
+        auto iter = layout_items_.begin();
+        while (iter != layout_items_.end()) {
+            if(*iter == item) {
+                return ;
+            }
+        }
         layout_items_.push_back(item);
     }
 
     virtual bool InsertItem(int32_t index, LayoutItem *item) {
         if(index < 0 || index > layout_items_.size())
             return false;
+        auto iter = layout_items_.begin();
+        while (iter != layout_items_.end()) {
+            if(*iter == item) {
+                return false;
+            }
+        }
         layout_items_.insert(layout_items_.begin()+index, item);
         return true;
     }

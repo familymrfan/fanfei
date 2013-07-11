@@ -19,7 +19,7 @@ public:
         ((QPushButton *)fake_widget_)->setText(text.c_str());
     }
 
-    virtual Size PreferSize() const override{
+    virtual Size PreferSize() override{
         return Size(200, 100);
     }
 };

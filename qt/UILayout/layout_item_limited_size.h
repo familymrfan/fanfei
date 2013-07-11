@@ -38,7 +38,7 @@ public:
         prefer_size_ = size;
     }
 
-    virtual Size PreferSize() const {
+    virtual Size PreferSize() {
         return prefer_size_;
     }
 
@@ -46,7 +46,7 @@ public:
         limited_min_size_ = size;
     }
 
-    virtual Size LimitedMinSize() const {
+    virtual Size LimitedMinSize() {
         return limited_min_size_;
     }
 
@@ -54,7 +54,7 @@ public:
         limited_max_size_ = size;
     }
 
-    virtual Size LimitedMaxSize() const {
+    virtual Size LimitedMaxSize() {
         return limited_max_size_;
     }
 
@@ -72,42 +72,42 @@ public:
         return (limited_status_ & status) == status && (limited_status_ & 4) == (status & 4);
     }
 
-    bool LessThanPreferWidth(const int32_t width) const {
+    bool LessThanPreferWidth(const int32_t width) {
         if(width < PreferSize().width_) {
             return true;
         }
         return false;
     }
 
-    bool LessThanPreferHeight(const int32_t height) const {
+    bool LessThanPreferHeight(const int32_t height) {
         if(height < PreferSize().height_) {
             return true;
         }
         return false;
     }
 
-    bool LessThanLimitMinWidth(const int32_t width) const {
+    bool LessThanLimitMinWidth(const int32_t width) {
         if(width < LimitedMinSize().width_) {
             return true;
         }
         return false;
     }
 
-    bool MoreThanLimitMaxWidth(const int32_t width) const {
+    bool MoreThanLimitMaxWidth(const int32_t width) {
         if(width > LimitedMaxSize().width_) {
             return true;
         }
         return false;
     }
 
-    bool LessThanLimitMinHeight(const int32_t height) const {
+    bool LessThanLimitMinHeight(const int32_t height) {
         if(height < LimitedMinSize().height_) {
             return true;
         }
         return false;
     }
 
-    bool MoreThanLimitMaxHeight(const int32_t height) const {
+    bool MoreThanLimitMaxHeight(const int32_t height) {
         if(height > LimitedMaxSize().height_) {
             return true;
         }

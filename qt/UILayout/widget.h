@@ -88,14 +88,14 @@ public:
         return fake_widget_->height();
     }
 
-    virtual Size LimitedMinSize() const override {
+    virtual Size LimitedMinSize() override {
         if(layer_.size() > 0) {
             return layer_[0]->LimitedMinSize();
         }
         return LayoutItem::LimitedMinSize();
     }
 
-    virtual Size LimitedMaxSize() const override {
+    virtual Size LimitedMaxSize() override {
         if(layer_.size() > 0) {
             return layer_[0]->LimitedMaxSize();
         }
