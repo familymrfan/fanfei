@@ -9,6 +9,7 @@ namespace ui
 {
 class BoxLayout:public Layout
 {
+    friend class HBoxLayout;
 public:
     virtual Size LimitedMinSize() const override {
         int32_t min_width = 0, width = 0, min_height = 0, height = 0;
@@ -51,37 +52,49 @@ public:
     }
 
     virtual Size LimitedMaxSize() const override {
-        int32_t max_width = 0, width = 0, max_height = 0, height = 0;
+        int32_t max_width = 0, width = INT32_MAX, max_height = 0, height = INT32_MAX;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
             LayoutItem *item = *iter;
             max_width = width;
             if(item->IsValidGap(LayoutItem::kWestValid) && !item->IsValidGap(LayoutItem::kEastValid)) {
-                width = item->LimitedMaxSize().width_ + item->EastSpace() + item->WestSpace();
+                if(item->LimitedMaxSize().width_ < INT32_MAX - item->EastSpace() - item->WestSpace()) {
+                    width = item->LimitedMaxSize().width_ + item->EastSpace() + item->WestSpace();
+                }
             } else if(item->IsValidGap(LayoutItem::kWestValid)){
-                width = item->LimitedMaxSize().width_ + item->WestSpace();
+                if(item->LimitedMaxSize().width_ < INT32_MAX - item->WestSpace()) {
+                    width = item->LimitedMaxSize().width_ + item->WestSpace();
+                }
             } else if(item->IsValidGap(LayoutItem::kEastValid)) {
-                width = item->LimitedMaxSize().width_ + item->EastSpace();
+                if(item->LimitedMaxSize().width_ < INT32_MAX - item->EastSpace()) {
+                    width = item->LimitedMaxSize().width_ + item->EastSpace();
+                }
             } else {
                 width = item->LimitedMaxSize().width_;
             }
 
-            if(width > max_width) {
+            if(width < max_width) {
                 max_width = width;
             }
 
             max_height = height;
             if(item->IsValidGap(LayoutItem::kNorthValid) && !item->IsValidGap(LayoutItem::kSouthValid)) {
-                height = item->LimitedMaxSize().height_ + item->NorthSpace() + item->EastSpace();
+                if(item->LimitedMaxSize().height_ < INT32_MAX - item->NorthSpace()) {
+                    height = item->LimitedMaxSize().height_ + item->NorthSpace() + item->EastSpace();
+                }
             } else if(item->IsValidGap(LayoutItem::kNorthValid)){
-                height = item->LimitedMaxSize().height_ + item->NorthSpace();
+                if(item->LimitedMaxSize().height_ < INT32_MAX - item->NorthSpace()) {
+                    height = item->LimitedMaxSize().height_ + item->NorthSpace();
+                }
             } else if(item->IsValidGap(LayoutItem::kSouthValid)) {
-                height = item->LimitedMaxSize().height_ + item->SouthSpace();
+                if(item->LimitedMaxSize().height_ < INT32_MAX - item->SouthSpace()) {
+                    height = item->LimitedMaxSize().height_ + item->SouthSpace();
+                }
             } else {
                 height = item->LimitedMaxSize().height_;
             }
 
-            if(height > max_height) {
+            if(height < max_height) {
                 max_height = height;
             }
 

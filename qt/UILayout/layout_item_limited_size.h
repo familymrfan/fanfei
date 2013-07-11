@@ -51,11 +51,11 @@ public:
     }
 
     virtual void SetLimitedMaxSize(const Size& size) {
-        limited_min_size_ = size;
+        limited_max_size_ = size;
     }
 
     virtual Size LimitedMaxSize() const {
-        return limited_min_size_;
+        return limited_max_size_;
     }
 
     virtual void SetLimitedStatus(LimitedSizeStatus status, bool valid = true) {
@@ -72,6 +72,47 @@ public:
         return (limited_status_ & status) == status && (limited_status_ & 4) == (status & 4);
     }
 
+    bool LessThanPreferWidth(const int32_t width) const {
+        if(width < PreferSize().width_) {
+            return true;
+        }
+        return false;
+    }
+
+    bool LessThanPreferHeight(const int32_t height) const {
+        if(height < PreferSize().height_) {
+            return true;
+        }
+        return false;
+    }
+
+    bool LessThanLimitMinWidth(const int32_t width) const {
+        if(width < LimitedMinSize().width_) {
+            return true;
+        }
+        return false;
+    }
+
+    bool MoreThanLimitMaxWidth(const int32_t width) const {
+        if(width > LimitedMaxSize().width_) {
+            return true;
+        }
+        return false;
+    }
+
+    bool LessThanLimitMinHeight(const int32_t height) const {
+        if(height < LimitedMinSize().height_) {
+            return true;
+        }
+        return false;
+    }
+
+    bool MoreThanLimitMaxHeight(const int32_t height) const {
+        if(height > LimitedMaxSize().height_) {
+            return true;
+        }
+        return false;
+    }
 protected:
     LayoutItemLimitedSize():prefer_size_(0, 0),
                            limited_min_size_(0, 0),

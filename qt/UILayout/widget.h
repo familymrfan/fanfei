@@ -109,7 +109,7 @@ public:
                 width = layer_[0]->LimitedMinSize().width_;
             }
 
-            if(Height() < layer_[0]->LimitedMaxSize().height_) {
+            if(Height() > layer_[0]->LimitedMaxSize().height_) {
                 height = layer_[0]->LimitedMaxSize().height_;
             }
             fake_widget_->resize(width, height);

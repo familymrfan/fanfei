@@ -48,6 +48,7 @@ public:
         Move(x, y);
         ReSize(width, height);
     }
+
 protected:
     LayoutItem():x_(0),
                  y_(0),
