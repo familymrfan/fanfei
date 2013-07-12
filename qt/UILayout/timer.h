@@ -15,7 +15,7 @@ public:
 
 public slots:
     void Update() {
-        widget_->Update();
+        widget_->Relayout();
     }
     
 private:

@@ -3,6 +3,7 @@
 
 #include "layout.h"
 #include "boxlayout.h"
+#include "linear_box_layout_item.h"
 #include <vector>
 #include <algorithm>
 #include <cassert>
@@ -12,7 +13,7 @@ namespace ui
 class HBoxLayout:public Layout
 {
 public:
-    HBoxLayout():recal_limit_size_(true) {}
+    HBoxLayout() {}
 
     struct AllocHelper
     {
@@ -28,116 +29,186 @@ public:
            
         }
 
-        int32_t section;
+        uint32_t section;
         AllocStatus status;
-        BoxLayout* box;
+        LinearBoxLayoutItem* box_item;
     };
 
-
-    virtual void AddItem(LayoutItem *item) override {
-        auto box = new BoxLayout;
-        box->AddItem(item);
-        boxes_.push_back(box);
-        SetReCalLimitSize();
+    void SetWestSpace(LayoutBaseItem *item, uint32_t west_space) {
+        BoxLayoutItem *bli = GetBoxLayoutItem(item);
+        assert(bli);
+        bli->SetWestSpace(west_space);
     }
 
-    virtual bool InsertItem(int32_t index, LayoutItem *item) {
+    void SetNorthSpace(LayoutBaseItem *item, uint32_t north_space) {
+        BoxLayoutItem *bli = GetBoxLayoutItem(item);
+        assert(bli);
+        bli->SetNorthSpace(north_space);
+    }
+
+    void SetEastSpace(LayoutBaseItem *item, uint32_t east_space) {
+        BoxLayoutItem *bli = GetBoxLayoutItem(item);
+        assert(bli);
+        bli->SetEastSpace(east_space);
+    }
+
+    void SetSouthSpace(LayoutBaseItem *item, uint32_t south_space) {
+        BoxLayoutItem *bli = GetBoxLayoutItem(item);
+        assert(bli);
+        bli->SetSouthSpace(south_space);
+    }
+
+    void SetAround(LayoutBaseItem *item, 
+        uint32_t west_space, 
+        uint32_t north_space, 
+        uint32_t east_space, 
+        uint32_t south_space) {
+            BoxLayoutItem *bli = GetBoxLayoutItem(item);
+            assert(bli);
+            SetWestSpace(bli->GetLayoutBaseItem(), west_space);
+            SetNorthSpace(bli->GetLayoutBaseItem(), north_space);
+            SetEastSpace(bli->GetLayoutBaseItem(), east_space);
+            SetSouthSpace(bli->GetLayoutBaseItem(), south_space);
+    }
+
+    void SetValidGap(LayoutBaseItem *item,
+        BoxLayoutItem::GapValid gap_valid, 
+        bool valid = true) {
+            BoxLayoutItem *bli = GetBoxLayoutItem(item);
+            assert(bli);
+            bli->SetValidGap(gap_valid, valid);
+    }
+
+    void SetStrechFactor(LayoutBaseItem* item, uint32_t strech_factor) {
+        LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+        assert(lbli);
+        lbli->SetStrechFactor(strech_factor);
+    }
+
+    void SetStrongElastic(LayoutBaseItem* item, bool strong_elastic) {
+        LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+        assert(lbli);
+        lbli->SetStrongElastic(strong_elastic);
+    }
+
+    void AddItem(LayoutBaseItem *item) {
         auto box = new BoxLayout;
         box->AddItem(item);
-        if(index < 0 || index > boxes_.size())
+        LinearBoxLayoutItem *lbli = new LinearBoxLayoutItem(box);
+        __super::AddItem(lbli);
+    }
+
+    bool InsertItem(uint32_t index, LayoutBaseItem *item) {
+        auto box = new BoxLayout;
+        box->AddItem(item);
+        LinearBoxLayoutItem *lbli = new LinearBoxLayoutItem(box);
+        return __super::InsertItem(index, lbli);
+    }
+
+    bool RemoveItem(LayoutBaseItem *item) {
+        auto iter = layout_items_.begin();
+        while (iter != layout_items_.end()) {
+            LayoutBaseItem *lbli = (*iter)->GetLayoutBaseItem();
+            if(lbli == item) {
+                delete lbli;
+                layout_items_.erase(iter);
+                return true;
+            }
+            iter++;
+        }
+        return false;
+    }
+
+    bool RemoveItem(uint32_t index) {
+        LayoutItem *item = ItemAt(index);
+        if(!item) {
             return false;
-        boxes_.insert(boxes_.begin()+index, box);
-        SetReCalLimitSize();
+        }
+        delete item;
+        layout_items_.erase(layout_items_.begin() + index);
         return true;
     }
 
-    virtual void RemoveItem(LayoutItem *item) {
-        for(size_t i = 0;i<boxes_.size();i++) {
-            if(item == ItemAt(i)) {
-                delete boxes_[i];
-                boxes_.erase(boxes_.begin() + i);
-                break;
-            }
-        }
-    }
-
-    virtual LayoutItem* ItemAt(int32_t index) {
-        if(index < 0 || index > boxes_.size()) {
-            return nullptr;
-        }
-        return boxes_[index]->ItemAt(0);
-    }
-
     ~HBoxLayout() {
-        for(size_t i = 0;i<boxes_.size();i++) {
-            delete boxes_[i];
-            boxes_.erase(boxes_.begin() + i);
+        for(uint32_t i = 0;i<layout_items_.size();i++) {
+            LayoutBaseItem *bli = layout_items_[i]->GetLayoutBaseItem();
+            assert(bli);
+            delete bli;
+            layout_items_.erase(layout_items_.begin() + i);
         }
     }
 
-    virtual Size LimitedMinSize() override {
-        if(!recal_limit_size_) {
-            //return limited_min_size_;
+    virtual uint32_t LimitMinWidth() override {
+        int width = 0;
+        for (LayoutItem* item:layout_items_) {
+             LayoutBaseItem *base_item = item->GetLayoutBaseItem();
+             assert(base_item);
+             width += base_item->LimitMinWidth();
         }
-        recal_limit_size_ = false;
-
-        int width = 0, height = 0;
-        for (BoxLayout* box:boxes_) {
-             width += box->LimitedMinSize().width_;
-             if(box->LimitedMinSize().height_ > height) {
-                 height = box->LimitedMinSize().height_;
-             }
-        }
-        limited_min_size_ = Size(width, height);
-        return limited_min_size_;
+        return width;
     }
 
-    virtual Size LimitedMaxSize() override {
-        if(!recal_limit_size_) {
-            //return limited_max_size_;
-        }
-        recal_limit_size_ = false;
-
-        int width = INT32_MAX, height = INT32_MAX;
-        for (BoxLayout* box:boxes_) {
-            if(width < INT32_MAX - box->LimitedMaxSize().width_) {
-                width += box->LimitedMaxSize().width_;
-            }
-            if(box->LimitedMaxSize().height_ < height) {
-                height = box->LimitedMaxSize().height_;
+    virtual uint32_t LimitMinHeight() override {
+        uint32_t height = 0;
+        for (LayoutItem* item:layout_items_) {
+            LayoutBaseItem *base_item = item->GetLayoutBaseItem();
+            assert(base_item);
+            if(base_item->LimitMinHeight() > height) {
+                height = base_item->LimitMinHeight();
             }
         }
-
-        limited_max_size_ = Size(width, height);
-        return limited_max_size_;
+        return height;
     }
 
-    virtual Size PreferSize() override {
-        if(!recal_limit_size_) {
-            //return prefer_size_;
+    virtual uint32_t LimitMaxWidth() override {
+        uint32_t width = MAX_LENGTH;
+        for (LayoutItem* item:layout_items_) {
+            LayoutBaseItem *base_item = item->GetLayoutBaseItem();
+            if(width < MAX_LENGTH - base_item->LimitMaxWidth()) {
+                width += base_item->LimitMaxWidth();
+            }
         }
-        recal_limit_size_ = false;
+        return width;
+    }
 
-        int width = 0, height = 0;
-        for (BoxLayout* box:boxes_) {
-            width += std::max(box->PreferSize().width_, box->LimitedMinSize().width_);
-            if(int32_t hign_height = std::max(box->PreferSize().height_, box->LimitedMinSize().height_) > height) {
+    virtual uint32_t LimitMaxHeight() override {
+        uint32_t height = MAX_LENGTH;
+        for (LayoutItem* item:layout_items_) {
+            LayoutBaseItem *base_item = item->GetLayoutBaseItem();
+            if(base_item->LimitMaxHeight() < height) {
+                height = base_item->LimitMaxHeight();
+            }
+        }
+
+        return height;
+    }
+
+    virtual uint32_t PreferWidth() override {
+        uint32_t width = 0;
+        for (LayoutItem* item:layout_items_) {
+            LayoutBaseItem *base_item = item->GetLayoutBaseItem();
+            width += std::max(base_item->LimitMinWidth(), base_item->PreferWidth());
+        }
+        return width;
+    }
+
+    virtual uint32_t PreferHeight() override {
+        uint32_t height = 0, hign_height = 0;
+        for (LayoutItem* item:layout_items_) {
+            LayoutBaseItem *base_item = item->GetLayoutBaseItem();
+            hign_height = std::max(base_item->LimitMinHeight(), base_item->PreferHeight());
+            if(hign_height > height) {
                 height = hign_height;
             }
         }
-
-        prefer_size_ = Size(width, height);
-        return prefer_size_;
+        return height;
     }
 
-    void SetReCalLimitSize() {
-        recal_limit_size_ = true;
-    }
 protected:
-    virtual void Update() override {
+    virtual void Relayout() override {
         BoxToAllocHelper();
-        int32_t alloc_size = Width();
-        if(alloc_size < PreferSize().width_) {
+        uint32_t alloc_size = Width();
+        if(alloc_size < PreferWidth()) {
             DoUnderPrefer();
         } else {
             DoExceedPrefer();
@@ -147,10 +218,10 @@ protected:
 
     void BoxToAllocHelper() {
         alloc_sections_.clear();
-        auto iter = boxes_.begin();
-        while(iter != boxes_.end()) {
+        auto iter = layout_items_.begin();
+        while(iter != layout_items_.end()) {
             AllocHelper helper;
-            helper.box = *iter;
+            helper.box_item = reinterpret_cast<LinearBoxLayoutItem *>(*iter);
             alloc_sections_.push_back(helper);
             iter++;
         }
@@ -162,20 +233,24 @@ protected:
 
         auto iter = alloc_sections_.begin();
         while(iter != alloc_sections_.end()) {
-            if(iter->box->LimitedMinSize().width_ > iter->box->PreferSize().width_) {
-                iter->section = iter->box->LimitedMinSize().width_;
+            LayoutBaseItem* box = iter->box_item->GetLayoutBaseItem();
+            assert(box);
+            if(box->LimitMinWidth() > box->PreferWidth()) {
+                iter->section = box->LimitMinWidth();
                 iter->status = AllocHelper::kAlloc;
                 alloc_size -= iter->section;
             } else {
-                sum_factor += iter->box->PreferSize().width_;
+                sum_factor += box->PreferWidth();
             }
             iter++;
         }
 
         iter = alloc_sections_.begin();
         while(iter != alloc_sections_.end()) {
+            LayoutBaseItem* box = iter->box_item->GetLayoutBaseItem();
+            assert(box);
             if(iter->status == AllocHelper::kNoAlloc) {
-                iter->section = (int32_t)((float)alloc_size/sum_factor*iter->box->PreferSize().width_);
+                iter->section = (uint32_t)((float)alloc_size/sum_factor*box->PreferWidth());
             }
             iter++;
         }
@@ -189,14 +264,14 @@ protected:
 
         auto iter = alloc_sections_.begin();
         while(iter != alloc_sections_.end()) {
-            LayoutItem* item = iter->box->ItemAt(0);
-            assert(item);
+            LayoutBaseItem* box = iter->box_item->GetLayoutBaseItem();
+            assert(box);
 
-            if(item->StrechFactor() == 0 || strong && !item->IsStrongElastic()) {
-                iter->section = std::max(iter->box->LimitedMinSize().width_, iter->box->PreferSize().width_);
+            if(iter->box_item->StrechFactor() == 0 || strong && !iter->box_item->IsStrongElastic()) {
+                iter->section = std::max(box->LimitMinWidth(), box->PreferWidth());
                 alloc_size -= iter->section;
             } else {
-                sum_factor += item->StrechFactor();
+                sum_factor += iter->box_item->StrechFactor();
             }
             iter++;
         }
@@ -215,15 +290,16 @@ protected:
         if(first != alloc_sections_.end()) {
             bool alloc = false;
             if(first->status == AllocHelper::kNoAlloc) {
-                first->section = (int32_t)((float)alloc_size/sum_factor*first->box->ItemAt(0)->StrechFactor());
-                if(first->box->LessThanLimitMinWidth(first->section)) {
-                    first->section = first->box->LimitedMinSize().width_;
+                LayoutBaseItem* box = first->box_item->GetLayoutBaseItem();
+                first->section = (uint32_t)((float)alloc_size/sum_factor*first->box_item->StrechFactor());
+                if(first->section < box->LimitMinWidth()) {
+                    first->section = box->LimitMinWidth();
                     alloc = true;
-                } else if (first->box->MoreThanLimitMaxWidth(first->section)) {
-                    first->section = first->box->LimitedMaxSize().width_;
+                } else if (first->section > box->LimitMaxWidth()) {
+                    first->section = box->LimitMaxWidth();
                     alloc = true;
-                } else if(first->box->LessThanPreferWidth(first->section)){
-                    first->section = first->box->PreferSize().width_;
+                } else if(first->section < box->PreferWidth()){
+                    first->section = box->PreferWidth();
                     alloc = true;
                 } else {
                     first->status = AllocHelper::kTempAlloc;
@@ -239,18 +315,16 @@ protected:
 
                     auto iter = alloc_sections_.begin();
                     while(iter != alloc_sections_.end()) {
-                        LayoutItem* item = iter->box->ItemAt(0);
-                        assert(item);
                         if(iter->status != AllocHelper::kNoAlloc) {
                             alloc_size -= iter->section;
                         } else {
-                            sum_factor += item->StrechFactor();
+                            sum_factor += iter->box_item->StrechFactor();
                         }
                         iter++;
                     }
                 } else {
                     alloc_size -= first->section;
-                    sum_factor -= first->box->ItemAt(0)->StrechFactor();
+                    sum_factor -= first->box_item->StrechFactor();
                 }
                 
                 AllocSectionByStrechFactor(alloc_size, sum_factor);
@@ -266,7 +340,7 @@ protected:
         while(iter != alloc_sections_.end()) {
             AllocHelper helper = *iter;
             if(helper.status == AllocHelper::kNoAlloc) {
-                if(helper.box->IsStrongElastic()) {
+                if(helper.box_item->IsStrongElastic()) {
                     has_strong = true;
                 } else {
                     has_weak = true;
@@ -296,16 +370,42 @@ protected:
         auto iter = alloc_sections_.begin();
         int32_t pre_x = X();
         while(iter != alloc_sections_.end()) {
-            iter->box->SetGeometry(pre_x, Y(), iter->section, Height());
-            iter->box->Update();
+            iter->box_item->SetGeometry(pre_x, Y(), iter->section, Height());
+            iter->box_item->Relayout();
             pre_x += iter->section;
             iter++;
         }
     }
 
-    std::vector<BoxLayout*> boxes_;
+    LinearBoxLayoutItem* GetLinearBoxLayoutItem(LayoutBaseItem *item) {
+        auto iter = layout_items_.begin();
+        while (iter != layout_items_.end()) {
+            BoxLayout *bli = reinterpret_cast<BoxLayout*>((*iter)->GetLayoutBaseItem());
+            assert(bli);
+            assert(bli->ItemAt(0));
+            if(bli->ItemAt(0)->GetLayoutBaseItem() == item) {
+                return reinterpret_cast<LinearBoxLayoutItem*>(*iter);
+            }
+            iter++;
+        }
+        return nullptr;
+    }
+
+    BoxLayoutItem* GetBoxLayoutItem(LayoutBaseItem *item) {
+        auto iter = layout_items_.begin();
+        while (iter != layout_items_.end()) {
+            BoxLayout *bli = reinterpret_cast<BoxLayout*>((*iter)->GetLayoutBaseItem());
+            assert(bli);
+            assert(bli->ItemAt(0));
+            if(bli->ItemAt(0)->GetLayoutBaseItem() == item) {
+                return reinterpret_cast<BoxLayoutItem*>(bli->ItemAt(0));
+            }
+            iter++;
+        }
+        return nullptr;
+    }
+
     std::vector<AllocHelper> alloc_sections_;
-    bool recal_limit_size_;
 };
 } // namespace ui
 

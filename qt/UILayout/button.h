@@ -19,8 +19,12 @@ public:
         ((QPushButton *)fake_widget_)->setText(text.c_str());
     }
 
-    virtual Size PreferSize() override{
-        return Size(200, 100);
+    virtual uint32_t PreferWidth() override{
+        return 200;
+    }
+
+    virtual uint32_t PreferHeight() override{
+        return 100;
     }
 };
 } // namespace UI
