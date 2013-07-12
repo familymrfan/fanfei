@@ -58,21 +58,13 @@ int main(int argc, char *argv[])
     /* HBOX */
     ui::Button btn;
     win.AddChild(&btn);
-    btn.SetStrechFactor(2);
+    btn.SetStrechFactor(1);
     btn.SetText("A");
-    btn.SetNorthSpace(0);
-    btn.SetSouthSpace(0);
-    btn.SetWestSpace(0);
-    btn.SetEastSpace(0);
 
     ui::Button btn2;
     win.AddChild(&btn2);
     btn2.SetStrechFactor(1);
     btn2.SetText("B");
-    btn2.SetNorthSpace(0);
-    btn2.SetSouthSpace(0);
-    btn2.SetWestSpace(0);
-    btn2.SetEastSpace(0);
 
     ui::HBoxLayout layout;
     layout.AddItem(&btn);

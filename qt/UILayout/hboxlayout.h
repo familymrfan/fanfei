@@ -198,7 +198,6 @@ protected:
             } else {
                 sum_factor += item->StrechFactor();
             }
-
             iter++;
         }
         AllocSectionByStrechFactor(alloc_size, sum_factor);

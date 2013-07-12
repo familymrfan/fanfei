@@ -9,7 +9,7 @@
 namespace ui
 {
 
-class LayoutItem : public LayoutItemSideSpace, 
+class LayoutItem : public LayoutItemSideSpace,
                    public LayoutItemLimitedSize,
                    public LayoutItemCapacityAlloc
 {

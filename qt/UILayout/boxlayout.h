@@ -202,7 +202,7 @@ protected:
             
             //¾ÓÖÐ
             int32_t width = std::min(item->PreferSize().width_, Width()), height = std::min(item->PreferSize().height_, Height());
-            int32_t x = (Width() - width)/2, y = (Height() - height)/2;
+            int32_t x = X() + (Width() - width)/2, y = Y() + (Height() - height)/2;
             
             if(item->IsValidGap(LayoutItem::kWestValid) && item->IsValidGap(LayoutItem::kEastValid)) {
                 x = X() + item->WestSpace();
