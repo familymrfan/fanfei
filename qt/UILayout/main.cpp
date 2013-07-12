@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     ui::Window win;
-    win.SetGeometry(100, 100, 150, 500);
+    win.SetGeometry(100, 100, 500, 500);
     
     /* BOX */
     /*ui::Button btn;
@@ -39,21 +39,23 @@ int main(int argc, char *argv[])
     win.AddChild(&btn);
     btn.SetText("A");
 
-    ui::Button btn2;
+    /*ui::Button btn2;
     win.AddChild(&btn2);
     btn2.SetText("B");
 
     ui::Button btn3;
     win.AddChild(&btn3);
-    btn3.SetText("C");
+    btn3.SetText("C");*/
 
     ui::HBoxLayout layout;
     layout.AddItem(&btn);
-    layout.AddItem(&btn2);
-    layout.AddItem(&btn3);
-    layout.SetWestSpace(&btn3, 10);
-    layout.SetEastSpace(&btn3, 10);
-    layout.SetStrechFactor(&btn3, 1);
+    //layout.AddItem(&btn2);
+    //layout.AddItem(&btn3);
+    layout.SetWestSpace(&btn, 10);
+    layout.SetEastSpace(&btn, 10);
+    //layout.SetWestSpace(&btn3, 10);
+    //layout.SetEastSpace(&btn3, 10);
+    //layout.SetStrechFactor(&btn3, 1);
 
     win.SetLayout(&layout);
     win.Relayout();

@@ -269,6 +269,7 @@ protected:
 
             if(iter->box_item->StrechFactor() == 0 || strong && !iter->box_item->IsStrongElastic()) {
                 iter->section = std::max(box->LimitMinWidth(), box->PreferWidth());
+                iter->status = AllocHelper::kAlloc;
                 alloc_size -= iter->section;
             } else {
                 sum_factor += iter->box_item->StrechFactor();
