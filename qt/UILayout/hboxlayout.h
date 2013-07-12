@@ -5,6 +5,7 @@
 #include "boxlayout.h"
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
 namespace ui
 {
@@ -156,7 +157,6 @@ protected:
     }
 
     void DoUnderPrefer() {
-        int32_t factor = 0; 
         int32_t alloc_size = Width();
         int32_t sum_factor = 0;
 
@@ -182,6 +182,29 @@ protected:
     }
 
     void DoExceedPrefer() {
+        int32_t alloc_size = Width();
+        int32_t sum_factor = 0;
+
+        bool strong = IsStrongWeakAllInNoAlloc();
+
+        auto iter = alloc_sections_.begin();
+        while(iter != alloc_sections_.end()) {
+            LayoutItem* item = iter->box->ItemAt(0);
+            assert(item);
+
+            if(item->StrechFactor() == 0 || strong && !item->IsStrongElastic()) {
+                iter->section = std::max(iter->box->LimitedMinSize().width_, iter->box->PreferSize().width_);
+                alloc_size -= iter->section;
+            } else {
+                sum_factor += item->StrechFactor();
+            }
+
+            iter++;
+        }
+        AllocSectionByStrechFactor(alloc_size, sum_factor);
+    }
+
+    void AllocSectionByStrechFactor(int32_t alloc_size, int32_t sum_factor) {
         auto first = alloc_sections_.begin();
         while(first != alloc_sections_.end()) {
             if(first->status == AllocHelper::kNoAlloc) {
@@ -191,67 +214,49 @@ protected:
         }
 
         if(first != alloc_sections_.end()) {
-            if (first->box->ItemAt(0)->StrechFactor() == 0) {
-                first->section = std::max(first->box->LimitedMinSize().width_, first->box->PreferSize().width_);
-                first->status = AllocHelper::kAlloc;
-                DoExceedPrefer();
-            }
-            else if(IsStrongWeakAllInNoAlloc() && !first->box->IsStrongElastic()) {
-                first->section = std::max(first->box->LimitedMinSize().width_, first->box->PreferSize().width_);
-                first->status = AllocHelper::kAlloc;
-                DoExceedPrefer();
-            } else {
-                first->section = GetAllocSectionByStrechFactor(first->box->IsStrongElastic());
-
+            bool alloc = false;
+            if(first->status == AllocHelper::kNoAlloc) {
+                first->section = (int32_t)((float)alloc_size/sum_factor*first->box->ItemAt(0)->StrechFactor());
                 if(first->box->LessThanLimitMinWidth(first->section)) {
                     first->section = first->box->LimitedMinSize().width_;
-                    first->status = AllocHelper::kAlloc;
-                    ResetTempAllocToNoAlloc();
+                    alloc = true;
                 } else if (first->box->MoreThanLimitMaxWidth(first->section)) {
                     first->section = first->box->LimitedMaxSize().width_;
-                    first->status = AllocHelper::kAlloc;
-                    ResetTempAllocToNoAlloc();
-                    
+                    alloc = true;
                 } else if(first->box->LessThanPreferWidth(first->section)){
                     first->section = first->box->PreferSize().width_;
-                    first->status = AllocHelper::kAlloc;
-                    ResetTempAllocToNoAlloc();
+                    alloc = true;
                 } else {
                     first->status = AllocHelper::kTempAlloc;
+                    alloc = false;
                 }
-                DoExceedPrefer();
-            }
-        }
-    }
 
-    int32_t GetAllocSectionByStrechFactor(bool strong) {
+                if(alloc) {
+                    first->status = AllocHelper::kAlloc;
+                    ResetTempAllocToNoAlloc();
 
-        int32_t factor = 0; 
-        int32_t alloc_size = Width();
-        int32_t sum_factor = 0;
+                    alloc_size = Width();
+                    sum_factor = 0;
 
-        auto iter = alloc_sections_.begin();
-        while(iter != alloc_sections_.end()) {
-            AllocHelper helper = *iter;
-            if(helper.status == AllocHelper::kNoAlloc && 
-               helper.box->IsStrongElastic() == strong &&
-               helper.box->ItemAt(0)->StrechFactor() > 0) {
-               if(factor == 0) {
-                   factor = helper.box->ItemAt(0)->StrechFactor();
-               }
-               sum_factor += helper.box->ItemAt(0)->StrechFactor();
-            } else {
-                if(helper.section != 0) {
-                    alloc_size -= helper.section;
+                    auto iter = alloc_sections_.begin();
+                    while(iter != alloc_sections_.end()) {
+                        LayoutItem* item = iter->box->ItemAt(0);
+                        assert(item);
+                        if(iter->status != AllocHelper::kNoAlloc) {
+                            alloc_size -= iter->section;
+                        } else {
+                            sum_factor += item->StrechFactor();
+                        }
+                        iter++;
+                    }
                 } else {
-                    alloc_size -= std::max(helper.box->LimitedMinSize().width_, helper.box->PreferSize().width_);
+                    alloc_size -= first->section;
+                    sum_factor -= first->box->ItemAt(0)->StrechFactor();
                 }
+                
+                AllocSectionByStrechFactor(alloc_size, sum_factor);
             }
-
-            iter++;
         }
-
-        return (int32_t)((float)alloc_size/sum_factor*factor);
     }
 
     bool IsStrongWeakAllInNoAlloc() {
