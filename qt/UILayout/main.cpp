@@ -49,17 +49,13 @@ int main(int argc, char *argv[])
 
     ui::VBoxLayout vlayout;
     vlayout.AddItem(&btn);
-    vlayout.SetStrechFactor(&btn, 1);
     
 
     ui::HBoxLayout hlayout;
     hlayout.AddItem(&btn2);
     hlayout.AddItem(&btn3);
-    hlayout.SetStrechFactor(&btn2, 1);
-    hlayout.SetStrechFactor(&btn3, 1);
 
     vlayout.AddItem(&hlayout);
-    vlayout.SetStrechFactor(&hlayout, 1);
     win.SetLayout(&vlayout);
     win.Relayout();
     win.Show();

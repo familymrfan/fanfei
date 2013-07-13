@@ -11,7 +11,7 @@ class LinearBoxLayoutItem:public LayoutItem
 public:
     LinearBoxLayoutItem(LayoutBaseItem* li):
         LayoutItem(li),
-        strech_factor_(0),
+        strech_factor_(1),
         strong_elastic_(false) {
 
     }
