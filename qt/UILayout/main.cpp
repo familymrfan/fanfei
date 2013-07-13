@@ -5,7 +5,7 @@
 #include "hboxlayout.h"
 #include "ywindow.h"
 #include "button.h"
-#include "hboxlayout.h"
+#include "vboxlayout.h"
 
 #include <QTimer>
 #include <QObject>
@@ -39,25 +39,28 @@ int main(int argc, char *argv[])
     win.AddChild(&btn);
     btn.SetText("A");
 
-    /*ui::Button btn2;
+    ui::Button btn2;
     win.AddChild(&btn2);
     btn2.SetText("B");
 
     ui::Button btn3;
     win.AddChild(&btn3);
-    btn3.SetText("C");*/
+    btn3.SetText("C");
 
-    ui::HBoxLayout layout;
-    layout.AddItem(&btn);
-    //layout.AddItem(&btn2);
-    //layout.AddItem(&btn3);
-    layout.SetWestSpace(&btn, 10);
-    layout.SetEastSpace(&btn, 10);
-    //layout.SetWestSpace(&btn3, 10);
-    //layout.SetEastSpace(&btn3, 10);
-    //layout.SetStrechFactor(&btn3, 1);
+    ui::VBoxLayout vlayout;
+    vlayout.AddItem(&btn);
+    vlayout.SetStrechFactor(&btn, 1);
+    
 
-    win.SetLayout(&layout);
+    ui::HBoxLayout hlayout;
+    hlayout.AddItem(&btn2);
+    hlayout.AddItem(&btn3);
+    hlayout.SetStrechFactor(&btn2, 1);
+    hlayout.SetStrechFactor(&btn3, 1);
+
+    vlayout.AddItem(&hlayout);
+    vlayout.SetStrechFactor(&hlayout, 1);
+    win.SetLayout(&vlayout);
     win.Relayout();
     win.Show();
 
