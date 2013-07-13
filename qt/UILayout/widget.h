@@ -93,6 +93,7 @@ public:
     virtual uint32_t Height() {
         return fake_widget_->height();
     }
+
 public:
     virtual void Relayout() override {
         if(layer_.size() > 0) {

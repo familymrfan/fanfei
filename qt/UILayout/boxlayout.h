@@ -93,7 +93,8 @@ public:
         return true;
     }
 
-    virtual uint32_t LimitMinWidth() override {
+protected:
+    void  CalculateLimitMinWidth() {
         int32_t min_width = 0, width = 0;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
@@ -115,10 +116,10 @@ public:
             }
             iter++;
         }
-        return min_width;
+        SetLimitMinWidth(min_width);
     }
 
-    virtual uint32_t LimitMinHeight() override {
+    void CalculateLimitMinHeight() {
         int32_t min_height = 0, height = 0;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
@@ -140,10 +141,10 @@ public:
             }
             iter++;
         }
-        return min_height;
+        SetLimitMinHeight(min_height);
     }
 
-    virtual uint32_t LimitMaxWidth() override {
+    void CalculateLimitMaxWidth() {
         int32_t max_width = 0, width = MAX_LENGTH;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
@@ -172,10 +173,10 @@ public:
 
             iter++;
         }
-        return max_width;
+        SetLimitMaxWidth(max_width);
     }
 
-    virtual uint32_t LimitMaxHeight() override {
+    void CalculateLimitMaxHeight() {
         int32_t max_height = 0, height = MAX_LENGTH;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
@@ -204,10 +205,10 @@ public:
 
             iter++;
         }
-        return max_height;
+        SetLimitMaxHeight(max_height);
     }
 
-    virtual uint32_t PreferWidth() override {
+    void CalculatePreferWidth() {
         int32_t prefer_width = 0, width = 0;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
@@ -235,11 +236,11 @@ public:
             }
             iter++;
         }
-        return prefer_width;
+        SetPreferWidth(prefer_width);
     }
 
 
-    virtual uint32_t PreferHeight() override {
+    void CalculatePreferHeight() {
         int32_t prefer_height = 0, height = 0;
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
@@ -268,11 +269,20 @@ public:
 
             iter++;
         }
-        return prefer_height;
+        SetPreferHeight(prefer_height);
     }
 
-protected:
+    void CalculateItemsSize() {
+        CalculateLimitMinWidth();
+        CalculateLimitMinHeight();
+        CalculateLimitMaxWidth();
+        CalculateLimitMaxHeight();
+        CalculatePreferWidth();
+        CalculatePreferHeight();
+    }
+
     virtual void Relayout() override {
+        CalculateItemsSize();
         auto iter = layout_items_.begin();
         while(iter != layout_items_.end()) {
             BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);

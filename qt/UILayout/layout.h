@@ -62,6 +62,8 @@ public:
         return layout_items_[index];
     }
 protected:
+    Layout():touched_widget_(nullptr) {}
+
     virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override {
         __super::SetGeometry(x, y, width, height);
     }
@@ -74,7 +76,32 @@ protected:
         __super::ReSize(width, height);
     }
 
+    virtual void SetPreferWidth(uint32_t width) {
+        __super::SetPreferWidth(width);
+    }
+
+    virtual void SetPreferHeight(uint32_t height) {
+        __super::SetPreferHeight(height);
+    }
+
+    virtual void SetLimitMinWidth(uint32_t width) {
+        __super::SetLimitMinWidth(width);
+    }
+
+    virtual void SetLimitMinHeight(uint32_t height) {
+        __super::SetLimitMinHeight(height);
+    }
+
+    virtual void SetLimitMaxWidth(uint32_t width) {
+        __super::SetLimitMaxWidth(width);
+    }
+
+    virtual void SetLimitMaxHeight(uint32_t height) {
+        __super::SetLimitMaxWidth(height);
+    }
+
     std::vector<LayoutItem*> layout_items_;
+    Widget* touched_widget_;
 };
 } // namespace ui
 

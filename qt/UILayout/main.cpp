@@ -43,20 +43,13 @@ int main(int argc, char *argv[])
     win.AddChild(&btn2);
     btn2.SetText("B");
 
-    ui::Button btn3;
-    win.AddChild(&btn3);
-    btn3.SetText("C");
-
-    ui::VBoxLayout vlayout;
-    vlayout.AddItem(&btn);
-    
-
     ui::HBoxLayout hlayout;
+    hlayout.AddItem(&btn);
     hlayout.AddItem(&btn2);
-    hlayout.AddItem(&btn3);
+    hlayout.SetStrechFactor(&btn, 0);
+    hlayout.SetStrechFactor(&btn2, 0);
 
-    vlayout.AddItem(&hlayout);
-    win.SetLayout(&vlayout);
+    win.SetLayout(&hlayout);
     win.Relayout();
     win.Show();
 
