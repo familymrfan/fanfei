@@ -61,9 +61,29 @@ public:
             return nullptr;
         return layout_items_[index];
     }
+    
+    virtual void ResetPreferLimitSize() override {
+	for(LayoutItem* item:layout_items_) {
+	  item->GetLayoutBaseItem()->ResetPreferLimitSize();
+	}
+	SetLimitMinWidth(CalculateLimitMinWidth());
+        SetLimitMinHeight(CalculateLimitMinHeight());
+        SetLimitMaxWidth(CalculateLimitMaxWidth());
+        SetLimitMaxHeight(CalculateLimitMaxHeight());
+        SetPreferWidth(CalculatePreferWidth());
+        SetPreferHeight(CalculatePreferHeight());
+    }
+
 protected:
     Layout() {}
 
+    virtual uint32_t CalculateLimitMinWidth() = 0;
+    virtual uint32_t CalculateLimitMinHeight() = 0;
+    virtual uint32_t CalculateLimitMaxWidth() = 0;
+    virtual uint32_t CalculateLimitMaxHeight() = 0;
+    virtual uint32_t CalculatePreferWidth() = 0;
+    virtual uint32_t CalculatePreferHeight() = 0;
+    
     virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override {
         LayoutBaseItem::SetGeometry(x, y, width, height);
     }

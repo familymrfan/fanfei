@@ -16,17 +16,18 @@ public:
     HBoxLayout() {}
 
 protected:
-    void CalculateLimitMinWidth() {
+    virtual uint32_t CalculateLimitMinWidth() override {
         int width = 0;
         for (LayoutItem* item:layout_items_) {
             LayoutBaseItem *base_item = item->GetLayoutBaseItem();
             assert(base_item);
             width += base_item->LimitMinWidth();
         }
-        SetLimitMinWidth(width);
+        
+        return width;
     }
 
-    void CalculateLimitMinHeight() {
+    virtual uint32_t CalculateLimitMinHeight() override {
         uint32_t height = 0;
         for (LayoutItem* item:layout_items_) {
             LayoutBaseItem *base_item = item->GetLayoutBaseItem();
@@ -35,10 +36,11 @@ protected:
                 height = base_item->LimitMinHeight();
             }
         }
-        SetLimitMinHeight(height);
+        
+        return height;
     }
 
-    void CalculateLimitMaxWidth() {
+    virtual uint32_t CalculateLimitMaxWidth() override {
         uint32_t width = MAX_LENGTH;
         for (LayoutItem* item:layout_items_) {
             LayoutBaseItem *base_item = item->GetLayoutBaseItem();
@@ -46,10 +48,11 @@ protected:
                 width += base_item->LimitMaxWidth();
             }
         }
-        SetLimitMaxWidth(width);
+        
+        return width;
     }
 
-    void CalculateLimitMaxHeight() {
+    virtual uint32_t CalculateLimitMaxHeight() override {
         uint32_t height = MAX_LENGTH;
         for (LayoutItem* item:layout_items_) {
             LayoutBaseItem *base_item = item->GetLayoutBaseItem();
@@ -57,19 +60,21 @@ protected:
                 height = base_item->LimitMaxHeight();
             }
         }
-        SetLimitMaxHeight(height);
+        
+        return height;
     }
 
-    void CalculatePreferWidth() {
+    virtual uint32_t CalculatePreferWidth() override {
         uint32_t width = 0;
         for (LayoutItem* item:layout_items_) {
             LayoutBaseItem *base_item = item->GetLayoutBaseItem();
             width += std::max(base_item->LimitMinWidth(), base_item->PreferWidth());
         }
-        SetPreferWidth(width);
+        
+        return width;
     }
 
-    void CalculatePreferHeight() {
+    virtual uint32_t CalculatePreferHeight() override {
         uint32_t height = 0, hign_height = 0;
         for (LayoutItem* item:layout_items_) {
             LayoutBaseItem *base_item = item->GetLayoutBaseItem();
@@ -78,21 +83,8 @@ protected:
                 height = hign_height;
             }
         }
-        SetPreferHeight(height);
-    }
-
-    void CalculateItemsSize() {
-        CalculateLimitMinWidth();
-        CalculateLimitMinHeight();
-        CalculateLimitMaxWidth();
-        CalculateLimitMaxHeight();
-        CalculatePreferWidth();
-        CalculatePreferHeight();
-    }
-
-    virtual void Relayout() override {
-        CalculateItemsSize();
-        LinearBoxLayout::Relayout();
+        
+        return height;
     }
 
     virtual bool IsUnderPrefer() override {

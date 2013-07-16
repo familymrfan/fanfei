@@ -12,7 +12,6 @@ namespace ui
 class LayoutBaseItem
 {
 public:
-
     LayoutBaseItem():x_(0),
                      y_(0),
                      width_(0),
@@ -108,6 +107,7 @@ public:
     }
 
     virtual void Relayout() = 0;
+    virtual void ResetPreferLimitSize() = 0;
 private:
     int32_t x_;
     int32_t y_;

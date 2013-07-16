@@ -84,36 +84,34 @@ public:
             layer_.push_back(layout);
         }
     }
-
-    virtual uint32_t Width() {
+    
+    virtual uint32_t Width() override {
         return fake_widget_->width();
     }
 
-    virtual uint32_t Height() {
+    virtual uint32_t Height() override {
         return fake_widget_->height();
     }
 
+    virtual void ResetPreferLimitSize() override {
+	if(layer_.size() > 0 && layer_[0]) {
+	  layer_[0]->ResetPreferLimitSize();
+	  
+	  SetPreferWidth(layer_[0]->PreferWidth());
+	  SetPreferHeight(layer_[0]->PreferHeight());
+	  SetLimitMinWidth(layer_[0]->LimitMinWidth());
+	  SetLimitMinHeight(layer_[0]->LimitMinHeight());
+	  SetLimitMaxWidth(layer_[0]->LimitMaxWidth());
+	  SetLimitMaxHeight(layer_[0]->LimitMaxHeight());
+	}
+    }
 public:
     virtual void Relayout() override {
         if(layer_.size() > 0) {
-            int32_t width = Width(), height = Height();
-            if(Width() < layer_[0]->LimitMinWidth()) {
-                width = layer_[0]->LimitMinWidth();
-            }
-
-            if(Width() > layer_[0]->LimitMaxWidth()) {
-                width = layer_[0]->LimitMaxWidth();
-            }
-
-            if(Height() < layer_[0]->LimitMinHeight()) {
-                height = layer_[0]->LimitMinHeight();
-            }
-
-            if(Height() > layer_[0]->LimitMaxHeight()) {
-                height = layer_[0]->LimitMaxHeight();
-            }
-            fake_widget_->resize(width, height);
-            layer_[0]->SetGeometry(0, 0, width, height);
+	    if(parent_ == nullptr) {
+	      ResetPreferLimitSize();
+	    }
+	    layer_[0]->SetGeometry(0, 0, Width(), Height());
             layer_[0]->Relayout();
         }
     }
