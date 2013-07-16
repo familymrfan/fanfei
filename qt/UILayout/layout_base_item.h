@@ -3,6 +3,10 @@
 
 namespace ui
 {
+#ifndef UINT32_MAX
+#define UINT32_MAX  (0xffffffff)
+#endif
+
 #define MAX_LENGTH UINT32_MAX
 
 class LayoutBaseItem

@@ -95,14 +95,14 @@ public:
         auto box = new BoxLayout;
         box->AddItem(item);
         LinearBoxLayoutItem *lbli = new LinearBoxLayoutItem(box);
-        __super::AddItem(lbli);
+        Layout::AddItem(lbli);
     }
 
     bool InsertItem(uint32_t index, LayoutBaseItem *item) {
         auto box = new BoxLayout;
         box->AddItem(item);
         LinearBoxLayoutItem *lbli = new LinearBoxLayoutItem(box);
-        return __super::InsertItem(index, lbli);
+        return Layout::InsertItem(index, lbli);
     }
 
     bool RemoveItem(LayoutBaseItem *item) {

@@ -61,12 +61,12 @@ public:
 
     void AddItem(LayoutBaseItem *item){
         BoxLayoutItem *bli = new BoxLayoutItem(item);
-        __super::AddItem(bli);
+        Layout::AddItem(bli);
     }
 
     bool InsertItem(int32_t index, LayoutBaseItem *item){
         BoxLayoutItem *bli = new BoxLayoutItem(item);
-        return __super::InsertItem(index, bli);
+        return Layout::InsertItem(index, bli);
     }
 
     bool RemoveItem(LayoutBaseItem *item) {

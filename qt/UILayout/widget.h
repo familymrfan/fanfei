@@ -1,7 +1,6 @@
 #ifndef WIDGET_H_
 #define WIDGET_H_
 
-#include "layout_item.h"
 #include "layout.h"
 
 #include <QWidget>
@@ -64,7 +63,7 @@ public:
     
     virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override {
         fake_widget_->setGeometry(x, y, width, height);
-        __super::SetGeometry(x, y, width, height);
+        LayoutBaseItem::SetGeometry(x, y, width, height);
     }
     
     virtual void Show() {
@@ -133,6 +132,6 @@ protected:
     //Fake remove later
     FakeWidget *fake_widget_;
 };
-} // namespace UI
+} // namespace ui
 
 #endif

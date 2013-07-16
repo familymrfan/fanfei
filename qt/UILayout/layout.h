@@ -62,46 +62,45 @@ public:
         return layout_items_[index];
     }
 protected:
-    Layout():touched_widget_(nullptr) {}
+    Layout() {}
 
     virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override {
-        __super::SetGeometry(x, y, width, height);
+        LayoutBaseItem::SetGeometry(x, y, width, height);
     }
 
     virtual void Move(int32_t x, int32_t y) override {
-        __super::Move(x, y);
+        LayoutBaseItem::Move(x, y);
     }
 
     virtual void ReSize(uint32_t width, uint32_t height) override {
-        __super::ReSize(width, height);
+        LayoutBaseItem::ReSize(width, height);
     }
 
-    virtual void SetPreferWidth(uint32_t width) {
-        __super::SetPreferWidth(width);
+    virtual void SetPreferWidth(uint32_t width) override {
+        LayoutBaseItem::SetPreferWidth(width);
     }
 
-    virtual void SetPreferHeight(uint32_t height) {
-        __super::SetPreferHeight(height);
+    virtual void SetPreferHeight(uint32_t height) override {
+        LayoutBaseItem::SetPreferHeight(height);
     }
 
-    virtual void SetLimitMinWidth(uint32_t width) {
-        __super::SetLimitMinWidth(width);
+    virtual void SetLimitMinWidth(uint32_t width) override {
+        LayoutBaseItem::SetLimitMinWidth(width);
     }
 
-    virtual void SetLimitMinHeight(uint32_t height) {
-        __super::SetLimitMinHeight(height);
+    virtual void SetLimitMinHeight(uint32_t height) override {
+        LayoutBaseItem::SetLimitMinHeight(height);
     }
 
-    virtual void SetLimitMaxWidth(uint32_t width) {
-        __super::SetLimitMaxWidth(width);
+    virtual void SetLimitMaxWidth(uint32_t width) override {
+        LayoutBaseItem::SetLimitMaxWidth(width);
     }
 
-    virtual void SetLimitMaxHeight(uint32_t height) {
-        __super::SetLimitMaxWidth(height);
+    virtual void SetLimitMaxHeight(uint32_t height) override {
+        LayoutBaseItem::SetLimitMaxWidth(height);
     }
 
     std::vector<LayoutItem*> layout_items_;
-    Widget* touched_widget_;
 };
 } // namespace ui
 

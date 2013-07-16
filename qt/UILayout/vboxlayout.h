@@ -92,7 +92,7 @@ protected:
 
     virtual void Relayout() override {
         CalculateItemsSize();
-        __super::Relayout();
+        Layout::Relayout();
     }
 
     virtual bool IsUnderPrefer() override {
@@ -139,7 +139,7 @@ protected:
             LayoutBaseItem* box = iter->box_item->GetLayoutBaseItem();
             assert(box);
 
-            if(iter->box_item->StrechFactor() == 0 || strong && !iter->box_item->IsStrongElastic()) {
+            if(iter->box_item->StrechFactor() == 0 || (strong && !iter->box_item->IsStrongElastic())) {
                 iter->section = std::max(box->LimitMinHeight(), box->PreferHeight());
                 iter->status = AllocHelper::kAlloc;
                 alloc_size -= iter->section;
