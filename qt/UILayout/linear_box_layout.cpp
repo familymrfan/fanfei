@@ -115,6 +115,7 @@ void LinearBoxLayout::AddLayout(Layout* layout) {
     auto box = new BoxLayout;
     box->SetParentWidget(parent);
     box->AddLayout(layout);
+    box->SetAround(layout, 0, 0, 0, 0);
     LinearBoxLayoutItem *lbli = new LinearBoxLayoutItem(box);
     Layout::AddItem(lbli);
 }
