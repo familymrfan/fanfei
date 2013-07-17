@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
     ui::HBoxLayout hlayout;
     hlayout.AddItem(&btn);
     hlayout.AddItem(&btn2);
+    
     hlayout.SetStrechFactor(&btn, 0);
     hlayout.SetWestSpace(&btn2, 0);
     hlayout.SetEastSpace(&btn2, 0);
@@ -69,10 +70,11 @@ int main(int argc, char *argv[])
     win.Relayout();
     win.Show();
 
+    hlayout.RemoveItem(&btn2);
 
     /* Ä£Äâ onsize */
     Timer c(&win);
-    QTimer *timer = new QTimer;
+    QTimer *timer = new QTimer();
     QObject::connect(timer, SIGNAL(timeout()), &c, SLOT(Update()));
     timer->start(500);
 

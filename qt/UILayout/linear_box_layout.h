@@ -108,9 +108,10 @@ public:
     bool RemoveItem(LayoutBaseItem *item) {
         auto iter = layout_items_.begin();
         while (iter != layout_items_.end()) {
-            LayoutBaseItem *lbli = (*iter)->GetLayoutBaseItem();
+            BoxLayout *box = reinterpret_cast<BoxLayout *>((*iter)->GetLayoutBaseItem());
+	    LayoutBaseItem *lbli = box->ItemAt(0)->GetLayoutBaseItem();
             if(lbli == item) {
-                delete lbli;
+                delete box;
                 layout_items_.erase(iter);
                 return true;
             }
