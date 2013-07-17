@@ -1,6 +1,8 @@
 #ifndef LAYOUT_BASE_ITEM_H_
 #define LAYOUT_BASE_ITEM_H_
 
+#include <stdint.h>
+
 namespace ui
 {
 #ifndef UINT32_MAX
@@ -12,99 +14,29 @@ namespace ui
 class LayoutBaseItem
 {
 public:
-    LayoutBaseItem():x_(0),
-                     y_(0),
-                     width_(0),
-                     height_(0),
-                     prefer_width_(0),
-                     prefer_height_(0),
-                     limit_min_width_(0),
-                     limit_min_height_(0),
-                     limit_max_width_(MAX_LENGTH),
-                     limit_max_height_(MAX_LENGTH) {
+    LayoutBaseItem();
 
-    }
+    virtual ~LayoutBaseItem();
 
-    virtual ~LayoutBaseItem() {}
-
-    virtual void Move(int32_t x, int32_t y) {
-        x_ = x;
-        y_ = y;
-    }
-
-    virtual void ReSize(uint32_t width, uint32_t height) {
-        width_ = width;
-        height_ = height;
-    }
-
-    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
-        Move(x, y);
-        ReSize(width, height);
-    }
-
-    virtual int32_t X() {
-        return x_;
-    }
-
-    virtual int32_t Y() {
-        return y_;
-    }
-
-    virtual uint32_t Width() {
-        return width_;
-    }
-
-    virtual uint32_t Height() {
-        return height_;
-    }
-    
-    virtual void SetPreferWidth(uint32_t width) {
-        prefer_width_ = width;
-    }
-
-    virtual uint32_t PreferWidth() {
-        return prefer_width_;
-    }
-
-    virtual void SetPreferHeight(uint32_t height) {
-        prefer_height_ = height;
-    }
-
-    virtual uint32_t PreferHeight() {
-        return prefer_height_;
-    }
-
-    virtual void SetLimitMinWidth(uint32_t width) {
-        limit_min_width_ = width;
-    }
-
-    virtual uint32_t LimitMinWidth() {
-        return limit_min_width_;
-    }
-
-    virtual void SetLimitMinHeight(uint32_t height) {
-        limit_min_height_ = height;
-    }
-
-    virtual uint32_t LimitMinHeight() {
-        return limit_min_height_;
-    }
-
-    virtual void SetLimitMaxWidth(uint32_t width) {
-        limit_max_width_ = width;
-    }
-
-    virtual uint32_t LimitMaxWidth() {
-        return limit_max_width_;
-    }
-
-    virtual void SetLimitMaxHeight(uint32_t height) {
-        limit_max_height_ = height;
-    }
-
-    virtual uint32_t LimitMaxHeight() {
-        return limit_max_height_;
-    }
+    virtual void Move(int32_t x, int32_t y);
+    virtual void ReSize(uint32_t width, uint32_t height);
+    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height);
+    virtual int32_t X();
+    virtual int32_t Y();
+    virtual uint32_t Width();
+    virtual uint32_t Height();
+    virtual void SetPreferWidth(uint32_t width);
+    virtual uint32_t PreferWidth();
+    virtual void SetPreferHeight(uint32_t height);
+    virtual uint32_t PreferHeight();
+    virtual void SetLimitMinWidth(uint32_t width);
+    virtual uint32_t LimitMinWidth();
+    virtual void SetLimitMinHeight(uint32_t height);
+    virtual uint32_t LimitMinHeight();
+    virtual void SetLimitMaxWidth(uint32_t width);
+    virtual uint32_t LimitMaxWidth();
+    virtual void SetLimitMaxHeight(uint32_t height);
+    virtual uint32_t LimitMaxHeight();
 
     virtual void Relayout() = 0;
     virtual void ResetPreferLimitSize() = 0;

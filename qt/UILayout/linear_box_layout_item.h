@@ -5,32 +5,22 @@
 
 namespace ui
 {
-
+class Widget;
+class Layout;
+class LayoutSpace;
+  
 class LinearBoxLayoutItem:public LayoutItem
 {
 public:
-    LinearBoxLayoutItem(LayoutBaseItem* li):
-        LayoutItem(li),
-        strech_factor_(1),
-        strong_elastic_(false) {
+    LinearBoxLayoutItem(Widget* widget);
+    LinearBoxLayoutItem(Layout* layout);
+    LinearBoxLayoutItem(LayoutSpace* layout_space);
 
-    }
-
-    void SetStrechFactor(uint32_t strech_factor) {
-        strech_factor_ = strech_factor;
-    }
-
-    uint32_t StrechFactor() const {
-        return strech_factor_;
-    }
-
-    void SetStrongElastic(bool strong_elastic) {
-        strong_elastic_ = strong_elastic;
-    }
-
-    bool IsStrongElastic() const {
-        return strong_elastic_;
-    }
+    void SetStrechFactor(uint32_t strech_factor);
+    uint32_t StrechFactor() const;
+    void SetStrongElastic(bool strong_elastic);
+    bool IsStrongElastic() const;
+    
 protected:
     uint32_t strech_factor_;
     bool    strong_elastic_;

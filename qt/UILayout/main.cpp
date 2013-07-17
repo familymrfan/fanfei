@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QLayout>
 
-#include "boxlayout.h"
+#include "box_layout.h"
 #include "hboxlayout.h"
 #include "ywindow.h"
 #include "button.h"
@@ -21,56 +21,21 @@ int main(int argc, char *argv[])
     ui::Window win;
     win.SetGeometry(100, 100, 500, 500);
     
-    /* BOX */
-    /*ui::Button btn;
-    win.AddChild(&btn);
-    btn.SetText("outside");
-   
-    ui::BoxLayout layout;
-    layout.AddItem(&btn);
-    layout.SetEastSpace(&btn, 10);
-    layout.SetNorthSpace(&btn, 10);
-    layout.SetSouthSpace(&btn, 10);
-
-    win.SetLayout(&layout);
-    win.Relayout();
+    ui::HBoxLayout hbox;
+    win.SetLayout(&hbox);
     
-    btn.Show();*/
-
-    ui::Button btn;
-    win.AddChild(&btn);
-    btn.SetText("A");
-
-    ui::Button btn2;
-    win.AddChild(&btn2);
-    btn2.SetText("B");
-
-    ui::HBoxLayout hlayout;
-    hlayout.AddItem(&btn);
-    hlayout.AddItem(&btn2);
+    ui::Button btn1,btn2,btn3,btn4;
+    hbox.AddWidget(&btn1);
+    hbox.AddWidget(&btn2);
     
-    hlayout.SetStrechFactor(&btn, 0);
-    hlayout.SetWestSpace(&btn2, 0);
-    hlayout.SetEastSpace(&btn2, 0);
-    hlayout.SetStrechFactor(&btn2, 1);
     
-    ui::LayoutSpace space1;
-    hlayout.InsertItem(0, &space1);
-    hlayout.SetWestSpace(&space1, 0);
-    hlayout.SetEastSpace(&space1, 0);
-    hlayout.SetStrechFactor(&space1, 1);
+    ui::VBoxLayout vbox;
+    hbox.AddLayout(&vbox);
+    vbox.AddWidget(&btn3);
+    vbox.AddWidget(&btn4);
     
-    ui::LayoutSpace space2;
-    hlayout.InsertItem(2, &space2);
-    hlayout.SetWestSpace(&space2, 0);
-    hlayout.SetEastSpace(&space2, 0);
-    hlayout.SetStrechFactor(&space2, 1);
-    
-    win.SetLayout(&hlayout);
     win.Relayout();
     win.Show();
-
-    hlayout.RemoveItem(&btn2);
 
     /* Ä£Äâ onsize */
     Timer c(&win);

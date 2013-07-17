@@ -2,7 +2,6 @@
 #define LAYOUT_SPACE_H_
 
 #include "layout_base_item.h"
-#include <QPainter>
 
 namespace ui
 {
