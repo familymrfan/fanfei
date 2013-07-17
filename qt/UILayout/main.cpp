@@ -6,7 +6,9 @@
 #include "ywindow.h"
 #include "button.h"
 #include "vboxlayout.h"
+#include "layout_space.h"
 
+#include <QImage>
 #include <QTimer>
 #include <QObject>
 #include "timer.h"
@@ -47,8 +49,22 @@ int main(int argc, char *argv[])
     hlayout.AddItem(&btn);
     hlayout.AddItem(&btn2);
     hlayout.SetStrechFactor(&btn, 0);
-    hlayout.SetStrechFactor(&btn2, 0);
-
+    hlayout.SetWestSpace(&btn2, 0);
+    hlayout.SetEastSpace(&btn2, 0);
+    hlayout.SetStrechFactor(&btn2, 1);
+    
+    ui::LayoutSpace space1;
+    hlayout.InsertItem(0, &space1);
+    hlayout.SetWestSpace(&space1, 0);
+    hlayout.SetEastSpace(&space1, 0);
+    hlayout.SetStrechFactor(&space1, 1);
+    
+    ui::LayoutSpace space2;
+    hlayout.InsertItem(2, &space2);
+    hlayout.SetWestSpace(&space2, 0);
+    hlayout.SetEastSpace(&space2, 0);
+    hlayout.SetStrechFactor(&space2, 1);
+    
     win.SetLayout(&hlayout);
     win.Relayout();
     win.Show();

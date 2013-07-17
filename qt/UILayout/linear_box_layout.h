@@ -72,7 +72,7 @@ public:
     }
 
     void SetValidGap(LayoutBaseItem *item,
-        BoxLayoutItem::GapValid gap_valid, 
+        BoxLayoutItem::GapValid gap_valid,
         bool valid = true) {
             BoxLayoutItem *bli = GetBoxLayoutItem(item);
             assert(bli);
