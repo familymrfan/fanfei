@@ -37,6 +37,7 @@ public:
     virtual bool InsertLayout(uint32_t index, Layout *layout) override ;
     virtual bool RemoveLayout(Layout *layout) override ;
 
+    virtual bool IsEmpty();
 protected:
     virtual uint32_t CalculateLimitMinWidth() override;
     virtual uint32_t CalculateLimitMinHeight() override;

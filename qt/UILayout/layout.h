@@ -32,6 +32,9 @@ public:
     
     void SetParentWidget(Widget* widget);
     Widget* GetParentWidget() const;
+    
+    virtual void Empty();
+    virtual bool IsEmpty();
 protected:
     Layout():parent_widget_(nullptr) {}
 

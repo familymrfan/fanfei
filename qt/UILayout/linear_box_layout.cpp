@@ -132,9 +132,8 @@ bool LinearBoxLayout::InsertLayout(uint32_t index, Layout *layout) {
 }
 
 bool LinearBoxLayout::RemoveLayout(Layout *layout) {
-    Widget* parent = GetParentWidget();
-    assert(parent);
     layout->SetParentWidget(nullptr);
+    layout->Empty();
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
 	BoxLayout *box = reinterpret_cast<BoxLayout *>((*iter)->GetLayoutBaseItem());
@@ -174,6 +173,10 @@ void LinearBoxLayout::BoxToAllocHelper() {
     while(iter != layout_items_.end()) {
 	AllocHelper helper;
 	helper.box_item = reinterpret_cast<LinearBoxLayoutItem *>(*iter);
+	if(helper.box_item->GetLayout() && helper.box_item->GetLayout()->IsEmpty()) {
+	    iter++;
+	    continue;
+	}
 	alloc_sections_.push_back(helper);
 	iter++;
     }
@@ -241,4 +244,19 @@ BoxLayoutItem* LinearBoxLayout::GetBoxLayoutItem(LayoutBaseItem *item) {
     return nullptr;
 }
 
+bool LinearBoxLayout::IsEmpty() {
+    bool empty = true;
+    auto iter = layout_items_.begin();
+    while (iter != layout_items_.end()) {
+	BoxLayout *bli = reinterpret_cast<BoxLayout*>((*iter)->GetLayoutBaseItem());
+	assert(bli);
+	if(bli->IsEmpty()) {
+	    iter++;
+	    continue ;
+	}
+	empty = false;
+	iter++;
+    }
+    return empty;
+}
 } // namespace ui

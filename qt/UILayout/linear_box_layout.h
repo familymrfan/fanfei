@@ -57,6 +57,8 @@ public:
     virtual void AddLayout(Layout* layout) override ;
     virtual bool InsertLayout(uint32_t index, Layout *layout) override ;
     virtual bool RemoveLayout(Layout *layout) override ;
+    
+    virtual bool IsEmpty();
 protected:
     virtual void Relayout() override;
 

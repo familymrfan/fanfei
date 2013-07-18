@@ -56,9 +56,13 @@ uint32_t Widget::ChildrenNum() const {
 
 void Widget::SetParent(Widget* widget) {
     if(fake_widget_ != nullptr) {
+      if(widget) {
 	fake_widget_->setParent(widget->GetFakeWidget());
+	widget->AddChild(this);
+      } else {
+	fake_widget_->setParent(nullptr);
+      }
     }
-    widget->AddChild(this);
 }
 
 void Widget::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
@@ -73,6 +77,11 @@ void Widget::Show() {
 void Widget::Hide() {
     fake_widget_->hide();
 }
+
+bool Widget::IsVisible() const{
+    return fake_widget_->isVisible();
+}
+
 //Fake remove later
 Widget::FakeWidget* Widget::GetFakeWidget() {
     return fake_widget_;

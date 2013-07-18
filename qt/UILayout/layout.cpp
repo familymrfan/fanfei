@@ -109,4 +109,24 @@ void Layout::SetParentWidget(Widget* widget) {
 Widget* Layout::GetParentWidget() const {
     return parent_widget_;
 }
+
+void Layout::Empty() {
+    auto iter = layout_items_.begin();
+    while(iter != layout_items_.end()) {
+	LayoutItem *item = (*iter);
+	// skip unvisible item
+	if(item->GetWidget()) {
+	    item->GetWidget()->SetParent(nullptr);
+	} else if(item->GetLayout()) {
+	    item->GetLayout()->SetParentWidget(nullptr);
+	    item->GetLayout()->Empty();
+	}
+	iter++;
+    }
+    layout_items_.clear();
+}
+
+bool Layout::IsEmpty() {
+    return layout_items_.empty();
+}
 } // namespace ui

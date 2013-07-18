@@ -105,9 +105,11 @@ bool BoxLayout::InsertLayout(uint32_t index, Layout *layout) {
 }
 
 bool BoxLayout::RemoveLayout(Layout *layout) {
+    layout->SetParentWidget(nullptr);
+    layout->Empty();
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
-        LayoutBaseItem *bli = (*iter)->GetWidget();
+        LayoutBaseItem *bli = (*iter)->GetLayout();
         if(bli == layout) {
             layout_items_.erase(iter);
             return true;
@@ -121,9 +123,13 @@ uint32_t BoxLayout::CalculateLimitMinWidth() {
   uint32_t min_width = 0, width = 0;
   auto iter = layout_items_.begin();
   while(iter != layout_items_.end()) {
-    BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
-    LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
     min_width = width;
+    BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
+    if(item->GetWidget() && !item->GetWidget()->IsVisible()) {
+	    iter++;
+	    continue ;
+    }
+    LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
     if(item->IsValidGap(BoxLayoutItem::kWestValid) && !item->IsValidGap(BoxLayoutItem::kEastValid)) {
       width = BaseItem->LimitMinWidth() + item->WestSpace() + item->EastSpace();
     } else if(item->IsValidGap(BoxLayoutItem::kWestValid)){
@@ -146,12 +152,16 @@ uint32_t BoxLayout::CalculateLimitMinHeight() {
   uint32_t min_height = 0, height = 0;
   auto iter = layout_items_.begin();
   while(iter != layout_items_.end()) {
-    BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
-    LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
     min_height = height;
+    BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
+    if(item->GetWidget() && !item->GetWidget()->IsVisible()) {
+	    iter++;
+	    continue ;
+    }
+    LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
     if(item->IsValidGap(BoxLayoutItem::kNorthValid) && !item->IsValidGap(BoxLayoutItem::kSouthValid)) {
       height = BaseItem->LimitMinHeight() + item->NorthSpace() + item->SouthSpace();
-    } else if(item->IsValidGap(BoxLayoutItem::kNorthValid)){
+    } else if(item->IsValidGap(BoxLayoutItem::kNorthValid)) {
       height = BaseItem->LimitMinHeight() + item->NorthSpace();
     } else if(item->IsValidGap(BoxLayoutItem::kSouthValid)) {
       height = BaseItem->LimitMinHeight() + item->SouthSpace();
@@ -168,12 +178,15 @@ uint32_t BoxLayout::CalculateLimitMinHeight() {
 }
 
 uint32_t BoxLayout::CalculateLimitMaxWidth() {
-    uint32_t max_width = 0, width = MAX_LENGTH;
+    uint32_t max_width = MAX_LENGTH, width = MAX_LENGTH;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
 	BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
+	if(item->GetWidget() && !item->GetWidget()->IsVisible()) {
+	    iter++;
+	    continue ;
+	}
 	LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
-	max_width = width;
 	if(item->IsValidGap(BoxLayoutItem::kWestValid) && !item->IsValidGap(BoxLayoutItem::kEastValid)) {
 	    if(BaseItem->LimitMaxWidth() < MAX_LENGTH - item->EastSpace() - item->WestSpace()) {
 		width = BaseItem->LimitMaxWidth() + item->EastSpace() + item->WestSpace();
@@ -200,12 +213,15 @@ uint32_t BoxLayout::CalculateLimitMaxWidth() {
 }
 
 uint32_t BoxLayout::CalculateLimitMaxHeight() {
-    uint32_t max_height = 0, height = MAX_LENGTH;
+    uint32_t max_height = MAX_LENGTH, height = MAX_LENGTH;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
 	BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
+	if(item->GetWidget() && !item->GetWidget()->IsVisible()) {
+	    iter++;
+	    continue ;
+	}
 	LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
-	max_height = height;
 	if(item->IsValidGap(BoxLayoutItem::kNorthValid) && !item->IsValidGap(BoxLayoutItem::kSouthValid)) {
 	    if(BaseItem->LimitMaxHeight() < MAX_LENGTH - item->NorthSpace() - item->SouthSpace()) {
 		height = BaseItem->LimitMaxHeight() + item->NorthSpace() + item->SouthSpace();
@@ -236,9 +252,13 @@ uint32_t BoxLayout::CalculatePreferWidth() {
     uint32_t prefer_width = 0, width = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
-	BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
-	LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
 	prefer_width = width;
+	BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
+	if(item->GetWidget() && !item->GetWidget()->IsVisible()) {
+	    iter++;
+	    continue ;
+	}
+	LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
 	if(item->IsValidGap(BoxLayoutItem::kWestValid) && !item->IsValidGap(BoxLayoutItem::kEastValid)) {
 	    if(BaseItem->PreferWidth() < MAX_LENGTH - item->EastSpace() - item->WestSpace()) {
 		width = BaseItem->PreferWidth() + item->EastSpace() + item->WestSpace();
@@ -267,9 +287,13 @@ uint32_t BoxLayout::CalculatePreferHeight() {
     uint32_t prefer_height = 0, height = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
-	BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
-	LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
 	prefer_height = height;
+	BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
+	if(item->GetWidget() && !item->GetWidget()->IsVisible()) {
+	    iter++;
+	    continue ;
+	}
+	LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
 	if(item->IsValidGap(BoxLayoutItem::kNorthValid) && !item->IsValidGap(BoxLayoutItem::kSouthValid)) {
 	    if(BaseItem->PreferHeight() < MAX_LENGTH - item->NorthSpace() - item->EastSpace()) {
 		height = BaseItem->PreferHeight() + item->NorthSpace() + item->EastSpace();
@@ -300,6 +324,11 @@ void BoxLayout::Relayout() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
 	BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
+	// skip unvisible item
+	if(item->GetWidget() && !item->GetWidget()->IsVisible()) {
+	    iter++;
+	    continue ;
+	}
 	LayoutBaseItem *BaseItem = item->GetLayoutBaseItem();
 
 	uint32_t width = std::min(BaseItem->PreferWidth(), Width()), height = std::min(BaseItem->PreferHeight(), Height());
@@ -347,5 +376,21 @@ BoxLayoutItem* BoxLayout::GetBoxLayoutItem(LayoutBaseItem *item) {
 	iter++;
     }
     return nullptr;
+}
+
+bool BoxLayout::IsEmpty() {
+    bool empty = true;
+    auto iter = layout_items_.begin();
+    while(iter != layout_items_.end()) {
+	BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(*iter);
+	// skip unvisible item
+	if(item->GetWidget() && !item->GetWidget()->IsVisible()) {
+	    iter++;
+	    continue ;
+	}
+	empty = false;
+	iter++;
+    }
+    return empty;
 }
 } // namespace ui
