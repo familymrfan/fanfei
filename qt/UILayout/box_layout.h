@@ -47,6 +47,7 @@ protected:
     virtual uint32_t CalculatePreferHeight() override;
     virtual void Relayout() override;
 
+    bool SkipUnVisibleWidget(BoxLayoutItem *item);
     BoxLayoutItem* GetBoxLayoutItem(LayoutBaseItem *item);
 };
 
