@@ -20,6 +20,7 @@ public:
     Widget* ChildAt(uint32_t index);
     uint32_t ChildrenNum() const;
     virtual void SetParent(Widget* widget);
+    Widget* Parent() const;
     virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
     virtual void Show();
     virtual void Hide();

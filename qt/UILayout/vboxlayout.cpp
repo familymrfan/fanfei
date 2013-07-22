@@ -7,14 +7,14 @@
 #include "linear_box_layout_item.h"
 
 namespace ui
-{
+{ 
 VBoxLayout::VBoxLayout() {
   
 }
 
 uint32_t VBoxLayout::CalculateLimitMinWidth() {
     uint32_t width = 0;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
 	assert(base_item);
 	if(base_item->LimitMinWidth() > width) {
@@ -26,7 +26,7 @@ uint32_t VBoxLayout::CalculateLimitMinWidth() {
 
 uint32_t VBoxLayout::CalculateLimitMinHeight() {
     uint32_t height = 0;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
 	assert(base_item);
 	height += base_item->LimitMinHeight();
@@ -36,7 +36,7 @@ uint32_t VBoxLayout::CalculateLimitMinHeight() {
 
 uint32_t VBoxLayout::CalculateLimitMaxWidth() {
     uint32_t width = MAX_LENGTH;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
 	if(base_item->LimitMaxWidth() < width) {
 	    width = base_item->LimitMaxWidth();
@@ -47,7 +47,7 @@ uint32_t VBoxLayout::CalculateLimitMaxWidth() {
 
 uint32_t VBoxLayout::CalculateLimitMaxHeight() {
     uint32_t height = MAX_LENGTH;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
 	if(height < MAX_LENGTH - base_item->LimitMaxHeight()) {
 	    height += base_item->LimitMaxHeight();
@@ -58,7 +58,7 @@ uint32_t VBoxLayout::CalculateLimitMaxHeight() {
 
 uint32_t VBoxLayout::CalculatePreferWidth() {
     uint32_t width = 0, hign_width = 0;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
 	hign_width = std::max(base_item->LimitMinWidth(), base_item->PreferWidth());
 	if(hign_width > width) {
@@ -70,7 +70,7 @@ uint32_t VBoxLayout::CalculatePreferWidth() {
 
 uint32_t VBoxLayout::CalculatePreferHeight() {
     uint32_t height = 0;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
 	height += std::max(base_item->LimitMinHeight(), base_item->PreferHeight());
     }
@@ -118,6 +118,7 @@ void VBoxLayout::DoExceedPrefer() {
 
     auto iter = alloc_sections_.begin();
     while(iter != alloc_sections_.end()) {
+	assert(iter->box_item);
 	LayoutBaseItem* box = iter->box_item->GetLayoutBaseItem();
 	assert(box);
 
@@ -143,6 +144,7 @@ void VBoxLayout::AllocHelperToBox() {
     auto iter = alloc_sections_.begin();
     int32_t pre_y = Y();
     while(iter != alloc_sections_.end()) {
+	assert(iter->box_item);
 	iter->box_item->SetGeometry(X(), pre_y, Width(), iter->section);
 	iter->box_item->Relayout();
 	pre_y += iter->section;
@@ -162,6 +164,7 @@ void VBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_fa
     if(first != alloc_sections_.end()) {
 	bool alloc = false;
 	if(first->status == AllocHelper::kNoAlloc) {
+	    assert(first->box_item);
 	    LayoutBaseItem* box = first->box_item->GetLayoutBaseItem();
 	    first->section = (uint32_t)((float)alloc_size/sum_factor*first->box_item->StrechFactor());
 	    if(first->section < box->LimitMinHeight()) {

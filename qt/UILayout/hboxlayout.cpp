@@ -14,7 +14,7 @@ HBoxLayout::HBoxLayout() {
 
 uint32_t HBoxLayout::CalculateLimitMinWidth() {
     uint32_t width = 0;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	width += item->LimitMinWidth();
     }
     return width;
@@ -22,7 +22,7 @@ uint32_t HBoxLayout::CalculateLimitMinWidth() {
 
 uint32_t HBoxLayout::CalculateLimitMinHeight() {
     uint32_t height = 0;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	if(item->LimitMinHeight() > height) {
 	    height = item->LimitMinHeight();
 	}
@@ -32,7 +32,7 @@ uint32_t HBoxLayout::CalculateLimitMinHeight() {
 
 uint32_t HBoxLayout::CalculateLimitMaxWidth() {
     uint32_t width = MAX_LENGTH;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	if(width < MAX_LENGTH - item->LimitMaxWidth()) {
 	    width += item->LimitMaxWidth();
 	}
@@ -42,7 +42,7 @@ uint32_t HBoxLayout::CalculateLimitMaxWidth() {
 
 uint32_t HBoxLayout::CalculateLimitMaxHeight() {
     uint32_t height = MAX_LENGTH;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	if(item->LimitMaxHeight() < height) {
 	    height = item->LimitMaxHeight();
 	}
@@ -52,7 +52,7 @@ uint32_t HBoxLayout::CalculateLimitMaxHeight() {
 
 uint32_t HBoxLayout::CalculatePreferWidth() {
     uint32_t width = 0;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	width += std::max(item->LimitMinWidth(), item->PreferWidth());
     }
     return width;
@@ -60,7 +60,7 @@ uint32_t HBoxLayout::CalculatePreferWidth() {
 
 uint32_t HBoxLayout::CalculatePreferHeight() {
     uint32_t height = 0, hign_height = 0;
-    for (LayoutItem* item:layout_items_) {
+    for (auto item:layout_items_) {
 	hign_height = std::max(item->LimitMinHeight(), item->PreferHeight());
 	if(hign_height > height) {
 	    height = hign_height;
@@ -106,6 +106,7 @@ void HBoxLayout::DoExceedPrefer() {
 
     auto iter = alloc_sections_.begin();
     while(iter != alloc_sections_.end()) {
+	assert(iter->box_item);
 	if(iter->box_item->StrechFactor() == 0 || (strong && !iter->box_item->IsStrongElastic())) {
 	    if(iter->box_item->PreferWidth() < iter->box_item->LimitMinWidth()) {
 	      iter->section = iter->box_item->LimitMinWidth();
@@ -128,6 +129,7 @@ void HBoxLayout::AllocHelperToBox() {
     auto iter = alloc_sections_.begin();
     int32_t pre_x = X();
     while(iter != alloc_sections_.end()) {
+	assert(iter->box_item);
 	iter->box_item->SetGeometry(pre_x, Y(), iter->section, Height());
 	iter->box_item->Relayout();
 	pre_x += iter->section;
@@ -147,6 +149,7 @@ void HBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_fa
     if(first != alloc_sections_.end()) {
 	bool alloc = false;
 	if(first->status == AllocHelper::kNoAlloc) {
+	    assert(first->box_item);
 	    first->section = (uint32_t)((float)alloc_size/sum_factor*first->box_item->StrechFactor());
 	    if(first->section < first->box_item->LimitMinWidth()) {
 		first->section = first->box_item->LimitMinWidth();

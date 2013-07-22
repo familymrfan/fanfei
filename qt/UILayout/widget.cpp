@@ -65,6 +65,10 @@ void Widget::SetParent(Widget* widget) {
     }
 }
 
+Widget* Widget::Parent() const {
+    return parent_;
+}
+
 void Widget::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
     fake_widget_->setGeometry(x, y, width, height);
     LayoutBaseItem::SetGeometry(x, y, width, height);

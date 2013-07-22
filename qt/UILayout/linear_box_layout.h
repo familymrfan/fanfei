@@ -25,7 +25,8 @@ public:
 
         AllocHelper():
             section(0),
-            status(kNoAlloc) {
+            status(kNoAlloc),
+            box_item(nullptr) {
 
         }
 
@@ -71,7 +72,6 @@ protected:
     bool IsStrongWeakAllInNoAlloc();
     void ResetTempAllocToNoAlloc();
     LinearBoxLayoutItem* GetLinearBoxLayoutItem(LayoutBaseItem *item);
-    BoxLayoutItem* GetBoxLayoutItem(LayoutBaseItem *item);
 
     std::vector<AllocHelper> alloc_sections_;
 };

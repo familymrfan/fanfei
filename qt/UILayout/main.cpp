@@ -43,6 +43,22 @@ int main(int argc, char *argv[])
     vbox.AddWidget(&btn3);
     vbox.AddWidget(&btn4);
     
+    /*ui::Button btn1,btn2,btn3,btn4;
+    btn1.SetText("A");
+    btn2.SetText("B");
+    btn3.SetText("C");
+    btn4.SetText("D");
+    
+    ui::BoxLayout box;
+    win.SetLayout(&box);
+    box.AddWidget(&btn1);
+    box.AddWidget(&btn2);
+    box.AddWidget(&btn3);
+    box.AddWidget(&btn4);
+    box.SetWestSpace(&btn1, 0);
+    box.SetEastSpace(&btn2, 0);
+    box.SetNorthSpace(&btn3, 0);
+    box.SetSouthSpace(&btn4, 0);*/
     //hbox.RemoveLayout(&vbox);
     
     win.Show();

@@ -41,6 +41,24 @@ public:
     uint32_t EastSpace() const;
     uint32_t SouthSpace() const;
     
+    virtual uint32_t PreferWidth() override ;
+    virtual uint32_t PreferHeight() override ;
+    virtual uint32_t LimitMinWidth() override ;
+    virtual uint32_t LimitMinHeight() override ;
+    virtual uint32_t LimitMaxWidth() override ;
+    virtual uint32_t LimitMaxHeight() override ;
+    
+    void CalculatePosition(int32_t container_x, 
+		      int32_t container_y,
+		      uint32_t container_width, 
+		      uint32_t container_height);
+protected:
+    int32_t CalculateX(int32_t container_x, 
+		    uint32_t container_width);
+    int32_t CalculateY(int32_t container_y, 
+		    uint32_t container_height);
+    uint32_t CalculateWidth(uint32_t container_width);
+    uint32_t CalculateHeight(uint32_t container_height);
 private:
     uint32_t west_space_;
     uint32_t north_space_;

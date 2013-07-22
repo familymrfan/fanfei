@@ -1,25 +1,27 @@
 #ifndef LAYOUT_H_
 #define LAYOUT_H_
 
-#include "widget.h"
 #include "layout_base_item.h"
-#include "layout_item.h"
 #include <vector>
+#include <memory>
 
 namespace ui
 {
-class LayoutItem;  
+class Widget;
+class LayoutItem;
   
 class Layout:public LayoutBaseItem
 {
     friend class Widget;
     friend class LayoutItem;
-public:
-    virtual void AddItem(LayoutItem *item);
-    virtual bool InsertItem(uint32_t index, LayoutItem *item);
-    virtual bool RemoveItem(LayoutItem *item);
+    
+    typedef std::shared_ptr<LayoutItem> SharedLayoutItem;
+protected:
+    virtual void AddItem(SharedLayoutItem item);
+    virtual bool InsertItem(uint32_t index, SharedLayoutItem item);
+    virtual bool RemoveItem(SharedLayoutItem item);
     virtual bool RemoveItem(uint32_t index);
-    virtual LayoutItem* ItemAt(uint32_t  index);
+    virtual SharedLayoutItem ItemAt(uint32_t  index);
     virtual void ResetPreferLimitSize() override;
 public:
     virtual void AddWidget(Widget* widget) = 0;
@@ -55,7 +57,7 @@ protected:
     virtual void SetLimitMaxWidth(uint32_t width) override;
     virtual void SetLimitMaxHeight(uint32_t height) override;
     
-    std::vector<LayoutItem*> layout_items_;
+    std::vector<SharedLayoutItem> layout_items_;
     Widget* parent_widget_;
 };
 } // namespace ui

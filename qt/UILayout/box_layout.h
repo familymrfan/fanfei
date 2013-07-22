@@ -9,9 +9,11 @@ namespace ui
 class Widget;
 class Layout;
 class LayoutBaseItem;
+class LinearBoxLayoutItem;
 
 class BoxLayout:public Layout
 {  
+    friend class LinearBoxLayoutItem;
 public:
     BoxLayout();
 

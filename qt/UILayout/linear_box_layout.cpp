@@ -4,6 +4,8 @@
 #include <vector>
 #include <algorithm>
 #include <cassert>
+#include <memory>
+#include "widget.h"
 
 namespace ui
 {
@@ -12,27 +14,27 @@ LinearBoxLayout::LinearBoxLayout() {
 }
 
 void LinearBoxLayout::SetWestSpace(LayoutBaseItem *item, uint32_t west_space) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
-    assert(bli);
-    bli->SetWestSpace(west_space);
+    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+    assert(lbli);
+    lbli->SetWestSpace(item, west_space);
 }
 
 void LinearBoxLayout::SetNorthSpace(LayoutBaseItem *item, uint32_t north_space) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
-    assert(bli);
-    bli->SetNorthSpace(north_space);
+    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+    assert(lbli);
+    lbli->SetNorthSpace(item, north_space);
 }
 
 void LinearBoxLayout::SetEastSpace(LayoutBaseItem *item, uint32_t east_space) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
-    assert(bli);
-    bli->SetEastSpace(east_space);
+    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+    assert(lbli);
+    lbli->SetEastSpace(item, east_space);
 }
 
 void LinearBoxLayout::SetSouthSpace(LayoutBaseItem *item, uint32_t south_space) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
-    assert(bli);
-    bli->SetSouthSpace(south_space);
+    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+    assert(lbli);
+    lbli->SetSouthSpace(item, south_space);
 }
 
 void LinearBoxLayout::SetAround(LayoutBaseItem *item, 
@@ -40,20 +42,18 @@ void LinearBoxLayout::SetAround(LayoutBaseItem *item,
     uint32_t north_space, 
     uint32_t east_space, 
     uint32_t south_space) {
-	BoxLayoutItem *bli = GetBoxLayoutItem(item);
-	assert(bli);
-	SetWestSpace(bli->GetLayoutBaseItem(), west_space);
-	SetNorthSpace(bli->GetLayoutBaseItem(), north_space);
-	SetEastSpace(bli->GetLayoutBaseItem(), east_space);
-	SetSouthSpace(bli->GetLayoutBaseItem(), south_space);
+    SetWestSpace(item, west_space);
+    SetNorthSpace(item, north_space);
+    SetEastSpace(item, east_space);
+    SetSouthSpace(item, south_space);
 }
 
 void LinearBoxLayout::SetValidGap(LayoutBaseItem *item,
     BoxLayoutItem::GapValid gap_valid,
     bool valid) {
-	BoxLayoutItem *bli = GetBoxLayoutItem(item);
-	assert(bli);
-	bli->SetValidGap(gap_valid, valid);
+    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+    assert(lbli);
+    lbli->SetValidGap(item, gap_valid, valid);
 }
 
 void LinearBoxLayout::SetStrechFactor(LayoutBaseItem* item, uint32_t strech_factor) {
@@ -72,22 +72,14 @@ void LinearBoxLayout::AddWidget(Widget* widget) {
     Widget* parent = GetParentWidget();
     assert(parent);
     parent->AddChild(widget);
-    auto box = new BoxLayout;
-    box->SetParentWidget(parent);
-    box->AddWidget(widget);
-    LinearBoxLayoutItem *lbli = new LinearBoxLayoutItem(box);
-    Layout::AddItem(lbli);
+    Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(widget));
 }
 
 bool LinearBoxLayout::InsertWidget(uint32_t index, Widget *widget) {
     Widget* parent = GetParentWidget();
     assert(parent);
     parent->AddChild(widget);
-    auto box = new BoxLayout;
-    box->SetParentWidget(parent);
-    box->AddWidget(widget);
-    LinearBoxLayoutItem *lbli = new LinearBoxLayoutItem(box);
-    return Layout::InsertItem(index, lbli);
+    return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(widget));
 }
 
 bool LinearBoxLayout::RemoveWidget(Widget *widget) {
@@ -96,10 +88,7 @@ bool LinearBoxLayout::RemoveWidget(Widget *widget) {
     parent->RemoveChild(widget);
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
-	BoxLayout *box = reinterpret_cast<BoxLayout *>((*iter)->GetLayoutBaseItem());
-	LayoutBaseItem *lbli = box->ItemAt(0)->GetLayoutBaseItem();
-	if(lbli == widget) {
-	    delete box;
+	if((*iter)->GetWidget() == widget) {
 	    layout_items_.erase(iter);
 	    return true;
 	}
@@ -112,23 +101,14 @@ void LinearBoxLayout::AddLayout(Layout* layout) {
     Widget* parent = GetParentWidget();
     assert(parent);
     layout->SetParentWidget(parent);
-    auto box = new BoxLayout;
-    box->SetParentWidget(parent);
-    box->AddLayout(layout);
-    box->SetAround(layout, 0, 0, 0, 0);
-    LinearBoxLayoutItem *lbli = new LinearBoxLayoutItem(box);
-    Layout::AddItem(lbli);
+    Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(layout));
 }
 
 bool LinearBoxLayout::InsertLayout(uint32_t index, Layout *layout) {
     Widget* parent = GetParentWidget();
     assert(parent);
     layout->SetParentWidget(parent);
-    auto box = new BoxLayout;
-    box->SetParentWidget(parent);
-    box->AddLayout(layout);
-    LinearBoxLayoutItem *lbli = new LinearBoxLayoutItem(box);
-    return Layout::InsertItem(index, lbli);
+    return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(layout));
 }
 
 bool LinearBoxLayout::RemoveLayout(Layout *layout) {
@@ -136,10 +116,7 @@ bool LinearBoxLayout::RemoveLayout(Layout *layout) {
     layout->Empty();
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
-	BoxLayout *box = reinterpret_cast<BoxLayout *>((*iter)->GetLayoutBaseItem());
-	LayoutBaseItem *lbli = box->ItemAt(0)->GetLayoutBaseItem();
-	if(lbli == layout) {
-	    delete box;
+	if((*iter)->GetLayout() == layout) {
 	    layout_items_.erase(iter);
 	    return true;
 	}
@@ -149,12 +126,7 @@ bool LinearBoxLayout::RemoveLayout(Layout *layout) {
 }
 
 LinearBoxLayout::~LinearBoxLayout() {
-    for(uint32_t i = 0;i<layout_items_.size();i++) {
-	LayoutBaseItem *bli = layout_items_[i]->GetLayoutBaseItem();
-	assert(bli);
-	delete bli;
-	layout_items_.erase(layout_items_.begin() + i);
-    }
+
 }
 
 void LinearBoxLayout::Relayout() {
@@ -172,8 +144,8 @@ void LinearBoxLayout::BoxToAllocHelper() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
 	AllocHelper helper;
-	helper.box_item = reinterpret_cast<LinearBoxLayoutItem *>(*iter);
-	if(helper.box_item->GetLayout() && helper.box_item->GetLayout()->IsEmpty()) {
+	helper.box_item = reinterpret_cast<LinearBoxLayoutItem *>(iter->get());
+	if(helper.box_item->IsEmpty()) {
 	    iter++;
 	    continue;
 	}
@@ -219,25 +191,8 @@ void LinearBoxLayout::ResetTempAllocToNoAlloc() {
 LinearBoxLayoutItem* LinearBoxLayout::GetLinearBoxLayoutItem(LayoutBaseItem *item) {
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
-	BoxLayout *bli = reinterpret_cast<BoxLayout*>((*iter)->GetLayoutBaseItem());
-	assert(bli);
-	assert(bli->ItemAt(0));
-	if(bli->ItemAt(0)->GetLayoutBaseItem() == item) {
-	    return reinterpret_cast<LinearBoxLayoutItem*>(*iter);
-	}
-	iter++;
-    }
-    return nullptr;
-}
-
-BoxLayoutItem* LinearBoxLayout::GetBoxLayoutItem(LayoutBaseItem *item) {
-    auto iter = layout_items_.begin();
-    while (iter != layout_items_.end()) {
-	BoxLayout *bli = reinterpret_cast<BoxLayout*>((*iter)->GetLayoutBaseItem());
-	assert(bli);
-	assert(bli->ItemAt(0));
-	if(bli->ItemAt(0)->GetLayoutBaseItem() == item) {
-	    return reinterpret_cast<BoxLayoutItem*>(bli->ItemAt(0));
+	if((*iter)->GetLayoutBaseItem() == item) {
+	    return reinterpret_cast<LinearBoxLayoutItem*>(iter->get());
 	}
 	iter++;
     }
@@ -248,9 +203,9 @@ bool LinearBoxLayout::IsEmpty() {
     bool empty = true;
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
-	BoxLayout *bli = reinterpret_cast<BoxLayout*>((*iter)->GetLayoutBaseItem());
-	assert(bli);
-	if(bli->IsEmpty()) {
+	LinearBoxLayoutItem *lbli = reinterpret_cast<LinearBoxLayoutItem*>(iter->get());
+	assert(lbli);
+	if(lbli->IsEmpty()) {
 	    iter++;
 	    continue ;
 	}

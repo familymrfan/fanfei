@@ -1,21 +1,15 @@
 #include "layout.h"
 #include "layout_item.h"
+#include "widget.h"
 #include <cassert>
 
 namespace ui
 {
-void Layout::AddItem(LayoutItem *item) {
-    auto iter = layout_items_.begin();
-    while (iter != layout_items_.end()) {
-	if(*iter == item) {
-	    return ;
-	}
-	iter++;
-    }
-    layout_items_.push_back(item);
+void Layout::AddItem(SharedLayoutItem item) {
+    InsertItem(layout_items_.size(), item);
 }
 
-bool Layout::InsertItem(uint32_t index, LayoutItem *item) {
+bool Layout::InsertItem(uint32_t index, SharedLayoutItem item) {
     if(index < 0 || index > layout_items_.size())
 	return false;
     auto iter = layout_items_.begin();
@@ -29,7 +23,7 @@ bool Layout::InsertItem(uint32_t index, LayoutItem *item) {
     return true;
 }
 
-bool Layout::RemoveItem(LayoutItem *item) {
+bool Layout::RemoveItem(SharedLayoutItem item) {
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
 	if(*iter == item) {
@@ -48,15 +42,15 @@ bool Layout::RemoveItem(uint32_t index) {
     return true;
 }
 
-LayoutItem* Layout::ItemAt(uint32_t  index) {
+Layout::SharedLayoutItem Layout::ItemAt(uint32_t  index) {
     if(index < 0 || index > layout_items_.size())
 	return nullptr;
     return layout_items_[index];
 }
 
 void Layout::ResetPreferLimitSize() {
-    for(LayoutItem* item:layout_items_) {
-      item->GetLayoutBaseItem()->ResetPreferLimitSize();
+    for(auto item:layout_items_) {
+      item->ResetPreferLimitSize();
     }
     SetLimitMinWidth(CalculateLimitMinWidth());
     SetLimitMinHeight(CalculateLimitMinHeight());
@@ -113,7 +107,7 @@ Widget* Layout::GetParentWidget() const {
 void Layout::Empty() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
-	LayoutItem *item = (*iter);
+	auto item = (*iter);
 	// skip unvisible item
 	if(item->GetWidget()) {
 	    item->GetWidget()->SetParent(nullptr);
