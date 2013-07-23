@@ -59,21 +59,21 @@ void BoxLayout::SetValidGap(LayoutBaseItem *item,
 }
 
 void BoxLayout::AddWidget(Widget* widget) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     parent->AddChild(widget);
     Layout::AddItem(std::make_shared<BoxLayoutItem>(widget));
 }
 
 bool BoxLayout::InsertWidget(uint32_t index, Widget *widget) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     parent->AddChild(widget);
     return Layout::InsertItem(index, std::make_shared<BoxLayoutItem>(widget));
 }
 
 bool BoxLayout::RemoveWidget(Widget *widget) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     parent->RemoveChild(widget);
     auto iter = layout_items_.begin();
@@ -88,14 +88,14 @@ bool BoxLayout::RemoveWidget(Widget *widget) {
 }
     
 void BoxLayout::AddLayout(Layout* layout) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     layout->SetParentWidget(parent);
     Layout::AddItem(std::make_shared<BoxLayoutItem>(layout));
 }
 
 bool BoxLayout::InsertLayout(uint32_t index, Layout *layout) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     layout->SetParentWidget(parent);
     return Layout::InsertItem(index, std::make_shared<BoxLayoutItem>(layout));

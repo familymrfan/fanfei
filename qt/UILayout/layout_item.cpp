@@ -23,8 +23,8 @@ void LayoutItem::Relayout() {
     layout_base_item_->Relayout();
 }
 
-void LayoutItem::ResetPreferLimitSize() {
-    layout_base_item_->ResetPreferLimitSize();
+void LayoutItem::ResetPreferLimitSize(bool deep) {
+    layout_base_item_->ResetPreferLimitSize(deep);
 }
 
 void LayoutItem::Move(int32_t x, int32_t y) {
@@ -128,4 +128,11 @@ LayoutBaseItem* LayoutItem::GetLayoutBaseItem() const {
     return layout_base_item_;
 }
 
+void LayoutItem::UpNotifyRelayout() {
+
+}
+
+void LayoutItem::RelayoutToAdapt() {
+
+}
 } // namespace ui

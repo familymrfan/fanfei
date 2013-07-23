@@ -15,10 +15,8 @@ VBoxLayout::VBoxLayout() {
 uint32_t VBoxLayout::CalculateLimitMinWidth() {
     uint32_t width = 0;
     for (auto item:layout_items_) {
-	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
-	assert(base_item);
-	if(base_item->LimitMinWidth() > width) {
-	    width = base_item->LimitMinWidth();
+	if(item->LimitMinWidth() > width) {
+	    width = item->LimitMinWidth();
 	}
     }
     return width;
@@ -27,9 +25,7 @@ uint32_t VBoxLayout::CalculateLimitMinWidth() {
 uint32_t VBoxLayout::CalculateLimitMinHeight() {
     uint32_t height = 0;
     for (auto item:layout_items_) {
-	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
-	assert(base_item);
-	height += base_item->LimitMinHeight();
+	height += item->LimitMinHeight();
     }
     return height;
 }
@@ -37,9 +33,8 @@ uint32_t VBoxLayout::CalculateLimitMinHeight() {
 uint32_t VBoxLayout::CalculateLimitMaxWidth() {
     uint32_t width = MAX_LENGTH;
     for (auto item:layout_items_) {
-	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
-	if(base_item->LimitMaxWidth() < width) {
-	    width = base_item->LimitMaxWidth();
+	if(item->LimitMaxWidth() < width) {
+	    width = item->LimitMaxWidth();
 	}
     }
     return width;
@@ -48,9 +43,8 @@ uint32_t VBoxLayout::CalculateLimitMaxWidth() {
 uint32_t VBoxLayout::CalculateLimitMaxHeight() {
     uint32_t height = MAX_LENGTH;
     for (auto item:layout_items_) {
-	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
-	if(height < MAX_LENGTH - base_item->LimitMaxHeight()) {
-	    height += base_item->LimitMaxHeight();
+	if(height < MAX_LENGTH - item->LimitMaxHeight()) {
+	    height += item->LimitMaxHeight();
 	}
     }
     return height;
@@ -59,8 +53,7 @@ uint32_t VBoxLayout::CalculateLimitMaxHeight() {
 uint32_t VBoxLayout::CalculatePreferWidth() {
     uint32_t width = 0, hign_width = 0;
     for (auto item:layout_items_) {
-	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
-	hign_width = std::max(base_item->LimitMinWidth(), base_item->PreferWidth());
+	hign_width = std::max(item->LimitMinWidth(), item->PreferWidth());
 	if(hign_width > width) {
 	    width = hign_width;
 	}
@@ -71,8 +64,7 @@ uint32_t VBoxLayout::CalculatePreferWidth() {
 uint32_t VBoxLayout::CalculatePreferHeight() {
     uint32_t height = 0;
     for (auto item:layout_items_) {
-	LayoutBaseItem *base_item = item->GetLayoutBaseItem();
-	height += std::max(base_item->LimitMinHeight(), base_item->PreferHeight());
+	height += std::max(item->LimitMinHeight(), item->PreferHeight());
     }
     return height;
 }

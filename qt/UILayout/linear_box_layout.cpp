@@ -6,6 +6,7 @@
 #include <cassert>
 #include <memory>
 #include "widget.h"
+#include "layout_space.h"
 
 namespace ui
 {
@@ -62,28 +63,34 @@ void LinearBoxLayout::SetStrechFactor(LayoutBaseItem* item, uint32_t strech_fact
     lbli->SetStrechFactor(strech_factor);
 }
 
-void LinearBoxLayout::SetStrongElastic(LayoutBaseItem* item, bool strong_elastic) {
+void LinearBoxLayout::SetStrongElastic(LayoutBaseItem* item) {
     LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
     assert(lbli);
-    lbli->SetStrongElastic(strong_elastic);
+    lbli->SetStrongElastic();
+}
+
+void LinearBoxLayout::SetWeakElastic(LayoutBaseItem* item) {
+    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+    assert(lbli);
+    lbli->SetWeakElastic();
 }
 
 void LinearBoxLayout::AddWidget(Widget* widget) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     parent->AddChild(widget);
     Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(widget));
 }
 
 bool LinearBoxLayout::InsertWidget(uint32_t index, Widget *widget) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     parent->AddChild(widget);
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(widget));
 }
 
 bool LinearBoxLayout::RemoveWidget(Widget *widget) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     parent->RemoveChild(widget);
     auto iter = layout_items_.begin();
@@ -98,14 +105,14 @@ bool LinearBoxLayout::RemoveWidget(Widget *widget) {
 }
     
 void LinearBoxLayout::AddLayout(Layout* layout) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     layout->SetParentWidget(parent);
     Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(layout));
 }
 
 bool LinearBoxLayout::InsertLayout(uint32_t index, Layout *layout) {
-    Widget* parent = GetParentWidget();
+    Widget* parent = ParentWidget();
     assert(parent);
     layout->SetParentWidget(parent);
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(layout));
@@ -125,8 +132,28 @@ bool LinearBoxLayout::RemoveLayout(Layout *layout) {
     return false;
 }
 
-LinearBoxLayout::~LinearBoxLayout() {
+void LinearBoxLayout::AddSpace(LayoutSpace* space) {
+    Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(space));
+}
 
+bool LinearBoxLayout::InsertSpace(uint32_t index, LayoutSpace *space) {
+    return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(space));
+}
+
+bool LinearBoxLayout::RemoveSpace(LayoutSpace *space) {
+    auto iter = layout_items_.begin();
+    while (iter != layout_items_.end()) {
+	if((*iter)->GetLayoutSpace() == space) {
+	    layout_items_.erase(iter);
+	    return true;
+	}
+	iter++;
+    }
+    return false;
+}
+
+LinearBoxLayout::~LinearBoxLayout() {
+    
 }
 
 void LinearBoxLayout::Relayout() {
@@ -137,6 +164,10 @@ void LinearBoxLayout::Relayout() {
 	DoExceedPrefer();
     }
     AllocHelperToBox();
+}
+
+void LinearBoxLayout::ResetPreferLimitSize(bool deep) {
+    Layout::ResetPreferLimitSize(true);
 }
 
 void LinearBoxLayout::BoxToAllocHelper() {

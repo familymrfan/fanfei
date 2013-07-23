@@ -8,7 +8,8 @@ namespace ui
 {
 class LayoutBaseItem;  
 class LinearBoxLayoutItem;  
-  
+class LayoutSpace;
+
 class LinearBoxLayout:public Layout
 {
 public:
@@ -49,7 +50,8 @@ public:
         bool valid = true);
 
     void SetStrechFactor(LayoutBaseItem* item, uint32_t strech_factor);
-    void SetStrongElastic(LayoutBaseItem* item, bool strong_elastic);
+    void SetStrongElastic(LayoutBaseItem* item);
+    void SetWeakElastic(LayoutBaseItem* item);
     
     virtual void AddWidget(Widget* widget) override ;
     virtual bool InsertWidget(uint32_t index, Widget *widget) override ;
@@ -59,10 +61,15 @@ public:
     virtual bool InsertLayout(uint32_t index, Layout *layout) override ;
     virtual bool RemoveLayout(Layout *layout) override ;
     
+    void AddSpace(LayoutSpace* space);
+    bool InsertSpace(uint32_t index, LayoutSpace *space) ;
+    bool RemoveSpace(LayoutSpace *space) ;
+    
     virtual bool IsEmpty();
 protected:
     virtual void Relayout() override;
-
+    virtual void ResetPreferLimitSize(bool deep = true) override;
+    
     virtual bool IsUnderPrefer() = 0;
     virtual void DoUnderPrefer() = 0;
     virtual void DoExceedPrefer() = 0;

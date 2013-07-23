@@ -35,7 +35,8 @@ public:
     
     void SetStrechFactor(uint32_t strech_factor);
     uint32_t StrechFactor() const;
-    void SetStrongElastic(bool strong_elastic);
+    void SetStrongElastic();
+    void SetWeakElastic();
     bool IsStrongElastic() const;
     bool IsEmpty();
     
@@ -43,6 +44,14 @@ public:
     virtual void ReSize(uint32_t width, uint32_t height) override ;
     virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
     virtual void Relayout()  override;
+    virtual void ResetPreferLimitSize(bool deep = true) override;
+    
+    virtual uint32_t PreferWidth() override ;
+    virtual uint32_t PreferHeight() override ;
+    virtual uint32_t LimitMinWidth() override ;
+    virtual uint32_t LimitMinHeight() override ;
+    virtual uint32_t LimitMaxWidth() override ;
+    virtual uint32_t LimitMaxHeight() override ;
 protected:
     uint32_t strech_factor_;
     bool    strong_elastic_;

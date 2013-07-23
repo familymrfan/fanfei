@@ -23,7 +23,7 @@ LinearBoxLayoutItem::LinearBoxLayoutItem(Layout* layout):
     strong_elastic_(false) {
       
     box_layout_ = std::make_shared<BoxLayout>();
-    box_layout_->SetParentWidget(layout->GetParentWidget());
+    box_layout_->SetParentWidget(layout->ParentWidget());
     box_layout_->AddLayout(layout);
     box_layout_->SetAround(layout, 0, 0, 0, 0);
 }
@@ -33,6 +33,9 @@ LinearBoxLayoutItem::LinearBoxLayoutItem(LayoutSpace* layout_space):
     strech_factor_(1),
     strong_elastic_(false){
   
+    box_layout_ = std::make_shared<BoxLayout>();
+    box_layout_->AddItem(std::make_shared<BoxLayoutItem>(layout_space));
+    box_layout_->SetAround(layout_space, 0, 0, 0, 0);
 }
 
 void LinearBoxLayoutItem::SetStrechFactor(uint32_t strech_factor) {
@@ -43,8 +46,12 @@ uint32_t LinearBoxLayoutItem::StrechFactor() const {
     return strech_factor_;
 }
 
-void LinearBoxLayoutItem::SetStrongElastic(bool strong_elastic) {
-    strong_elastic_ = strong_elastic;
+void LinearBoxLayoutItem::SetStrongElastic() {
+    strong_elastic_ = true;
+}
+
+void LinearBoxLayoutItem::SetWeakElastic() {
+    strong_elastic_ = false;
 }
 
 bool LinearBoxLayoutItem::IsStrongElastic() const {
@@ -118,10 +125,56 @@ void LinearBoxLayoutItem::SetGeometry(int32_t x, int32_t y, uint32_t width, uint
     }
 }
 
+void LinearBoxLayoutItem::ResetPreferLimitSize(bool deep) {
+    box_layout_->ResetPreferLimitSize(deep);
+}
+
 void LinearBoxLayoutItem::Relayout() {
     if(box_layout_) {
       box_layout_->Relayout();
     }
+}
+
+uint32_t LinearBoxLayoutItem::PreferWidth() {
+    if(box_layout_) {
+      return box_layout_->PreferWidth();
+    }
+    return 0;
+}
+
+uint32_t LinearBoxLayoutItem::PreferHeight() {
+    if(box_layout_) {
+      return box_layout_->PreferHeight();
+    }
+    return 0;
+}
+
+uint32_t LinearBoxLayoutItem::LimitMinWidth() {
+    if(box_layout_) {
+      return box_layout_->LimitMinWidth();
+    }
+    return 0;
+}
+
+uint32_t LinearBoxLayoutItem::LimitMinHeight() {
+    if(box_layout_) {
+      return box_layout_->LimitMinHeight();
+    }
+    return 0;
+}
+
+uint32_t LinearBoxLayoutItem::LimitMaxWidth() {
+    if(box_layout_) {
+      return box_layout_->LimitMaxWidth();
+    }
+    return MAX_LENGTH;
+}
+
+uint32_t LinearBoxLayoutItem::LimitMaxHeight() {
+    if(box_layout_) {
+      return box_layout_->LimitMaxHeight();
+    }
+    return MAX_LENGTH;
 }
 
 } // namespace ui

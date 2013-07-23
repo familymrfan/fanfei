@@ -16,13 +16,12 @@ class Layout:public LayoutBaseItem
     friend class LayoutItem;
     
     typedef std::shared_ptr<LayoutItem> SharedLayoutItem;
-protected:
+public:
     virtual void AddItem(SharedLayoutItem item);
     virtual bool InsertItem(uint32_t index, SharedLayoutItem item);
     virtual bool RemoveItem(SharedLayoutItem item);
-    virtual bool RemoveItem(uint32_t index);
     virtual SharedLayoutItem ItemAt(uint32_t  index);
-    virtual void ResetPreferLimitSize() override;
+    
 public:
     virtual void AddWidget(Widget* widget) = 0;
     virtual bool InsertWidget(uint32_t index, Widget *widget) = 0;
@@ -32,13 +31,23 @@ public:
     virtual bool InsertLayout(uint32_t index, Layout *layout) = 0;
     virtual bool RemoveLayout(Layout *layout) = 0;
     
-    void SetParentWidget(Widget* widget);
-    Widget* GetParentWidget() const;
+    void SetParentWidget(Widget* parent);
+    Widget* ParentWidget() const;
+    
+    void SetParentLayout(Layout* parent);
+    Layout* ParentLayout() const;
     
     virtual void Empty();
     virtual bool IsEmpty();
+    
+    virtual void ResetPreferLimitSize(bool deep = true) override;
+    
+    virtual void UpNotifyRelayout() override;
+    virtual void RelayoutToAdapt() override;
+    
+    bool NeedUpNotify();
 protected:
-    Layout():parent_widget_(nullptr) {}
+    Layout():parent_widget_(nullptr),parent_layout_(nullptr) {}
 
     virtual uint32_t CalculateLimitMinWidth() = 0;
     virtual uint32_t CalculateLimitMinHeight() = 0;
@@ -59,6 +68,7 @@ protected:
     
     std::vector<SharedLayoutItem> layout_items_;
     Widget* parent_widget_;
+    Layout* parent_layout_;
 };
 } // namespace ui
 

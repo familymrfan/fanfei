@@ -20,19 +20,23 @@ int main(int argc, char *argv[])
 
     ui::Window win;
     
-    win.SetGeometry(100, 100, 800, 500);
+    win.SetGeometry(100, 100, 300, 200);
     
     ui::HBoxLayout hbox;
     win.SetLayout(&hbox);
     
+    ui::LayoutSpace space;
     ui::Button btn1,btn2,btn3,btn4;
+    
     btn1.SetText("A");
     btn2.SetText("B");
     btn3.SetText("C");
     btn4.SetText("D");
     
     hbox.AddWidget(&btn1);
+    hbox.AddSpace(&space);
     hbox.AddWidget(&btn2);
+    hbox.SetStrongElastic(&space);
     hbox.SetStrechFactor(&btn1, 0);
     hbox.SetEastSpace(&btn2, 0);
     hbox.SetWestSpace(&btn2, 0);

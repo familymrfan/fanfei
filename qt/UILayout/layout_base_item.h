@@ -39,7 +39,11 @@ public:
     virtual uint32_t LimitMaxHeight();
 
     virtual void Relayout() = 0;
-    virtual void ResetPreferLimitSize() = 0;
+    virtual void ResetPreferLimitSize(bool deep = true) = 0;
+    
+    // adapt
+    virtual void UpNotifyRelayout() = 0;
+    virtual void RelayoutToAdapt() = 0;
 private:
     int32_t x_;
     int32_t y_;

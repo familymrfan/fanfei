@@ -10,18 +10,18 @@ class Timer: public QObject
 public:
     Timer(ui::Widget* widget, ui::Widget* awidget, ui::Widget* bwidget) {
         widget_ = widget;
-	awidget_ = awidget;
-	bwidget_ = bwidget;
-	i = 0;
+        awidget_ = awidget;
+        bwidget_ = bwidget;
+        i = 0;
     }
 
 public slots:
     void Update() {
-	awidget_->IsVisible() ? awidget_->Hide():awidget_->Show();
-	bwidget_->SetPreferWidth(i%600);
-	i+=10;
-	widget_->Show();
-        widget_->Relayout();
+        //awidget_->IsVisible() ? awidget_->Hide():awidget_->Show();
+        bwidget_->SetPreferWidth(i%600);
+        i+=10;
+        //widget_->Show();
+        //widget_->Relayout();
     }
     
 private:

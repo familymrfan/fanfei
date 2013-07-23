@@ -20,6 +20,12 @@ bool Layout::InsertItem(uint32_t index, SharedLayoutItem item) {
 	iter++;
     }
     layout_items_.insert(layout_items_.begin()+index, item);
+    
+    if(item->GetWidget()) {
+      item->GetWidget()->SetParentLayout(this);
+    } else if(item->GetLayout()) {
+      item->GetLayout()->SetParentLayout(this);
+    }
     return true;
 }
 
@@ -32,14 +38,9 @@ bool Layout::RemoveItem(SharedLayoutItem item) {
 	}
 	iter++;
     }
+    
+    
     return false;
-}
-
-bool Layout::RemoveItem(uint32_t index) {
-    if(index < 0 || index > layout_items_.size())
-	return false;
-    layout_items_.erase(layout_items_.begin() + index);
-    return true;
 }
 
 Layout::SharedLayoutItem Layout::ItemAt(uint32_t  index) {
@@ -48,9 +49,11 @@ Layout::SharedLayoutItem Layout::ItemAt(uint32_t  index) {
     return layout_items_[index];
 }
 
-void Layout::ResetPreferLimitSize() {
-    for(auto item:layout_items_) {
-      item->ResetPreferLimitSize();
+void Layout::ResetPreferLimitSize(bool deep) {
+    if(deep) {
+      for(auto item:layout_items_) {
+	item->ResetPreferLimitSize();
+      }
     }
     SetLimitMinWidth(CalculateLimitMinWidth());
     SetLimitMinHeight(CalculateLimitMinHeight());
@@ -100,15 +103,23 @@ void Layout::SetParentWidget(Widget* widget) {
     parent_widget_ = widget;
 }
 
-Widget* Layout::GetParentWidget() const {
+Widget* Layout::ParentWidget() const {
     return parent_widget_;
+}
+
+void Layout::SetParentLayout(Layout* parent) {
+    parent_layout_ = parent;
+}
+
+Layout* Layout::ParentLayout() const {
+    return parent_layout_;
 }
 
 void Layout::Empty() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
 	auto item = (*iter);
-	// skip unvisible item
+
 	if(item->GetWidget()) {
 	    item->GetWidget()->SetParent(nullptr);
 	} else if(item->GetLayout()) {
@@ -122,5 +133,40 @@ void Layout::Empty() {
 
 bool Layout::IsEmpty() {
     return layout_items_.empty();
+}
+
+void Layout::UpNotifyRelayout() {
+    if(ParentLayout()) {
+      ParentLayout()->RelayoutToAdapt();
+    } else if(ParentWidget()) {
+      ParentWidget()->RelayoutToAdapt();
+    }
+}
+
+void Layout::RelayoutToAdapt() {
+    if(NeedUpNotify()) {
+      UpNotifyRelayout();
+    } else {
+      Relayout();
+    }
+}
+
+bool Layout::NeedUpNotify() {
+    uint32_t prefer_width = PreferWidth();
+    uint32_t prefer_height = PreferHeight();
+    uint32_t limit_min_width = LimitMinWidth();
+    uint32_t limit_min_height = LimitMinHeight();
+    uint32_t limit_max_width = LimitMaxWidth();
+    uint32_t limit_max_height = LimitMaxHeight();
+    
+    ResetPreferLimitSize(false);
+    
+    if(prefer_width != PreferWidth()) return true;
+    if(prefer_height != PreferHeight()) return true;
+    if(limit_min_width != LimitMinWidth()) return true;
+    if(limit_min_height != LimitMinHeight()) return true;
+    if(limit_max_width != LimitMaxWidth()) return true;
+    if(limit_max_height != LimitMaxHeight()) return true;
+    return false;
 }
 } // namespace ui

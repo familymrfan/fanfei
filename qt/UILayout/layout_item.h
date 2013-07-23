@@ -47,7 +47,10 @@ public:
     virtual uint32_t LimitMaxHeight() override ;
 
     virtual void Relayout()  override ;
-    virtual void ResetPreferLimitSize()  override ;
+    virtual void ResetPreferLimitSize(bool deep = true)  override ;
+
+    virtual void UpNotifyRelayout() override;
+    virtual void RelayoutToAdapt() override;
 public:    
     Widget* GetWidget() const;
     Layout* GetLayout() const;
