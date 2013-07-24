@@ -44,8 +44,7 @@ public:
     
     virtual void UpNotifyRelayout() override;
     virtual void RelayoutToAdapt() override;
-    
-    bool NeedUpNotify();
+    virtual bool NeedUpNotify();
 protected:
     Layout():parent_widget_(nullptr),parent_layout_(nullptr) {}
 

@@ -126,7 +126,9 @@ void LinearBoxLayoutItem::SetGeometry(int32_t x, int32_t y, uint32_t width, uint
 }
 
 void LinearBoxLayoutItem::ResetPreferLimitSize(bool deep) {
-    box_layout_->ResetPreferLimitSize(deep);
+    if(box_layout_) {
+      box_layout_->ResetPreferLimitSize();
+    }
 }
 
 void LinearBoxLayoutItem::Relayout() {

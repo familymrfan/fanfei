@@ -167,7 +167,14 @@ void LinearBoxLayout::Relayout() {
 }
 
 void LinearBoxLayout::ResetPreferLimitSize(bool deep) {
-    Layout::ResetPreferLimitSize(true);
+    if(!deep) {
+      auto iter = layout_items_.begin();
+      while(iter != layout_items_.end()) {
+	(*iter)->ResetPreferLimitSize(false);
+	iter++;
+      }
+    }
+    Layout::ResetPreferLimitSize(deep);
 }
 
 void LinearBoxLayout::BoxToAllocHelper() {

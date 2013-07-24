@@ -16,7 +16,7 @@ class BoxLayout:public Layout
     friend class LinearBoxLayoutItem;
 public:
     BoxLayout();
-
+    
     void SetWestSpace(LayoutBaseItem *item, uint32_t west_space);
     void SetNorthSpace(LayoutBaseItem *item, uint32_t north_space);
     void SetEastSpace(LayoutBaseItem *item, uint32_t east_space);
