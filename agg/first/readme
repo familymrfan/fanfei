@@ -1,0 +1,10 @@
+Onlinux:
+
+download http://www.antigrain.com/download/index.html
+look at readme make makefile to get a lib in src directory
+copy the lib to lib directory of my project
+copy include directory to my project
+so we have to dir with lib and include
+mkdir build
+cmake ../
+make
