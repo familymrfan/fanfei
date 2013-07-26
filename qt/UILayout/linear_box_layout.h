@@ -3,6 +3,7 @@
 
 #include "layout.h"
 #include "box_layout_item.h"
+#include "box_layout.h"
 
 namespace ui
 {
@@ -10,12 +11,9 @@ class LayoutBaseItem;
 class LinearBoxLayoutItem;  
 class LayoutSpace;
 
-class LinearBoxLayout:public Layout
+class LinearBoxLayout:public BoxLayout
 {
-public:
-    LinearBoxLayout();
-    ~LinearBoxLayout();
-    
+protected:  
     struct AllocHelper
     {
         enum AllocStatus{
@@ -35,19 +33,9 @@ public:
         AllocStatus status;
         LinearBoxLayoutItem* box_item;
     };
-
-    void SetWestSpace(LayoutBaseItem *item, uint32_t west_space);
-    void SetNorthSpace(LayoutBaseItem *item, uint32_t north_space);
-    void SetEastSpace(LayoutBaseItem *item, uint32_t east_space);
-    void SetSouthSpace(LayoutBaseItem *item, uint32_t south_space);
-    void SetAround(LayoutBaseItem *item, 
-        uint32_t west_space, 
-        uint32_t north_space, 
-        uint32_t east_space, 
-        uint32_t south_space);
-    void SetValidGap(LayoutBaseItem *item,
-        BoxLayoutItem::GapValid gap_valid,
-        bool valid = true);
+public:
+    LinearBoxLayout();
+    ~LinearBoxLayout();
 
     void SetStrechFactor(LayoutBaseItem* item, uint32_t strech_factor);
     void SetStrongElastic(LayoutBaseItem* item);
@@ -64,11 +52,8 @@ public:
     void AddSpace(LayoutSpace* space);
     bool InsertSpace(uint32_t index, LayoutSpace *space) ;
     bool RemoveSpace(LayoutSpace *space) ;
-    
-    virtual bool IsEmpty();
 protected:
     virtual void Relayout() override;
-    virtual void ResetPreferLimitSize(bool deep = true) override;
     
     virtual bool IsUnderPrefer() = 0;
     virtual void DoUnderPrefer() = 0;
@@ -78,7 +63,6 @@ protected:
     void BoxToAllocHelper();
     bool IsStrongWeakAllInNoAlloc();
     void ResetTempAllocToNoAlloc();
-    LinearBoxLayoutItem* GetLinearBoxLayoutItem(LayoutBaseItem *item);
 
     std::vector<AllocHelper> alloc_sections_;
 };

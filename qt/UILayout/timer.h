@@ -17,7 +17,8 @@ public:
 
 public slots:
     void Update() {
-        //awidget_->IsVisible() ? awidget_->Hide():awidget_->Show();
+        awidget_->IsVisible() ? awidget_->Hide():awidget_->Show();
+	awidget_->SetPreferHeight(i%600);
         bwidget_->SetPreferWidth(i%600);
         i+=10;
         //widget_->Show();

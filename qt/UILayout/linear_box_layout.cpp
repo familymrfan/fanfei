@@ -14,63 +14,20 @@ LinearBoxLayout::LinearBoxLayout() {
   
 }
 
-void LinearBoxLayout::SetWestSpace(LayoutBaseItem *item, uint32_t west_space) {
-    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
-    assert(lbli);
-    lbli->SetWestSpace(item, west_space);
-}
-
-void LinearBoxLayout::SetNorthSpace(LayoutBaseItem *item, uint32_t north_space) {
-    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
-    assert(lbli);
-    lbli->SetNorthSpace(item, north_space);
-}
-
-void LinearBoxLayout::SetEastSpace(LayoutBaseItem *item, uint32_t east_space) {
-    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
-    assert(lbli);
-    lbli->SetEastSpace(item, east_space);
-}
-
-void LinearBoxLayout::SetSouthSpace(LayoutBaseItem *item, uint32_t south_space) {
-    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
-    assert(lbli);
-    lbli->SetSouthSpace(item, south_space);
-}
-
-void LinearBoxLayout::SetAround(LayoutBaseItem *item, 
-    uint32_t west_space, 
-    uint32_t north_space, 
-    uint32_t east_space, 
-    uint32_t south_space) {
-    SetWestSpace(item, west_space);
-    SetNorthSpace(item, north_space);
-    SetEastSpace(item, east_space);
-    SetSouthSpace(item, south_space);
-}
-
-void LinearBoxLayout::SetValidGap(LayoutBaseItem *item,
-    BoxLayoutItem::GapValid gap_valid,
-    bool valid) {
-    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
-    assert(lbli);
-    lbli->SetValidGap(item, gap_valid, valid);
-}
-
 void LinearBoxLayout::SetStrechFactor(LayoutBaseItem* item, uint32_t strech_factor) {
-    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+    LinearBoxLayoutItem *lbli = reinterpret_cast<LinearBoxLayoutItem *>(FindItem(item));
     assert(lbli);
     lbli->SetStrechFactor(strech_factor);
 }
 
 void LinearBoxLayout::SetStrongElastic(LayoutBaseItem* item) {
-    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+    LinearBoxLayoutItem *lbli = reinterpret_cast<LinearBoxLayoutItem *>(FindItem(item));
     assert(lbli);
     lbli->SetStrongElastic();
 }
 
 void LinearBoxLayout::SetWeakElastic(LayoutBaseItem* item) {
-    LinearBoxLayoutItem *lbli = GetLinearBoxLayoutItem(item);
+    LinearBoxLayoutItem *lbli = reinterpret_cast<LinearBoxLayoutItem *>(FindItem(item));
     assert(lbli);
     lbli->SetWeakElastic();
 }
@@ -88,7 +45,9 @@ bool LinearBoxLayout::InsertWidget(uint32_t index, Widget *widget) {
     parent->AddChild(widget);
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(widget));
 }
-
+void SetStrechFactor(LayoutBaseItem* item, uint32_t strech_factor);
+    void SetStrongElastic(LayoutBaseItem* item);
+    void SetWeakElastic(LayoutBaseItem* item);
 bool LinearBoxLayout::RemoveWidget(Widget *widget) {
     Widget* parent = ParentWidget();
     assert(parent);
@@ -166,26 +125,15 @@ void LinearBoxLayout::Relayout() {
     AllocHelperToBox();
 }
 
-void LinearBoxLayout::ResetPreferLimitSize(bool deep) {
-    if(!deep) {
-      auto iter = layout_items_.begin();
-      while(iter != layout_items_.end()) {
-	(*iter)->ResetPreferLimitSize(false);
-	iter++;
-      }
-    }
-    Layout::ResetPreferLimitSize(deep);
-}
-
 void LinearBoxLayout::BoxToAllocHelper() {
     alloc_sections_.clear();
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
 	AllocHelper helper;
 	helper.box_item = reinterpret_cast<LinearBoxLayoutItem *>(iter->get());
-	if(helper.box_item->IsEmpty()) {
-	    iter++;
-	    continue;
+	if(SkipUnVisibleWidget(helper.box_item)) {
+	  iter++;
+	  continue;
 	}
 	alloc_sections_.push_back(helper);
 	iter++;
@@ -198,9 +146,8 @@ bool LinearBoxLayout::IsStrongWeakAllInNoAlloc() {
 
     auto iter = alloc_sections_.begin();
     while(iter != alloc_sections_.end()) {
-	AllocHelper helper = *iter;
-	if(helper.status == AllocHelper::kNoAlloc) {
-	    if(helper.box_item->IsStrongElastic()) {
+	if(iter->status == AllocHelper::kNoAlloc) {
+	    if(iter->box_item->IsStrongElastic()) {
 		has_strong = true;
 	    } else {
 		has_weak = true;
@@ -224,32 +171,5 @@ void LinearBoxLayout::ResetTempAllocToNoAlloc() {
 	}
 	iter++;
     }
-}
-
-LinearBoxLayoutItem* LinearBoxLayout::GetLinearBoxLayoutItem(LayoutBaseItem *item) {
-    auto iter = layout_items_.begin();
-    while (iter != layout_items_.end()) {
-	if((*iter)->GetLayoutBaseItem() == item) {
-	    return reinterpret_cast<LinearBoxLayoutItem*>(iter->get());
-	}
-	iter++;
-    }
-    return nullptr;
-}
-
-bool LinearBoxLayout::IsEmpty() {
-    bool empty = true;
-    auto iter = layout_items_.begin();
-    while (iter != layout_items_.end()) {
-	LinearBoxLayoutItem *lbli = reinterpret_cast<LinearBoxLayoutItem*>(iter->get());
-	assert(lbli);
-	if(lbli->IsEmpty()) {
-	    iter++;
-	    continue ;
-	}
-	empty = false;
-	iter++;
-    }
-    return empty;
 }
 } // namespace ui

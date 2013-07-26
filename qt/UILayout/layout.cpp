@@ -1,6 +1,7 @@
 #include "layout.h"
 #include "layout_item.h"
 #include "widget.h"
+#include "layout_base_item.h"
 #include <cassert>
 
 namespace ui
@@ -168,5 +169,17 @@ bool Layout::NeedUpNotify() {
     if(limit_max_width != LimitMaxWidth()) return true;
     if(limit_max_height != LimitMaxHeight()) return true;
     return false;
+}
+
+LayoutItem* Layout::FindItem(LayoutBaseItem *item) {
+    auto iter = layout_items_.begin();
+    while (iter != layout_items_.end()) {
+	LayoutBaseItem *bli = (*iter)->GetLayoutBaseItem();
+	if(bli == item) {
+	    return iter->get();
+	}
+	iter++;
+    }
+    return nullptr;
 }
 } // namespace ui

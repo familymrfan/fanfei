@@ -16,12 +16,12 @@ class Layout:public LayoutBaseItem
     friend class LayoutItem;
     
     typedef std::shared_ptr<LayoutItem> SharedLayoutItem;
-public:
+protected:
     virtual void AddItem(SharedLayoutItem item);
     virtual bool InsertItem(uint32_t index, SharedLayoutItem item);
     virtual bool RemoveItem(SharedLayoutItem item);
     virtual SharedLayoutItem ItemAt(uint32_t  index);
-    
+    virtual LayoutItem* FindItem(LayoutBaseItem *item);
 public:
     virtual void AddWidget(Widget* widget) = 0;
     virtual bool InsertWidget(uint32_t index, Widget *widget) = 0;
@@ -45,6 +45,8 @@ public:
     virtual void UpNotifyRelayout() override;
     virtual void RelayoutToAdapt() override;
     virtual bool NeedUpNotify();
+    
+    
 protected:
     Layout():parent_widget_(nullptr),parent_layout_(nullptr) {}
 

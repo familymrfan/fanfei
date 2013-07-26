@@ -130,7 +130,7 @@ void HBoxLayout::AllocHelperToBox() {
     int32_t pre_x = X();
     while(iter != alloc_sections_.end()) {
 	assert(iter->box_item);
-	iter->box_item->SetGeometry(pre_x, Y(), iter->section, Height());
+	iter->box_item->CalculatePosition(pre_x, Y(), iter->section, Height()) ;
 	iter->box_item->Relayout();
 	pre_x += iter->section;
 	iter++;

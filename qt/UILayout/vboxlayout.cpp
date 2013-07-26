@@ -137,7 +137,7 @@ void VBoxLayout::AllocHelperToBox() {
     int32_t pre_y = Y();
     while(iter != alloc_sections_.end()) {
 	assert(iter->box_item);
-	iter->box_item->SetGeometry(X(), pre_y, Width(), iter->section);
+	iter->box_item->CalculatePosition(X(), pre_y, Width(), iter->section);
 	iter->box_item->Relayout();
 	pre_y += iter->section;
 	iter++;

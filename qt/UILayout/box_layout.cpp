@@ -14,25 +14,25 @@ BoxLayout::BoxLayout() {
 }
 
 void BoxLayout::SetWestSpace(LayoutBaseItem *item, uint32_t west_space) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
+    BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     bli->SetWestSpace(west_space);
 }
 
 void BoxLayout::SetNorthSpace(LayoutBaseItem *item, uint32_t north_space) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
+    BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     bli->SetNorthSpace(north_space);
 }
 
 void BoxLayout::SetEastSpace(LayoutBaseItem *item, uint32_t east_space) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
+    BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     bli->SetEastSpace(east_space);
 }
 
 void BoxLayout::SetSouthSpace(LayoutBaseItem *item, uint32_t south_space) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
+    BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     bli->SetSouthSpace(south_space);
 }
@@ -42,7 +42,7 @@ void BoxLayout::SetAround(LayoutBaseItem *item,
                    uint32_t north_space, 
                    uint32_t east_space, 
                    uint32_t south_space) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
+    BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     SetWestSpace(bli->GetLayoutBaseItem(), west_space);
     SetNorthSpace(bli->GetLayoutBaseItem(), north_space);
@@ -53,7 +53,7 @@ void BoxLayout::SetAround(LayoutBaseItem *item,
 void BoxLayout::SetValidGap(LayoutBaseItem *item,
                      BoxLayoutItem::GapValid gap_valid, 
                      bool valid) {
-    BoxLayoutItem *bli = GetBoxLayoutItem(item);
+    BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     bli->SetValidGap(gap_valid, valid);
 }
@@ -237,18 +237,6 @@ void BoxLayout::Relayout() {
 	item->Relayout();
 	iter++;
     }
-}
-
-BoxLayoutItem* BoxLayout::GetBoxLayoutItem(LayoutBaseItem *item) {
-    auto iter = layout_items_.begin();
-    while (iter != layout_items_.end()) {
-	LayoutBaseItem *bli = (*iter)->GetLayoutBaseItem();
-	if(bli == item) {
-	    return reinterpret_cast<BoxLayoutItem*>(iter->get());
-	}
-	iter++;
-    }
-    return nullptr;
 }
 
 bool BoxLayout::IsEmpty() {
