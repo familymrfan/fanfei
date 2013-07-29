@@ -12,7 +12,7 @@ file(GLOB source RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	)
 find_library(xlib X11) 
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
-add_executable(AGGIMAGE agg_platform_support.cpp image1.cpp)
+add_executable(AGGIMAGE agg_platform_support.cpp main.cpp)
 
 include_directories(include)
 target_link_libraries(AGGIMAGE libagg.a ${xlib})
