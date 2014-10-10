@@ -10,6 +10,8 @@
 	<string>hippo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>04101981B66E318109934C9516F88D824BB96459</key>
+		<string>https://github.com/ccgus/fmdb.git</string>
 		<key>B9743BE4CE6D0ED5511BCDD2A6F22B5106659EC4</key>
 		<string>https://github.com/familymrfan/fanfei.git</string>
 	</dict>
@@ -17,6 +19,8 @@
 	<string>hippo/hippo.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>04101981B66E318109934C9516F88D824BB96459</key>
+		<string>../../..hippo/hippo/thirdparty/fmdb/</string>
 		<key>B9743BE4CE6D0ED5511BCDD2A6F22B5106659EC4</key>
 		<string>../../..</string>
 	</dict>
@@ -35,6 +39,14 @@
 			<string>B9743BE4CE6D0ED5511BCDD2A6F22B5106659EC4</string>
 			<key>IDESourceControlWCCName</key>
 			<string>fanfei</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>04101981B66E318109934C9516F88D824BB96459</string>
+			<key>IDESourceControlWCCName</key>
+			<string>fmdb</string>
 		</dict>
 	</array>
 </dict>
