@@ -20,7 +20,7 @@
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>04101981B66E318109934C9516F88D824BB96459</key>
-		<string>../../..hippo/hippo/thirdparty/fmdb/</string>
+		<string>../../..hippo/hippo/thirdparty/fmdb</string>
 		<key>B9743BE4CE6D0ED5511BCDD2A6F22B5106659EC4</key>
 		<string>../../..</string>
 	</dict>

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E9C6D2E319EA4E0A00586CE8 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */; };
 		E9D9334719E828D900B30303 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9334619E828D900B30303 /* main.m */; };
 		E9D9334A19E828D900B30303 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9334919E828D900B30303 /* AppDelegate.m */; };
 		E9D9334D19E828D900B30303 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9334C19E828D900B30303 /* ViewController.m */; };
@@ -32,6 +33,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		E9D9334119E828D900B30303 /* hippo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hippo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D9334519E828D900B30303 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9D9334619E828D900B30303 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9C6D2E319EA4E0A00586CE8 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,9 +79,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E9C6D2E119EA49BB00586CE8 /* hippocore */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = hippocore;
+			sourceTree = "<group>";
+		};
 		E9D9333819E828D900B30303 = {
 			isa = PBXGroup;
 			children = (
+				E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */,
 				E9D9334319E828D900B30303 /* hippo */,
 				E9D9335D19E828DA00B30303 /* hippoTests */,
 				E9D9334219E828D900B30303 /* Products */,
@@ -97,6 +108,7 @@
 		E9D9334319E828D900B30303 /* hippo */ = {
 			isa = PBXGroup;
 			children = (
+				E9C6D2E119EA49BB00586CE8 /* hippocore */,
 				E9D9336A19E8344A00B30303 /* thirdparty */,
 				E9D9334819E828D900B30303 /* AppDelegate.h */,
 				E9D9334919E828D900B30303 /* AppDelegate.m */,
@@ -460,6 +472,7 @@
 				E9D9336619E828DA00B30303 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E9D9336719E828DA00B30303 /* Build configuration list for PBXNativeTarget "hippoTests" */ = {
 			isa = XCConfigurationList;
@@ -468,6 +481,7 @@
 				E9D9336919E828DA00B30303 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
