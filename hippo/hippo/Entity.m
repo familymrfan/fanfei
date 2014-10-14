@@ -61,4 +61,9 @@
     return dict;
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@:%@", [[self class] description], self.keyname2Value];
+}
+
 @end
