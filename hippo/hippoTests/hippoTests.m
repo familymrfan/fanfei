@@ -44,7 +44,7 @@
     [a.keyname2fieldExtension setObject:@"INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL" forKey:@"rowId"];
     NSLog(@"keyname2Value %@", [a keyname2Type]);
     [[DataBaseManager sharedInstace] createDateBase:@"hippo.db" path:nil];
-    [[DataBaseManager sharedInstace] createTableByEntity:a dbName:@"hippo.db"];
+    [[DataBaseManager sharedInstace] createTableByEntity:a];
 }
 
 @end

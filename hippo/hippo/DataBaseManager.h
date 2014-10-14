@@ -17,6 +17,9 @@
 - (BOOL)createDateBase:(NSString *)dbName path:(NSString *)path;
 
 // 创建表
-- (BOOL)createTableByEntity:(Entity *)entity dbName:(NSString *)dbName;
+- (BOOL)createTableByEntity:(Entity *)entity;
+
+// 设置当前的数据库
+- (void)setCurrentDB:(NSString *)dbName;
 
 @end

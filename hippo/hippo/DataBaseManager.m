@@ -15,6 +15,7 @@
 
 @property (nonatomic) NSMutableDictionary* dbName2Db;
 @property (nonatomic) NSDictionary* fieldMap;
+@property (nonatomic) NSString* currentDbName;
 
 @end
 
@@ -50,6 +51,7 @@
     FMDatabase* dataBase = [FMDatabase databaseWithPath:fullPath];
     if (dataBase && [dataBase open]) {
        [self.dbName2Db setObject:dataBase forKey:dbName];
+        self.currentDbName = dbName;
     } else {
         NSLog(@"create database %@ failed", dbName);
         return NO;
@@ -66,9 +68,9 @@
     return @"BLOB";
 }
 
-- (BOOL)createTableByEntity:(Entity *)entity dbName:(NSString *)dbName
+- (BOOL)createTableByEntity:(Entity *)entity
 {
-    FMDatabase* dataBase = [self.dbName2Db objectForKey:dbName];
+    FMDatabase* dataBase = [self.dbName2Db objectForKey:self.currentDbName];
     if (dataBase == nil) {
         return NO;
     }
@@ -90,6 +92,11 @@
         NSLog(@"create table %@ failed, error is %@", [[entity class] description], error);
     }
     return success;
+}
+
+- (void)setCurrentDB:(NSString *)dbName
+{
+    self.currentDbName = dbName;
 }
 
 @end
