@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "Entity.h"
+#import "DataBaseManager.h"
 
 @interface TestA : Entity
-
+@property (nonatomic) NSNumber* rowId;
 @property (nonatomic) NSString* a1;
 @property (nonatomic) NSNumber* a2;
 @property (nonatomic) NSData* a3;
@@ -40,7 +41,10 @@
 
 - (void)testExample {
     TestA* a = [[TestA alloc] init];
+    [a.keyname2fieldExtension setObject:@"INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL" forKey:@"rowId"];
     NSLog(@"keyname2Value %@", [a keyname2Type]);
+    [[DataBaseManager sharedInstace] createDateBase:@"hippo.db" path:nil];
+    [[DataBaseManager sharedInstace] createTableByEntity:a dbName:@"hippo.db"];
 }
 
 @end

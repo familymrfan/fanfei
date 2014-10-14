@@ -9,7 +9,20 @@
 #import "Entity.h"
 #import <objc/runtime.h>
 
+@interface Entity ()
+
+@end
+
 @implementation Entity
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.keyname2fieldExtension = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 
 -(NSDictionary *)keyname2Value
 {

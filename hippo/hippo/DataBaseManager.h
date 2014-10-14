@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+@class Entity;
 @interface DataBaseManager : NSObject
 
 + (instancetype)sharedInstace;
 
 // 创建数据库, path 为 nil 默认为document
 - (BOOL)createDateBase:(NSString *)dbName path:(NSString *)path;
+
+// 创建表
+- (BOOL)createTableByEntity:(Entity *)entity dbName:(NSString *)dbName;
 
 @end

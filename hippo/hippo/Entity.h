@@ -13,4 +13,6 @@
 - (NSDictionary *)keyname2Value;
 - (NSDictionary *)keyname2Type;
 
+@property (nonatomic) NSMutableDictionary* keyname2fieldExtension;
+
 @end
