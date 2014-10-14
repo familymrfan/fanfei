@@ -23,6 +23,8 @@
 		E606EFDB19EBFDE900CBADF0 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = E606EFD119EBFDE900CBADF0 /* FMResultSet.m */; };
 		E606EFE019EC002A00CBADF0 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */; };
 		E606EFE119EC003300CBADF0 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */; };
+		E606EFE719ED27E800CBADF0 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = E606EFE619ED27E800CBADF0 /* Entity.m */; };
+		E606EFE819ED27E800CBADF0 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = E606EFE619ED27E800CBADF0 /* Entity.m */; };
 		E9D9334719E828D900B30303 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9334619E828D900B30303 /* main.m */; };
 		E9D9334A19E828D900B30303 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9334919E828D900B30303 /* AppDelegate.m */; };
 		E9D9334D19E828D900B30303 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9334C19E828D900B30303 /* ViewController.m */; };
@@ -58,7 +60,8 @@
 		E606EFCF19EBFDE900CBADF0 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDB.h; path = thirdparty/fmdb/src/fmdb/FMDB.h; sourceTree = "<group>"; };
 		E606EFD019EBFDE900CBADF0 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = thirdparty/fmdb/src/fmdb/FMResultSet.h; sourceTree = "<group>"; };
 		E606EFD119EBFDE900CBADF0 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = thirdparty/fmdb/src/fmdb/FMResultSet.m; sourceTree = "<group>"; };
-		E606EFDC19EBFF8100CBADF0 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		E606EFE519ED27E800CBADF0 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		E606EFE619ED27E800CBADF0 /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entity.m; sourceTree = "<group>"; };
 		E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		E9D9334119E828D900B30303 /* hippo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hippo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D9334519E828D900B30303 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,6 +105,8 @@
 				E606EFC019EBF78C00CBADF0 /* DataBaseManager.m */,
 				E606EFC319EBFB7200CBADF0 /* PathProvider.h */,
 				E606EFC419EBFB7200CBADF0 /* PathProvider.m */,
+				E606EFE519ED27E800CBADF0 /* Entity.h */,
+				E606EFE619ED27E800CBADF0 /* Entity.m */,
 			);
 			name = hippocore;
 			sourceTree = "<group>";
@@ -109,7 +114,6 @@
 		E9D9333819E828D900B30303 = {
 			isa = PBXGroup;
 			children = (
-				E606EFDC19EBFF8100CBADF0 /* libsqlite3.0.dylib */,
 				E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */,
 				E9D9334319E828D900B30303 /* hippo */,
 				E9D9335D19E828DA00B30303 /* hippoTests */,
@@ -305,6 +309,7 @@
 				E606EFD419EBFDE900CBADF0 /* FMDatabaseAdditions.m in Sources */,
 				E606EFC519EBFB7200CBADF0 /* PathProvider.m in Sources */,
 				E606EFD819EBFDE900CBADF0 /* FMDatabaseQueue.m in Sources */,
+				E606EFE719ED27E800CBADF0 /* Entity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +323,7 @@
 				E606EFD919EBFDE900CBADF0 /* FMDatabaseQueue.m in Sources */,
 				E606EFC219EBF78C00CBADF0 /* DataBaseManager.m in Sources */,
 				E606EFD319EBFDE900CBADF0 /* FMDatabase.m in Sources */,
+				E606EFE819ED27E800CBADF0 /* Entity.m in Sources */,
 				E606EFDB19EBFDE900CBADF0 /* FMResultSet.m in Sources */,
 				E606EFD519EBFDE900CBADF0 /* FMDatabaseAdditions.m in Sources */,
 			);

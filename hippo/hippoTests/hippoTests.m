@@ -8,6 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "Entity.h"
+
+@interface TestA : Entity
+
+@property (nonatomic) NSString* a1;
+@property (nonatomic) NSNumber* a2;
+@property (nonatomic) NSData* a3;
+
+@end
+
+@implementation TestA
+
+@end
 
 @interface hippoTests : XCTestCase
 
@@ -26,15 +39,8 @@
 }
 
 - (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+    TestA* a = [[TestA alloc] init];
+    NSLog(@"keyname2Value %@", [a keyname2Type]);
 }
 
 @end
