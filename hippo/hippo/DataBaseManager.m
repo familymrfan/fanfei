@@ -89,9 +89,33 @@
     BOOL success = [dataBase executeUpdate:sql];
     NSError *error = [dataBase lastError];
     if (error) {
-        NSLog(@"create table %@ failed, error is %@", [[entity class] description], error);
+        NSLog(@"create table %@ failed, error is %@", NSStringFromClass([entity class]), error);
     }
     return success;
+}
+
+- (NSNumber *)saveByEntity:(Entity *)entity
+{
+    NSNumber* rowId = nil;
+    FMDatabase* dataBase = [self.dbName2Db objectForKey:self.currentDbName];
+    if (dataBase == nil) {
+        return rowId;
+    }
+    NSMutableArray* marks = [NSMutableArray arrayWithCapacity:[entity.keyname2Value.allKeys count]];
+    for (__unused NSString* key in entity.keyname2Value.allKeys) {
+        [marks addObject:@"?"];
+    }
+    NSString* sql = [NSString stringWithFormat:@"REPLACE INTO %@ (%@) VALUES (%@)", entity.class, [entity.keyname2Value.allKeys componentsJoinedByString:@", "],  [marks componentsJoinedByString:@", "]];
+    BOOL success = [dataBase executeUpdate:sql withArgumentsInArray:entity.keyname2Value.allValues];
+    NSError *error = [dataBase lastError];
+    if (!success) {
+        NSLog(@"saveByEntity %@ failed, error is %@", NSStringFromClass([entity class]), error);
+    } else {
+        if (entity.rowId == nil) {
+            rowId = [NSNumber numberWithLongLong:[dataBase lastInsertRowId]];
+        }
+    }
+    return rowId;
 }
 
 - (void)setCurrentDB:(NSString *)dbName

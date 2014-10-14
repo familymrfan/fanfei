@@ -19,6 +19,9 @@
 // 创建表
 - (BOOL)createTableByEntity:(Entity *)entity;
 
+// 保存
+- (NSNumber *)saveByEntity:(Entity *)entity;
+
 // 设置当前的数据库
 - (void)setCurrentDB:(NSString *)dbName;
 

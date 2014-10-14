@@ -11,15 +11,15 @@
 #import "Entity.h"
 #import "DataBaseManager.h"
 
-@interface TestA : Entity
+@interface Hippo : Entity
+
 @property (nonatomic) NSNumber* rowId;
-@property (nonatomic) NSString* a1;
-@property (nonatomic) NSNumber* a2;
-@property (nonatomic) NSData* a3;
+@property (nonatomic) NSString* name;
+@property (nonatomic) NSNumber* size;
 
 @end
 
-@implementation TestA
+@implementation Hippo
 
 @end
 
@@ -40,11 +40,17 @@
 }
 
 - (void)testExample {
-    TestA* a = [[TestA alloc] init];
-    [a.keyname2fieldExtension setObject:@"INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL" forKey:@"rowId"];
-    NSLog(@"keyname2Value %@", [a keyname2Type]);
+    Hippo* h = [[Hippo alloc] init];
+    h.name = @"小白";
+    h.size = @100;
+    [h.keyname2fieldExtension setObject:@"INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL" forKey:@"rowId"];
+    NSLog(@"keyname2Value %@", [h keyname2Type]);
+    NSLog(@"test a description %@", [h description]);
     [[DataBaseManager sharedInstace] createDateBase:@"hippo.db" path:nil];
-    [[DataBaseManager sharedInstace] createTableByEntity:a];
+    [[DataBaseManager sharedInstace] createTableByEntity:h];
+    h.rowId = [h save];
+    h.size = @200;
+    [h save];
 }
 
 @end

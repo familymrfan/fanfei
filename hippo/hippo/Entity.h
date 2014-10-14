@@ -10,9 +10,14 @@
 
 @interface Entity : NSObject
 
+@property (nonatomic) NSMutableDictionary* keyname2fieldExtension;
+
+- (id)rowId;
+- (NSArray *)keys;
 - (NSDictionary *)keyname2Value;
 - (NSDictionary *)keyname2Type;
 
-@property (nonatomic) NSMutableDictionary* keyname2fieldExtension;
+// 数据库同步操作接口
+- (NSNumber *)save;
 
 @end

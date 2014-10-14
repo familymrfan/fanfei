@@ -8,6 +8,7 @@
 
 #import "Entity.h"
 #import <objc/runtime.h>
+#import "DataBaseManager.h"
 
 @interface Entity ()
 
@@ -22,6 +23,27 @@
         self.keyname2fieldExtension = [NSMutableDictionary dictionary];
     }
     return self;
+}
+
+- (id)rowId
+{
+    if ([self.keys count] == 0) {
+        return nil;
+    }
+    return [self valueForKey:[self.keys firstObject]];
+}
+
+-(NSArray *)keys
+{
+    NSMutableArray* result = [NSMutableArray array];
+    unsigned int outCount;
+    objc_property_t *props = class_copyPropertyList([self class], &outCount);
+    for(int i=0; i<outCount; i++){
+        objc_property_t prop = props[i];
+        NSString *propName = [[NSString alloc]initWithCString:property_getName(prop) encoding:NSUTF8StringEncoding];
+        [result addObject:propName];
+    }
+    return result;
 }
 
 -(NSDictionary *)keyname2Value
@@ -63,7 +85,12 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"%@:%@", [[self class] description], self.keyname2Value];
+    return [NSString stringWithFormat:@"%@:%@", NSStringFromClass([self class]), self.keyname2Value];
+}
+
+- (NSNumber *)save
+{
+    return [[DataBaseManager sharedInstace] saveByEntity:self];
 }
 
 @end
