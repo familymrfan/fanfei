@@ -52,7 +52,10 @@
     h.name = @"小新";
     h.size = @200;
     [h save];
-    Hippo* h1 = (Hippo *)[h getEntity];
+    Hippo* h1 = [h getEntity];
+    NSLog(@"h1 %@", h1);
+    [h1 remove];
+    h1 = [h1 getEntity];
     NSLog(@"h1 %@", h1);
 }
 

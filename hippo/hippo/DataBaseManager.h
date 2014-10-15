@@ -26,6 +26,9 @@
 - (Entity *)getEntity:(Entity *)entity;
 - (NSArray *)getEntity:(Entity *)entity otherCondition:(NSString *)condition withParam:(NSArray*)param;
 
+// 删除
+- (BOOL)remove:(Entity *)entity;
+
 // 设置当前的数据库
 - (void)setCurrentDB:(NSString *)dbName;
 

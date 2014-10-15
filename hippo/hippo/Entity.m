@@ -141,7 +141,7 @@
     return [[DataBaseManager sharedInstace] saveByEntity:self];
 }
 
-- (Entity *)getEntity
+- (id)getEntity
 {
     return [[DataBaseManager sharedInstace] getEntity:self];
 }
@@ -149,6 +149,11 @@
 - (NSArray *)getEntity:(NSString *)condition withParam:(NSArray*)param
 {
     return [[DataBaseManager sharedInstace] getEntity:self otherCondition:condition withParam:param];
+}
+
+- (BOOL)remove
+{
+    return [[DataBaseManager sharedInstace] remove:self];
 }
 
 @end

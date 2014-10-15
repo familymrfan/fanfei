@@ -122,7 +122,7 @@
     BOOL success = [dataBase executeUpdate:sql withArgumentsInArray:entity.keyname2Value.allValues];
     NSError *error = [dataBase lastError];
     if (!success) {
-        NSLog(@"saveByEntity %@ failed, error is %@", entity.tablename, error);
+        NSLog(@"saveByEntity %@ failed, entity is %@, error is %@", entity.tablename, entity, error);
     } else {
         if (entity.rowId == nil) {
             rowId = [NSNumber numberWithLongLong:[dataBase lastInsertRowId]];
@@ -143,6 +143,7 @@
         return nil;
     }
     NSLock* lock = [self lockForEntity:entity];
+    [lock lock];
     NSString* sql = nil;
     if (entity.rowId) {
         sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ = ?", entity.tablename, entity.keyname];
@@ -155,7 +156,7 @@
     }
     FMResultSet* queryResult = [dataBase executeQuery:sql withArgumentsInArray:param];
     if (queryResult == nil) {
-        NSLog(@"getEntity %@ failed, error is %@", entity.tablename, dataBase.lastError);
+        NSLog(@"getEntity %@ failed, entity is %@, error is %@", entity.tablename, entity, dataBase.lastError);
     }
     NSMutableArray* entitys = [NSMutableArray array];
     while (queryResult.next) {
@@ -172,6 +173,27 @@
 - (Entity *)getEntity:(Entity *)entity
 {
     return [self getEntity:entity otherCondition:nil withParam:nil].firstObject;
+}
+
+- (BOOL)remove:(Entity *)entity
+{
+    FMDatabase* dataBase = [self.dbName2Db objectForKey:self.currentDbName];
+    if (dataBase == nil) {
+        return nil;
+    }
+    if ([entity rowId] == nil) {
+        return nil;
+    }
+    NSLock* lock = [self lockForEntity:entity];
+    [lock lock];
+    NSString* sql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ = ?", entity.tablename, entity.keyname];
+    BOOL success = [dataBase executeUpdate:sql withArgumentsInArray:@[entity.rowId]];
+    NSError *error = [dataBase lastError];
+    if (!success) {
+        NSLog(@"remove %@ failed, entity is %@, error is %@", entity.tablename, entity, error);
+    }
+    [lock unlock];
+    return success;
 }
 
 - (void)setCurrentDB:(NSString *)dbName

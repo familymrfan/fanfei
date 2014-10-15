@@ -24,7 +24,9 @@
 // 数据库同步操作接口
 - (NSNumber *)save;
 // 查询接口
-- (Entity *)getEntity;
+- (id)getEntity;
 - (NSArray *)getEntity:(NSString *)condition withParam:(NSArray*)param;
+// 删除
+- (BOOL)remove;
 
 @end
