@@ -49,10 +49,9 @@
     [[DataBaseManager sharedInstace] createDateBase:@"hippo.db" path:nil];
     [[DataBaseManager sharedInstace] createTableByEntity:h];
     h.rowId = [h save];
-    h.name = @"小黑";
+    h.name = @"小新";
     h.size = @200;
     [h save];
-    h.rowId = @10;
     Hippo* h1 = (Hippo *)[h getEntity];
     NSLog(@"h1 %@", h1);
 }

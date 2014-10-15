@@ -145,7 +145,7 @@
     NSLock* lock = [self lockForEntity:entity];
     NSString* sql = nil;
     if (entity.rowId) {
-        sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ == ?", entity.tablename, entity.keyname];
+        sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ = ?", entity.tablename, entity.keyname];
         param = @[entity.rowId];
     } else {
         sql = [NSString stringWithFormat:@"SELECT * FROM %@", entity.tablename];
