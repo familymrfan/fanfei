@@ -88,14 +88,14 @@
     return dict;
 }
 
-- (NSString *)name
+- (NSString *)tablename
 {
     return NSStringFromClass([self class]);
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"%@:%@", self.name, self.keyname2Value];
+    return [NSString stringWithFormat:@"%@:%@", self.tablename, self.keyname2Value];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -139,6 +139,16 @@
 - (NSNumber *)save
 {
     return [[DataBaseManager sharedInstace] saveByEntity:self];
+}
+
+- (Entity *)getEntity
+{
+    return [[DataBaseManager sharedInstace] getEntity:self];
+}
+
+- (NSArray *)getEntity:(NSString *)condition withParam:(NSArray*)param
+{
+    return [[DataBaseManager sharedInstace] getEntity:self otherCondition:condition withParam:param];
 }
 
 @end

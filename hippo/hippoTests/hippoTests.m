@@ -52,6 +52,9 @@
     h.name = @"小黑";
     h.size = @200;
     [h save];
+    h.rowId = @10;
+    Hippo* h1 = (Hippo *)[h getEntity];
+    NSLog(@"h1 %@", h1);
 }
 
 @end

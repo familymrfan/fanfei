@@ -17,12 +17,14 @@
 - (NSArray *)keys;
 - (NSDictionary *)keyname2Value;
 - (NSDictionary *)keyname2Type;
-- (NSString *)name;
+- (NSString *)tablename;
+
+- (instancetype)deepCopy;
 
 // 数据库同步操作接口
 - (NSNumber *)save;
-
-// 深复制本对象, 效率较低, 需要实现NSCoding
-- (instancetype)deepCopy;
+// 查询接口
+- (Entity *)getEntity;
+- (NSArray *)getEntity:(NSString *)condition withParam:(NSArray*)param;
 
 @end

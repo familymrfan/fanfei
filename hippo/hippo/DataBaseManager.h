@@ -24,7 +24,7 @@
 
 // 查询
 - (Entity *)getEntity:(Entity *)entity;
-- (NSArray *)getEntity:(Entity *)entity otherCondition:(NSString *)condition;
+- (NSArray *)getEntity:(Entity *)entity otherCondition:(NSString *)condition withParam:(NSArray*)param;
 
 // 设置当前的数据库
 - (void)setCurrentDB:(NSString *)dbName;
