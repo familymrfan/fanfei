@@ -16,6 +16,7 @@
 @property (nonatomic) NSMutableDictionary* dbName2Db;
 @property (nonatomic) NSDictionary* fieldMap;
 @property (nonatomic) NSString* currentDbName;
+@property (nonatomic) NSDictionary* tbName2DbLock;
 
 @end
 
@@ -36,6 +37,7 @@
     self = [super init];
     if (self) {
         self.dbName2Db = [NSMutableDictionary dictionary];
+        self.tbName2DbLock = [NSMutableDictionary dictionary];
         self.fieldMap = @{@"NSString":@"TEXT", @"NSNumber":@"INTEGER", @"NSData":@"BLOB"};
     }
     return self;
@@ -74,8 +76,11 @@
     if (dataBase == nil) {
         return NO;
     }
+    // 为每个表分配一个锁，保证同一时刻只有一个操作
+    NSLock* lock = [[NSLock alloc] init];
+    [self.tbName2DbLock setValue:lock forKey:NSStringFromClass([entity class])];
     NSDictionary* keyname2type = [entity keyname2Type];
-    NSMutableString* sql = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(", [[entity class] description]];
+    NSMutableString* sql = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(", NSStringFromClass([entity class])];
     [keyname2type enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString* type, BOOL *stop) {
         NSString* feildProperty = [entity.keyname2fieldExtension objectForKey:key];
         if (feildProperty == nil) {
@@ -94,13 +99,21 @@
     return success;
 }
 
+- (NSLock *)lockForEntity:(Entity *)entity
+{
+    return [self.tbName2DbLock objectForKey:NSStringFromClass([entity class])];
+}
+
 - (NSNumber *)saveByEntity:(Entity *)entity
 {
     NSNumber* rowId = nil;
     FMDatabase* dataBase = [self.dbName2Db objectForKey:self.currentDbName];
     if (dataBase == nil) {
-        return rowId;
+        return nil;
     }
+    
+    NSLock* lock = [self lockForEntity:entity];
+    [lock lock];
     NSMutableArray* marks = [NSMutableArray arrayWithCapacity:[entity.keyname2Value.allKeys count]];
     for (__unused NSString* key in entity.keyname2Value.allKeys) {
         [marks addObject:@"?"];
@@ -115,6 +128,7 @@
             rowId = [NSNumber numberWithLongLong:[dataBase lastInsertRowId]];
         }
     }
+    [lock unlock];
     return rowId;
 }
 
