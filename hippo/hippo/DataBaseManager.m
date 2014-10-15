@@ -78,9 +78,9 @@
     }
     // 为每个表分配一个锁，保证同一时刻只有一个操作
     NSLock* lock = [[NSLock alloc] init];
-    [self.tbName2DbLock setValue:lock forKey:NSStringFromClass([entity class])];
+    [self.tbName2DbLock setValue:lock forKey:entity.name];
     NSDictionary* keyname2type = [entity keyname2Type];
-    NSMutableString* sql = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(", NSStringFromClass([entity class])];
+    NSMutableString* sql = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(", entity.name];
     [keyname2type enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSString* type, BOOL *stop) {
         NSString* feildProperty = [entity.keyname2fieldExtension objectForKey:key];
         if (feildProperty == nil) {
@@ -94,14 +94,14 @@
     BOOL success = [dataBase executeUpdate:sql];
     NSError *error = [dataBase lastError];
     if (error) {
-        NSLog(@"create table %@ failed, error is %@", NSStringFromClass([entity class]), error);
+        NSLog(@"create table %@ failed, error is %@", entity.name, error);
     }
     return success;
 }
 
 - (NSLock *)lockForEntity:(Entity *)entity
 {
-    return [self.tbName2DbLock objectForKey:NSStringFromClass([entity class])];
+    return [self.tbName2DbLock objectForKey:entity.name];
 }
 
 - (NSNumber *)saveByEntity:(Entity *)entity
@@ -122,7 +122,7 @@
     BOOL success = [dataBase executeUpdate:sql withArgumentsInArray:entity.keyname2Value.allValues];
     NSError *error = [dataBase lastError];
     if (!success) {
-        NSLog(@"saveByEntity %@ failed, error is %@", NSStringFromClass([entity class]), error);
+        NSLog(@"saveByEntity %@ failed, error is %@", entity.name, error);
     } else {
         if (entity.rowId == nil) {
             rowId = [NSNumber numberWithLongLong:[dataBase lastInsertRowId]];
@@ -130,6 +130,48 @@
     }
     [lock unlock];
     return rowId;
+}
+
+// todo keyname array
+- (NSArray *)getEntity:(Entity *)entity otherCondition:(NSString *)condition withParam:(NSArray*)param
+{
+    FMDatabase* dataBase = [self.dbName2Db objectForKey:self.currentDbName];
+    if (dataBase == nil) {
+        return nil;
+    }
+    if ([entity rowId] == nil && condition == nil) {
+        return nil;
+    }
+    NSLock* lock = [self lockForEntity:entity];
+    NSString* sql = nil;
+    if (entity.rowId) {
+        sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@ == ?", entity.name, entity.keyname];
+        param = @[entity.rowId];
+    } else {
+        sql = [NSString stringWithFormat:@"SELECT * FROM %@", entity.name];
+    }
+    if (condition != nil) {
+        sql = [sql stringByAppendingFormat:@" %@", condition];
+    }
+    FMResultSet* queryResult = [dataBase executeQuery:sql withArgumentsInArray:param];
+    if (queryResult == nil) {
+        NSLog(@"getEntity %@ failed, error is %@", entity.name, dataBase.lastError);
+    }
+    NSMutableArray* entitys = [NSMutableArray array];
+    while (queryResult.next) {
+        Entity* newEntity = [entity deepCopy];
+        [entity.keys enumerateObjectsUsingBlock:^(NSString* keyname, NSUInteger idx, BOOL *stop) {
+            [newEntity setValue:[queryResult objectForColumnName:keyname] forKey:keyname];
+        }];
+        [entitys addObject:newEntity];
+    }
+    [lock unlock];
+    return entitys;
+}
+
+- (Entity *)getEntity:(Entity *)entity
+{
+    return [self getEntity:entity otherCondition:nil withParam:nil].firstObject;
 }
 
 - (void)setCurrentDB:(NSString *)dbName

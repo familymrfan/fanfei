@@ -22,6 +22,10 @@
 // 保存
 - (NSNumber *)saveByEntity:(Entity *)entity;
 
+// 查询
+- (Entity *)getEntity:(Entity *)entity;
+- (NSArray *)getEntity:(Entity *)entity otherCondition:(NSString *)condition;
+
 // 设置当前的数据库
 - (void)setCurrentDB:(NSString *)dbName;
 

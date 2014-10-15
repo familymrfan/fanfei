@@ -30,7 +30,12 @@
     if ([self.keys count] == 0) {
         return nil;
     }
-    return [self valueForKey:[self.keys firstObject]];
+    return [self valueForKey:self.keyname];
+}
+
+- (NSString *)keyname
+{
+    return [self.keys firstObject];
 }
 
 -(NSArray *)keys
@@ -83,9 +88,52 @@
     return dict;
 }
 
+- (NSString *)name
+{
+    return NSStringFromClass([self class]);
+}
+
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"%@:%@", NSStringFromClass([self class]), self.keyname2Value];
+    return [NSString stringWithFormat:@"%@:%@", self.name, self.keyname2Value];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self != nil) {
+        for (NSString* propertyName in [self keys]) {
+            if ([propertyName isEqualToString:@"superclass"]
+                || [propertyName isEqualToString:@"hash"]
+                || [propertyName isEqualToString:@"description"]
+                || [propertyName isEqualToString:@"debugDescription"]) {
+                continue;
+            }
+            id value = [aDecoder decodeObjectForKey:propertyName];
+            [self setValue:value forKey:propertyName];
+        }
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    for (NSString* propertyName in [self keys]) {
+        if ([propertyName isEqualToString:@"superclass"]
+            || [propertyName isEqualToString:@"hash"]
+            || [propertyName isEqualToString:@"description"]
+            || [propertyName isEqualToString:@"debugDescription"]) {
+            continue;
+        }
+        
+        id value = [self valueForKey:propertyName];
+        [aCoder encodeObject:value forKey:propertyName];
+    }
+}
+
+- (instancetype)deepCopy
+{
+    return [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]];
 }
 
 - (NSNumber *)save
