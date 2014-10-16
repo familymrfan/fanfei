@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "DataBaseManager.h"
+#import "AccountBook.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +18,8 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    [[DataBaseManager sharedInstace] createDateBase:@"AccountBook.db" path:nil];
+    [[DataBaseManager sharedInstace] createTableByEntity:[AccountBook new]];
     return YES;
 }
 

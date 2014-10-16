@@ -38,7 +38,7 @@
     if (self) {
         self.dbName2Db = [NSMutableDictionary dictionary];
         self.tbName2DbLock = [NSMutableDictionary dictionary];
-        self.fieldMap = @{@"NSString":@"TEXT", @"NSNumber":@"INTEGER", @"NSData":@"BLOB"};
+        self.fieldMap = @{@"NSString":@"TEXT", @"NSNumber":@"INTEGER", @"NSData":@"BLOB", @"NSDate":@"TEXT"};
     }
     return self;
 }
@@ -93,7 +93,7 @@
     [sql appendString:@")"];
     BOOL success = [dataBase executeUpdate:sql];
     NSError *error = [dataBase lastError];
-    if (error) {
+    if (!success) {
         NSLog(@"create table %@ failed, error is %@", entity.tablename, error);
     }
     return success;
