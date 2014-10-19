@@ -25,6 +25,7 @@
 		E606EFE119EC003300CBADF0 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */; };
 		E606EFE719ED27E800CBADF0 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = E606EFE619ED27E800CBADF0 /* Entity.m */; };
 		E606EFE819ED27E800CBADF0 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = E606EFE619ED27E800CBADF0 /* Entity.m */; };
+		E9B41DF919F409F800A98351 /* CDRTranslucentSideBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B41DF819F409F800A98351 /* CDRTranslucentSideBar.m */; };
 		E9D52F5A19F0149200E208FA /* AccountBook.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D52F5919F0149200E208FA /* AccountBook.m */; };
 		E9D9334719E828D900B30303 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9334619E828D900B30303 /* main.m */; };
 		E9D9334A19E828D900B30303 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9334919E828D900B30303 /* AppDelegate.m */; };
@@ -63,6 +64,8 @@
 		E606EFD119EBFDE900CBADF0 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = thirdparty/fmdb/src/fmdb/FMResultSet.m; sourceTree = "<group>"; };
 		E606EFE519ED27E800CBADF0 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
 		E606EFE619ED27E800CBADF0 /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entity.m; sourceTree = "<group>"; };
+		E9B41DF719F409F800A98351 /* CDRTranslucentSideBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDRTranslucentSideBar.h; path = CDRTranslucentSideBar/CDRTranslucentSideBar.h; sourceTree = "<group>"; };
+		E9B41DF819F409F800A98351 /* CDRTranslucentSideBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDRTranslucentSideBar.m; path = CDRTranslucentSideBar/CDRTranslucentSideBar.m; sourceTree = "<group>"; };
 		E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		E9D52F5819F0149200E208FA /* AccountBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountBook.h; sourceTree = "<group>"; };
 		E9D52F5919F0149200E208FA /* AccountBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountBook.m; sourceTree = "<group>"; };
@@ -101,6 +104,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E9B41DF619F409EC00A98351 /* CDRTranslucentSideBar */ = {
+			isa = PBXGroup;
+			children = (
+				E9B41DF719F409F800A98351 /* CDRTranslucentSideBar.h */,
+				E9B41DF819F409F800A98351 /* CDRTranslucentSideBar.m */,
+			);
+			name = CDRTranslucentSideBar;
+			sourceTree = "<group>";
+		};
 		E9C6D2E119EA49BB00586CE8 /* hippocore */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,6 +148,7 @@
 		E9D9334319E828D900B30303 /* hippo */ = {
 			isa = PBXGroup;
 			children = (
+				E9B41DF619F409EC00A98351 /* CDRTranslucentSideBar */,
 				E9D52F5819F0149200E208FA /* AccountBook.h */,
 				E9D52F5919F0149200E208FA /* AccountBook.m */,
 				E9D9334819E828D900B30303 /* AppDelegate.h */,
@@ -307,6 +320,7 @@
 				E9D9334D19E828D900B30303 /* ViewController.m in Sources */,
 				E9D9334A19E828D900B30303 /* AppDelegate.m in Sources */,
 				E606EFC119EBF78C00CBADF0 /* DataBaseManager.m in Sources */,
+				E9B41DF919F409F800A98351 /* CDRTranslucentSideBar.m in Sources */,
 				E606EFD219EBFDE900CBADF0 /* FMDatabase.m in Sources */,
 				E606EFDA19EBFDE900CBADF0 /* FMResultSet.m in Sources */,
 				E9D9334719E828D900B30303 /* main.m in Sources */,
