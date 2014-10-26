@@ -7,12 +7,14 @@
 //
 
 #import "AddViewController.h"
+#import "AccountBook.h"
 
 @interface AddViewController ()
 
 @property (weak, nonatomic) IBOutlet UISwitch *switchInOrOut;
 @property (weak, nonatomic) IBOutlet UITextField *txtMoney;
 @property (weak, nonatomic) IBOutlet UILabel *labelTitle;
+@property (weak, nonatomic) IBOutlet UITextField *txtUse;
 
 @end
 
@@ -27,8 +29,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
     
-    // Do any additional setup after loading the view.
+    if ([self.txtMoney.text integerValue] == 0) {
+        return ;
+    }
+    
+    AccountBook* abk = [[AccountBook alloc] init];
+    abk.inOrOut = @(!self.switchInOrOut.isOn);
+    abk.money = self.txtMoney.text;
+    abk.use = self.txtUse.text;
+    abk.date = [NSDate date];
+    [abk save];
 }
 
 - (void)didReceiveMemoryWarning {

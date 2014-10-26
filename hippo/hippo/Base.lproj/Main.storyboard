@@ -64,11 +64,6 @@
                                     <action selector="changeMoney:" destination="A8R-WV-bus" eventType="editingChanged" id="ire-ZV-PXl"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="description" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AQ5-5B-e75">
-                                <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="orU-8d-lCn">
                                 <rect key="frame" x="213" y="180" width="51" height="31"/>
                                 <variation key="heightClass=compact-widthClass=compact" fixedFrame="YES">
@@ -99,6 +94,11 @@
                                     </mask>
                                 </variation>
                             </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="description" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AQ5-5B-e75">
+                                <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -118,8 +118,8 @@
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="AQ5-5B-e75"/>
                                 <exclude reference="nNd-QW-8EA"/>
+                                <exclude reference="AQ5-5B-e75"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="ACO-2G-i97"/>
@@ -137,8 +137,8 @@
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
-                                <include reference="AQ5-5B-e75"/>
                                 <include reference="nNd-QW-8EA"/>
+                                <include reference="AQ5-5B-e75"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="ACO-2G-i97"/>
@@ -160,6 +160,7 @@
                         <outlet property="labelTitle" destination="nNd-QW-8EA" id="SUv-DS-4eV"/>
                         <outlet property="switchInOrOut" destination="orU-8d-lCn" id="xRl-v5-nvk"/>
                         <outlet property="txtMoney" destination="EZW-pw-sV2" id="pYU-ZX-T2T"/>
+                        <outlet property="txtUse" destination="AQ5-5B-e75" id="n6p-kf-fXf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e5d-jo-luX" userLabel="First Responder" sceneMemberID="firstResponder"/>
