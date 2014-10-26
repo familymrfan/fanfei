@@ -26,6 +26,7 @@
 		E606EFE719ED27E800CBADF0 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = E606EFE619ED27E800CBADF0 /* Entity.m */; };
 		E606EFE819ED27E800CBADF0 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = E606EFE619ED27E800CBADF0 /* Entity.m */; };
 		E9B41DF919F409F800A98351 /* CDRTranslucentSideBar.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B41DF819F409F800A98351 /* CDRTranslucentSideBar.m */; };
+		E9CC6AF919FCD37B004A4317 /* AddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9CC6AF819FCD37B004A4317 /* AddViewController.m */; };
 		E9CFB89C19F5528100D20D63 /* UIViewController+ScrollingNavbar.m in Sources */ = {isa = PBXBuildFile; fileRef = E9CFB89B19F5528100D20D63 /* UIViewController+ScrollingNavbar.m */; };
 		E9D52F5A19F0149200E208FA /* AccountBook.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D52F5919F0149200E208FA /* AccountBook.m */; };
 		E9D9334719E828D900B30303 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9334619E828D900B30303 /* main.m */; };
@@ -68,6 +69,8 @@
 		E9B41DF719F409F800A98351 /* CDRTranslucentSideBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDRTranslucentSideBar.h; path = CDRTranslucentSideBar/CDRTranslucentSideBar.h; sourceTree = "<group>"; };
 		E9B41DF819F409F800A98351 /* CDRTranslucentSideBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDRTranslucentSideBar.m; path = CDRTranslucentSideBar/CDRTranslucentSideBar.m; sourceTree = "<group>"; };
 		E9C6D2E219EA4E0A00586CE8 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		E9CC6AF719FCD37B004A4317 /* AddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddViewController.h; sourceTree = "<group>"; };
+		E9CC6AF819FCD37B004A4317 /* AddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddViewController.m; sourceTree = "<group>"; };
 		E9CFB89A19F5528100D20D63 /* UIViewController+ScrollingNavbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+ScrollingNavbar.h"; path = "AMScrollingNavbar/UIViewController+ScrollingNavbar.h"; sourceTree = "<group>"; };
 		E9CFB89B19F5528100D20D63 /* UIViewController+ScrollingNavbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+ScrollingNavbar.m"; path = "AMScrollingNavbar/UIViewController+ScrollingNavbar.m"; sourceTree = "<group>"; };
 		E9D52F5819F0149200E208FA /* AccountBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountBook.h; sourceTree = "<group>"; };
@@ -168,6 +171,8 @@
 				E9D9334919E828D900B30303 /* AppDelegate.m */,
 				E9D9334B19E828D900B30303 /* ViewController.h */,
 				E9D9334C19E828D900B30303 /* ViewController.m */,
+				E9CC6AF719FCD37B004A4317 /* AddViewController.h */,
+				E9CC6AF819FCD37B004A4317 /* AddViewController.m */,
 				E9D9334E19E828D900B30303 /* Main.storyboard */,
 				E9D9335119E828DA00B30303 /* Images.xcassets */,
 				E9D9335319E828DA00B30303 /* LaunchScreen.xib */,
@@ -335,6 +340,7 @@
 				E606EFC119EBF78C00CBADF0 /* DataBaseManager.m in Sources */,
 				E9B41DF919F409F800A98351 /* CDRTranslucentSideBar.m in Sources */,
 				E606EFD219EBFDE900CBADF0 /* FMDatabase.m in Sources */,
+				E9CC6AF919FCD37B004A4317 /* AddViewController.m in Sources */,
 				E606EFDA19EBFDE900CBADF0 /* FMResultSet.m in Sources */,
 				E9D9334719E828D900B30303 /* main.m in Sources */,
 				E606EFD619EBFDE900CBADF0 /* FMDatabasePool.m in Sources */,
