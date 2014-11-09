@@ -16,7 +16,7 @@
 
 @property (nonatomic) CDRTranslucentSideBar *sideBar;
 @property (weak, nonatomic) IBOutlet UITableView *bookTable;
-@property (strong, nonatomic) NSArray* data;
+@property (strong, nonatomic) NSDictionary* data;
 
 @end
 
@@ -35,8 +35,7 @@
     // Add PanGesture to Show SideBar by PanGesture
     // UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     // [self.view addGestureRecognizer:panGestureRecognizer];
-    AccountBook* ab = [AccountBook new];
-    self.data = [[DataBaseManager sharedInstace] getEntity:ab otherCondition:@"order by date" withParam:nil];
+    
     
     //if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
     //    self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -63,6 +62,23 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSMutableDictionary* data = [NSMutableDictionary dictionary];
+    NSArray* abs = [[DataBaseManager sharedInstace] getEntity:[AccountBook new] otherCondition:@"order by date" withParam:nil];
+    [abs enumerateObjectsUsingBlock:^(AccountBook* obj, NSUInteger idx, BOOL *stop) {
+        NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitMonth fromDate:obj.date];
+        NSMutableArray* absMonth = [data objectForKey:@(components.month)];
+        if (absMonth == nil) {
+            absMonth = [NSMutableArray array];
+            [data setObject:absMonth forKey:@(components.month)];
+        }
+        [absMonth addObject:obj];
+    }];
+    self.data = data;
+    [self.bookTable reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -95,9 +111,32 @@
     return YES;
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return self.data.allKeys.count;
+}
+
+- (NSNumber *)monthInSection:(NSInteger)section
+{
+    NSArray* keysInSort = [self.data.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSNumber* obj1, NSNumber* obj2) {
+        return [obj1 compare:obj2];
+    }];
+    return [keysInSort objectAtIndex:section];
+}
+
+- (NSArray *)accountBooksInSection:(NSInteger)section
+{
+    return [self.data objectForKey:[self monthInSection:section]];
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return [NSString stringWithFormat:@"%@ 月", [self monthInSection:section]];
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.data count];
+    return [self accountBooksInSection:section].count;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -107,9 +146,11 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Identifier"];
     }
     
-    AccountBook* ab = [self.data objectAtIndex:indexPath.row];
+    AccountBook* ab = [[self accountBooksInSection:indexPath.section] objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ %@ 日期:%@", ab.money, ab.inOrOut.boolValue ? @"收入":@"支出", ab.date];
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:ab.date];
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ %@      %@日%@:%@", ab.money, ab.inOrOut.boolValue ? @"收入":@"支出", @(components.day), @(components.hour), @(components.minute)];
     
     return cell;
 }
