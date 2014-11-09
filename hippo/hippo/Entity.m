@@ -131,6 +131,11 @@
     }
 }
 
+- (instancetype)create
+{
+    return [[self.class alloc] init];
+}
+
 - (instancetype)deepCopy
 {
     return [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]];

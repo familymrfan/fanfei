@@ -10,6 +10,7 @@
 #import "DataBaseManager.h"
 #import "CDRTranslucentSideBar.h"
 #import "UIViewController+ScrollingNavbar.h"
+#import "AccountBook.h"
 
 @interface ViewController () <CDRTranslucentSideBarDelegate, UITableViewDataSource, UITableViewDelegate>
 
@@ -32,19 +33,20 @@
     self.sideBar.tag = 0;
     
     // Add PanGesture to Show SideBar by PanGesture
-    UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-    [self.view addGestureRecognizer:panGestureRecognizer];
+    // UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    // [self.view addGestureRecognizer:panGestureRecognizer];
+    AccountBook* ab = [AccountBook new];
+    self.data = [[DataBaseManager sharedInstace] getEntity:ab otherCondition:@"order by date" withParam:nil];
     
-    self.data = @[@"Awesome content", @"Great content", @"Amazing content", @"Ludicrous content", @"Awesome content", @"Great content", @"Amazing content", @"Ludicrous content", @"Awesome content", @"Great content", @"Amazing content", @"Ludicrous content", @"Awesome content", @"Great content", @"Amazing content", @"Ludicrous content"];
+    //if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+    //    self.edgesForExtendedLayout = UIRectEdgeNone;
+    //}
     
-    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
     // self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"nav"]];
     
     // Just call this line to enable the scrolling navbar
-    [self followScrollView:self.bookTable withDelay:65];
-    [self setShouldScrollWhenContentFits:YES];
+    //[self followScrollView:self.bookTable withDelay:65];
+    //[self setShouldScrollWhenContentFits:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -105,7 +107,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Identifier"];
     }
     
-    cell.textLabel.text = self.data[indexPath.row];
+    AccountBook* ab = [self.data objectAtIndex:indexPath.row];
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ %@ 日期:%@", ab.money, ab.inOrOut.boolValue ? @"收入":@"支出", ab.date];
     
     return cell;
 }

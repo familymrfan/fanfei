@@ -19,6 +19,7 @@
 - (NSDictionary *)keyname2Type;
 - (NSString *)tablename;
 
+- (instancetype)create;
 - (instancetype)deepCopy;
 
 // 数据库同步操作接口

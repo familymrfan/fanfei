@@ -139,9 +139,6 @@
     if (dataBase == nil) {
         return nil;
     }
-    if ([entity rowId] == nil && condition == nil) {
-        return nil;
-    }
     NSLock* lock = [self lockForEntity:entity];
     [lock lock];
     NSString* sql = nil;
@@ -160,9 +157,14 @@
     }
     NSMutableArray* entitys = [NSMutableArray array];
     while (queryResult.next) {
-        Entity* newEntity = [entity deepCopy];
+        Entity* newEntity = [entity create];
         [entity.keys enumerateObjectsUsingBlock:^(NSString* keyname, NSUInteger idx, BOOL *stop) {
-            [newEntity setValue:[queryResult objectForColumnName:keyname] forKey:keyname];
+            // 如果是NSDate, NSString 转 NSDate
+            id value = [queryResult objectForColumnName:keyname];
+            if ([[entity.keyname2Type objectForKey:keyname] isEqualToString:@"NSDate"]) {
+                value = [NSDate dateWithTimeIntervalSince1970:[value integerValue]];
+            }
+            [newEntity setValue:value forKey:keyname];
         }];
         [entitys addObject:newEntity];
     }
