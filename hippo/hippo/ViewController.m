@@ -16,7 +16,7 @@
 
 @property (nonatomic) CDRTranslucentSideBar *sideBar;
 @property (weak, nonatomic) IBOutlet UITableView *bookTable;
-@property (strong, nonatomic) NSDictionary* data;
+@property (strong, nonatomic) NSMutableDictionary* data;
 
 @end
 
@@ -124,7 +124,7 @@
     return [keysInSort objectAtIndex:section];
 }
 
-- (NSArray *)accountBooksInSection:(NSInteger)section
+- (NSMutableArray *)accountBooksInSection:(NSInteger)section
 {
     return [self.data objectForKey:[self monthInSection:section]];
 }
@@ -155,15 +155,21 @@
     return cell;
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // [self.data removeObjectAtIndex:indexPath.row];
-        // Delete the row from the data source.
-        // [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+        NSMutableArray* abs = [self accountBooksInSection:indexPath.section];
+        AccountBook* ab = [abs objectAtIndex:indexPath.row];
+        [ab remove];
+        [abs removeObject:ab];
+        if (abs.count == 0) {
+            [self.data removeObjectForKey:@(indexPath.section)];
+        }
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
