@@ -17,4 +17,6 @@
 @property (nonatomic) NSString* use;
 @property (nonatomic) NSDate* date;
 
+- (NSInteger)income;
+
 @end

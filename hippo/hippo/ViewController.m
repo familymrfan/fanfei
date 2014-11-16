@@ -66,8 +66,9 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    // 提取列表数据
     NSMutableDictionary* data = [NSMutableDictionary dictionary];
-    NSArray* abs = [[DataBaseManager sharedInstace] getEntity:[AccountBook new] otherCondition:@"order by date" withParam:nil];
+    NSArray* abs = [[AccountBook new] getEntity:@"order by date" withParam:nil];
     [abs enumerateObjectsUsingBlock:^(AccountBook* obj, NSUInteger idx, BOOL *stop) {
         NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitMonth fromDate:obj.date];
         NSMutableArray* absMonth = [data objectForKey:@(components.month)];
@@ -78,7 +79,15 @@
         [absMonth addObject:obj];
     }];
     self.data = data;
+    [self refreshIncome];
     [self.bookTable reloadData];
+}
+
+- (void)refreshIncome
+{
+    // 提取总收入
+    NSLog(@"总收入 %ld", [[AccountBook new] income]);
+    [self.navigationController.navigationBar.topItem setTitle:[NSString stringWithFormat:@"总收入 %ld", [[AccountBook new] income]]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -170,6 +179,7 @@
             [self.data removeObjectForKey:@(indexPath.section)];
         }
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self refreshIncome];
     }
 }
 
