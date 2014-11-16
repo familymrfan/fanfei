@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class Entity;
+@class FMDatabase;
 @interface DataBaseManager : NSObject
 
 + (instancetype)sharedInstace;
@@ -31,5 +32,8 @@
 
 // 设置当前的数据库
 - (void)setCurrentDB:(NSString *)dbName;
+
+// 获取当前的数据库
+- (FMDatabase *)currentDB;
 
 @end

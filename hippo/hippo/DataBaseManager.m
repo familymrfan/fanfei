@@ -72,7 +72,7 @@
 
 - (BOOL)createTableByEntity:(Entity *)entity
 {
-    FMDatabase* dataBase = [self.dbName2Db objectForKey:self.currentDbName];
+    FMDatabase* dataBase = [self currentDB];
     if (dataBase == nil) {
         return NO;
     }
@@ -107,11 +107,10 @@
 - (NSNumber *)saveByEntity:(Entity *)entity
 {
     NSNumber* rowId = nil;
-    FMDatabase* dataBase = [self.dbName2Db objectForKey:self.currentDbName];
+    FMDatabase* dataBase = [self currentDB];
     if (dataBase == nil) {
         return nil;
     }
-    
     NSLock* lock = [self lockForEntity:entity];
     [lock lock];
     NSMutableArray* marks = [NSMutableArray arrayWithCapacity:[entity.keyname2Value.allKeys count]];
@@ -135,7 +134,7 @@
 // todo keyname array
 - (NSArray *)getEntity:(Entity *)entity otherCondition:(NSString *)condition withParam:(NSArray*)param
 {
-    FMDatabase* dataBase = [self.dbName2Db objectForKey:self.currentDbName];
+    FMDatabase* dataBase = [self currentDB];
     if (dataBase == nil) {
         return nil;
     }
@@ -179,7 +178,7 @@
 
 - (BOOL)remove:(Entity *)entity
 {
-    FMDatabase* dataBase = [self.dbName2Db objectForKey:self.currentDbName];
+    FMDatabase* dataBase = [self currentDB];
     if (dataBase == nil) {
         return nil;
     }
@@ -201,6 +200,11 @@
 - (void)setCurrentDB:(NSString *)dbName
 {
     self.currentDbName = dbName;
+}
+
+- (FMDatabase *)currentDB
+{
+    return [self.dbName2Db objectForKey:self.currentDbName];
 }
 
 @end
