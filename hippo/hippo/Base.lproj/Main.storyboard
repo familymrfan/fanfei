@@ -84,6 +84,12 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="D2t-WD-9v4">
+                                <rect key="frame" x="-4" y="352" width="320" height="216"/>
+                                <date key="date" timeIntervalSinceReferenceDate="437814908.12708497">
+                                    <!--2014-11-16 07:15:08 +0000-->
+                                </date>
+                            </datePicker>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -102,6 +108,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="KmM-wc-Yx6"/>
                     <connections>
+                        <outlet property="datePicker" destination="D2t-WD-9v4" id="bAF-Nv-Ob4"/>
                         <outlet property="labelTitle" destination="nNd-QW-8EA" id="SUv-DS-4eV"/>
                         <outlet property="switchInOrOut" destination="orU-8d-lCn" id="xRl-v5-nvk"/>
                         <outlet property="txtMoney" destination="EZW-pw-sV2" id="pYU-ZX-T2T"/>
@@ -110,7 +117,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e5d-jo-luX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1029.5999999999999" y="68.159999999999997"/>
+            <point key="canvasLocation" x="1020" y="68"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9TO-7h-EPI">

@@ -15,6 +15,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtMoney;
 @property (weak, nonatomic) IBOutlet UILabel *labelTitle;
 @property (weak, nonatomic) IBOutlet UITextField *txtUse;
+@property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
+
 
 @end
 
@@ -43,7 +45,7 @@
     abk.inOrOut = @(!self.switchInOrOut.isOn);
     abk.money = self.txtMoney.text;
     abk.use = self.txtUse.text;
-    abk.date = [NSDate date];
+    abk.date = [self.datePicker date];
     [abk save];
 }
 

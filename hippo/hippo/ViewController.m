@@ -175,10 +175,12 @@
         AccountBook* ab = [abs objectAtIndex:indexPath.row];
         [ab remove];
         [abs removeObject:ab];
-        if (abs.count == 0) {
-            [self.data removeObjectForKey:@(indexPath.section)];
-        }
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        if (abs.count == 0) {
+            NSLog(@"%ld", indexPath.section);
+            [self.data removeObjectForKey:[self monthInSection:indexPath.section]];
+            [tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+        }
         [self refreshIncome];
     }
 }
