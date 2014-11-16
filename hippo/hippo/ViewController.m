@@ -159,7 +159,7 @@
     
     NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:ab.date];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ %@      %@日%@:%@", ab.money, ab.inOrOut.boolValue ? @"收入":@"支出", @(components.day), @(components.hour), @(components.minute)];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@%@ %@日 %@",ab.inOrOut.boolValue ? @"+":@"-", ab.money, @(components.day), ab.use];
     
     return cell;
 }

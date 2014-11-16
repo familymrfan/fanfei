@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="O6w-Pc-DZ8">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -55,8 +55,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0.00" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EZW-pw-sV2">
-                                <rect key="frame" x="108" y="180" width="97" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0.00" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EZW-pw-sV2">
+                                <rect key="frame" x="102" y="131" width="97" height="30"/>
                                 <color key="textColor" red="0.0" green="0.40000000000000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad"/>
@@ -64,47 +64,31 @@
                                     <action selector="changeMoney:" destination="A8R-WV-bus" eventType="editingChanged" id="ire-ZV-PXl"/>
                                 </connections>
                             </textField>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="orU-8d-lCn">
-                                <rect key="frame" x="213" y="180" width="31" height="31"/>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="orU-8d-lCn">
+                                <rect key="frame" x="215" y="131" width="51" height="31"/>
                                 <connections>
                                     <action selector="changeInOrOut:" destination="A8R-WV-bus" eventType="valueChanged" id="54V-dT-vXR"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nNd-QW-8EA">
-                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="rDe-2U-5H8"/>
-                                </constraints>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nNd-QW-8EA">
+                                <rect key="frame" x="0.0" y="64" width="320" height="44"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="description" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AQ5-5B-e75">
-                                <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="D2t-WD-9v4">
-                                <rect key="frame" x="-4" y="352" width="320" height="216"/>
+                                <rect key="frame" x="0.0" y="352" width="320" height="216"/>
                                 <date key="date" timeIntervalSinceReferenceDate="437814908.12708497">
                                     <!--2014-11-16 07:15:08 +0000-->
                                 </date>
                             </datePicker>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="description" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AQ5-5B-e75">
+                                <rect key="frame" x="0.0" y="172" width="320" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="nNd-QW-8EA" firstAttribute="top" secondItem="k4r-95-7Zr" secondAttribute="bottom" constant="80" id="ACO-2G-i97"/>
-                            <constraint firstItem="orU-8d-lCn" firstAttribute="leading" secondItem="EZW-pw-sV2" secondAttribute="trailing" constant="8" symbolic="YES" id="FKR-W2-Bhb"/>
-                            <constraint firstItem="nNd-QW-8EA" firstAttribute="centerX" secondItem="EZW-pw-sV2" secondAttribute="centerX" id="GMS-MI-k1K"/>
-                            <constraint firstItem="AQ5-5B-e75" firstAttribute="trailing" secondItem="mnM-3X-hAq" secondAttribute="trailingMargin" id="Ryp-6E-idp"/>
-                            <constraint firstItem="nNd-QW-8EA" firstAttribute="leading" secondItem="mnM-3X-hAq" secondAttribute="leadingMargin" constant="21" id="XH4-gg-WmE"/>
-                            <constraint firstItem="orU-8d-lCn" firstAttribute="top" secondItem="EZW-pw-sV2" secondAttribute="top" id="ZPA-Ps-IsV"/>
-                            <constraint firstItem="AQ5-5B-e75" firstAttribute="top" secondItem="orU-8d-lCn" secondAttribute="bottom" constant="8" symbolic="YES" id="ar0-af-MmF"/>
-                            <constraint firstItem="AQ5-5B-e75" firstAttribute="leading" secondItem="mnM-3X-hAq" secondAttribute="leadingMargin" constant="-5" id="dET-sA-aoV"/>
-                            <constraint firstItem="EZW-pw-sV2" firstAttribute="top" secondItem="nNd-QW-8EA" secondAttribute="bottom" constant="8" symbolic="YES" id="egt-HV-g7r"/>
-                            <constraint firstItem="nNd-QW-8EA" firstAttribute="centerX" secondItem="mnM-3X-hAq" secondAttribute="centerX" id="nAi-1D-fIL"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="orU-8d-lCn" secondAttribute="trailing" constant="78" id="xoQ-GD-JWe"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="KmM-wc-Yx6"/>
                     <connections>
