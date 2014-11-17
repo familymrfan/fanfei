@@ -31,6 +31,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    UITapGestureRecognizer* tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)]; tapper.cancelsTouchesInView = NO; [self.view addGestureRecognizer:tapper];
+}
+
+- (void)handleSingleTap:(UITapGestureRecognizer *) sender {
+    [self.txtMoney endEditing:YES];
+    [self.txtUse endEditing:YES];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -68,9 +74,9 @@
 - (void)refreshMoneyTitle
 {
     if (self.switchInOrOut.isOn) {
-        [self.labelTitle setText:[NSString stringWithFormat:@"支出%@元", self.txtMoney.text]];
+        [self.labelTitle setText:[NSString stringWithFormat:@"-%@元", self.txtMoney.text]];
     } else {
-        [self.labelTitle setText:[NSString stringWithFormat:@"收入%@元", self.txtMoney.text]];
+        [self.labelTitle setText:[NSString stringWithFormat:@"+%@元", self.txtMoney.text]];
     }
 }
 
