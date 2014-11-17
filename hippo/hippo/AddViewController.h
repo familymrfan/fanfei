@@ -8,6 +8,9 @@
 
 #import "ViewController.h"
 
+@class AccountBook;
 @interface AddViewController : ViewController
+
+@property (nonatomic) AccountBook* abk;
 
 @end

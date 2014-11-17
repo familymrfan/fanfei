@@ -31,7 +31,7 @@
                     <navigationItem key="navigationItem" id="8FS-je-TYa">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="GMY-z2-ZzY">
                             <connections>
-                                <segue destination="A8R-WV-bus" kind="push" id="Had-nI-r7O"/>
+                                <segue destination="A8R-WV-bus" kind="push" identifier="ToAddVC" id="Had-nI-r7O"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

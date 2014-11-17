@@ -11,6 +11,7 @@
 #import "CDRTranslucentSideBar.h"
 #import "UIViewController+ScrollingNavbar.h"
 #import "AccountBook.h"
+#import "AddViewController.h"
 
 @interface ViewController () <CDRTranslucentSideBarDelegate, UITableViewDataSource, UITableViewDelegate>
 
@@ -61,7 +62,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    [self performSegueWithIdentifier:@"ToAddVC" sender:self.bookTable];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -182,6 +183,21 @@
             [tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
         }
         [self refreshIncome];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    AddViewController* addVC = segue.destinationViewController;
+    if ([addVC respondsToSelector:@selector(setAbk:)]) {
+        NSIndexPath* indexPath = [self.bookTable indexPathForSelectedRow];
+        AccountBook* abk = [[self accountBooksInSection:indexPath.section] objectAtIndex:indexPath.row];
+        if (indexPath) {
+            [addVC setValue:abk forKey:@"abk"];
+        } else {
+            [addVC setValue:nil forKey:@"abk"];
+        }
+        
     }
 }
 

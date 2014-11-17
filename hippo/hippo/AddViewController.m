@@ -26,6 +26,13 @@
 {
     [self.txtMoney setTextColor:[UIColor greenColor]];
     [self.labelTitle setTextColor:[UIColor greenColor]];
+    
+    [self.switchInOrOut setOn:YES];
+    [self.txtMoney setText:@""];
+    [self.labelTitle setText:@""];
+    [self.txtUse setText:@""];
+    [self.datePicker setDate:[NSDate date]];
+    [self loadAccountBookToUI];
     [super viewWillAppear:animated];
 }
 
@@ -39,6 +46,28 @@
     [self.txtUse endEditing:YES];
 }
 
+- (void)loadAccountBookToUI
+{
+    if (self.abk == nil) {
+        return ;
+    }
+    [self.switchInOrOut setOn:![self.abk.inOrOut boolValue]];
+    [self.txtMoney setText:self.abk.money];
+    [self.txtUse setText:self.abk.use];
+    [self.datePicker setDate:self.abk.date];
+}
+
+- (void)saveAccountBook
+{
+    AccountBook* abk = [[AccountBook alloc] init];
+    abk.inOrOut = @(!self.switchInOrOut.isOn);
+    abk.money = self.txtMoney.text;
+    abk.use = self.txtUse.text;
+    abk.date = [self.datePicker date];
+    [abk save];
+    [self.abk remove];
+}
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -46,13 +75,7 @@
     if ([self.txtMoney.text integerValue] == 0) {
         return ;
     }
-    
-    AccountBook* abk = [[AccountBook alloc] init];
-    abk.inOrOut = @(!self.switchInOrOut.isOn);
-    abk.money = self.txtMoney.text;
-    abk.use = self.txtUse.text;
-    abk.date = [self.datePicker date];
-    [abk save];
+    [self saveAccountBook];
 }
 
 - (void)didReceiveMemoryWarning {
