@@ -87,8 +87,8 @@
 - (void)refreshIncome
 {
     // 提取总收入
-    NSLog(@"总收入 %ld", [[AccountBook new] income]);
-    [self.navigationController.navigationBar.topItem setTitle:[NSString stringWithFormat:@"总收入 %ld", [[AccountBook new] income]]];
+    NSLog(@"总收入 %.2lf", [[AccountBook new] income]);
+    [self.navigationController.navigationBar.topItem setTitle:[NSString stringWithFormat:@"总收入 %.2lf", [[AccountBook new] income]]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

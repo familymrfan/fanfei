@@ -21,7 +21,7 @@
     return self;
 }
 
-- (NSInteger)income
+- (float)income
 {
     FMDatabase* db = [[DataBaseManager sharedInstace] currentDB];
     NSString* sqlOutMoney = @"select sum(money) from AccountBook where inOrOut = 0";
@@ -46,7 +46,7 @@
     if (![in isKindOfClass:[NSNumber class]]) {
         in = @0;
     }
-    return in.integerValue - out.integerValue;
+    return in.floatValue - out.floatValue;
 }
 
 @end
