@@ -117,11 +117,9 @@
 
 - (void)detechSave
 {
-    if ([self.buttonSave isEnabled] == YES) {
-        return ;
-    }
     // 如果没有填写金钱，不可以保存
     if (self.txtMoney.text.length == 0) {
+        [self.buttonSave setEnabled:NO];
         return ;
     }
     [self.buttonSave setEnabled:YES];
