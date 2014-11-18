@@ -59,6 +59,9 @@
 
 - (void)saveAccountBook
 {
+    if ([self.txtMoney.text integerValue] == 0) {
+        return ;
+    }
     AccountBook* abk = [[AccountBook alloc] init];
     abk.inOrOut = @(!self.switchInOrOut.isOn);
     abk.money = self.txtMoney.text;
@@ -71,11 +74,6 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
-    if ([self.txtMoney.text integerValue] == 0) {
-        return ;
-    }
-    [self saveAccountBook];
 }
 
 - (void)didReceiveMemoryWarning {
