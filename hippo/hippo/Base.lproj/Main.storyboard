@@ -81,17 +81,30 @@
                                 <date key="date" timeIntervalSinceReferenceDate="437814908.12708497">
                                     <!--2014-11-16 07:15:08 +0000-->
                                 </date>
+                                <connections>
+                                    <action selector="changeDatePick:" destination="A8R-WV-bus" eventType="valueChanged" id="PhF-cQ-THm"/>
+                                </connections>
                             </datePicker>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="description" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AQ5-5B-e75">
                                 <rect key="frame" x="0.0" y="172" width="320" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="changeDescription:" destination="A8R-WV-bus" eventType="valueChanged" id="BzZ-kh-unz"/>
+                                </connections>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="KmM-wc-Yx6"/>
+                    <navigationItem key="navigationItem" id="KmM-wc-Yx6">
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="保存" style="done" id="yOn-x2-Zhj">
+                            <connections>
+                                <action selector="saveAccountBook:" destination="A8R-WV-bus" id="keF-Xt-D5D"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="buttonSave" destination="yOn-x2-Zhj" id="uK9-3e-ZPe"/>
                         <outlet property="datePicker" destination="D2t-WD-9v4" id="bAF-Nv-Ob4"/>
                         <outlet property="labelTitle" destination="nNd-QW-8EA" id="SUv-DS-4eV"/>
                         <outlet property="switchInOrOut" destination="orU-8d-lCn" id="xRl-v5-nvk"/>

@@ -11,6 +11,7 @@
 @class AccountBook;
 @interface AddViewController : ViewController
 
+// 已经保存的ab
 @property (nonatomic) AccountBook* abk;
 
 @end

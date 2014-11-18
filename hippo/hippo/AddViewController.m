@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *labelTitle;
 @property (weak, nonatomic) IBOutlet UITextField *txtUse;
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *buttonSave;
 
 
 @end
@@ -32,6 +33,7 @@
     [self.labelTitle setText:@""];
     [self.txtUse setText:@""];
     [self.datePicker setDate:[NSDate date]];
+    
     [self loadAccountBookToUI];
     [super viewWillAppear:animated];
 }
@@ -56,9 +58,7 @@
     [self.txtUse setText:self.abk.use];
     [self.datePicker setDate:self.abk.date];
 }
-
-- (void)saveAccountBook
-{
+- (IBAction)saveAccountBook:(id)sender {
     if ([self.txtMoney.text integerValue] == 0) {
         return ;
     }
@@ -69,6 +69,8 @@
     abk.date = [self.datePicker date];
     [abk save];
     [self.abk remove];
+    self.abk = abk;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -90,6 +92,7 @@
         [self.labelTitle setTextColor:[UIColor redColor]];
     }
     [self refreshMoneyTitle];
+    [self detechSave];
 }
 
 - (void)refreshMoneyTitle
@@ -103,6 +106,25 @@
 
 - (IBAction)changeMoney:(id)sender {
     [self refreshMoneyTitle];
+    [self detechSave];
+}
+- (IBAction)changeDescription:(id)sender {
+    [self detechSave];
+}
+- (IBAction)changeDatePick:(id)sender {
+    [self detechSave];
+}
+
+- (void)detechSave
+{
+    if ([self.buttonSave isEnabled] == YES) {
+        return ;
+    }
+    // 如果没有填写金钱，不可以保存
+    if (self.txtMoney.text.length == 0) {
+        return ;
+    }
+    [self.buttonSave setEnabled:YES];
 }
 
 @end
